@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "question": "Choose the correct demonstrative: ___ is my bag.",
+    "options": {
+      "A": "This",
+      "B": "These",
+      "C": "Those",
+      "D": "They"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct pronoun: ___ are my shoes.",
+    "options": {
+      "A": "This",
+      "B": "These",
+      "C": "That",
+      "D": "It"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"These\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"These\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct sentence: ___ car is very old.",
+    "options": {
+      "A": "These",
+      "B": "Those",
+      "C": "That",
+      "D": "They"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"That\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"That\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Choose the correct plural form: ___ apples are fresh.",
+    "options": {
+      "A": "This",
+      "B": "That",
+      "C": "It",
+      "D": "These"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"These\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"These\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "Choose the correct sentence: ___ boy is my brother.",
+    "options": {
+      "A": "This",
+      "B": "These",
+      "C": "Those",
+      "D": "They"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct sentence: ___ are my classmates over there.",
+    "options": {
+      "A": "That",
+      "B": "Those",
+      "C": "This",
+      "D": "It"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Those\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Those\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct pronoun: ___ pen is blue, but ___ one is black.",
+    "options": {
+      "A": "This / those",
+      "B": "These / that",
+      "C": "This / that",
+      "D": "These / these"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This / that\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This / that\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Choose the correct sentence: ___ is my favorite teacher.",
+    "options": {
+      "A": "These",
+      "B": "Those",
+      "C": "They",
+      "D": "This"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct sentence: ___ chairs are broken.",
+    "options": {
+      "A": "Those",
+      "B": "That",
+      "C": "This",
+      "D": "It"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Those\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Those\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the correct sentence: ___ dog is very friendly.",
+    "options": {
+      "A": "Those",
+      "B": "That",
+      "C": "These",
+      "D": "They"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"That\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"That\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Choose the correct sentence: ___ a book on the table.",
+    "options": {
+      "A": "There are",
+      "B": "There be",
+      "C": "There is",
+      "D": "It is"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There is\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There is\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Choose the correct sentence: ___ many people in the park.",
+    "options": {
+      "A": "There are",
+      "B": "There is",
+      "C": "It is",
+      "D": "It are"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There are\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There are\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Choose the correct negative form: ___ not any milk in the fridge.",
+    "options": {
+      "A": "There are",
+      "B": "There isn't",
+      "C": "There aren't",
+      "D": "There is"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There isn't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There isn't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Choose the correct sentence: ___ two windows in my room.",
+    "options": {
+      "A": "There is",
+      "B": "There are",
+      "C": "There be",
+      "D": "There was"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There are\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"There are\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Choose the correct question: ___ a computer in your classroom",
+    "options": {
+      "A": "Are there",
+      "B": "There is",
+      "C": "Is there",
+      "D": "There are"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Is there\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Is there\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]

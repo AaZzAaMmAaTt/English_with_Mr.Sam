@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "question": "Choose the correct article: I have ___ apple.",
+    "options": {
+      "A": "a",
+      "B": "an",
+      "C": "the",
+      "D": "—"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct article: She is ___ teacher.",
+    "options": {
+      "A": "the",
+      "B": "an",
+      "C": "—",
+      "D": "a"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct article: He bought ___ new car yesterday.",
+    "options": {
+      "A": "a",
+      "B": "an",
+      "C": "the",
+      "D": "—"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Choose the correct article: ___ moon is very bright tonight.",
+    "options": {
+      "A": "A",
+      "B": "An",
+      "C": "The",
+      "D": "—"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "Choose the correct article: I saw ___ elephant at the zoo.",
+    "options": {
+      "A": "a",
+      "B": "an",
+      "C": "the",
+      "D": "—"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct article: She has ___ old phone, but she wants a new one.",
+    "options": {
+      "A": "an",
+      "B": "a",
+      "C": "the",
+      "D": "—"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct article: ___ weather is nice today.",
+    "options": {
+      "A": "A",
+      "B": "An",
+      "C": "—",
+      "D": "The"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Choose the correct article: My brother is reading ___ interesting book.",
+    "options": {
+      "A": "a",
+      "B": "the",
+      "C": "an",
+      "D": "—"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"an\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct form: I ___ a bike.",
+    "options": {
+      "A": "has",
+      "B": "have",
+      "C": "had",
+      "D": "having"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the correct form: She ___ a cat.",
+    "options": {
+      "A": "have",
+      "B": "had",
+      "C": "has",
+      "D": "having"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"has\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"has\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Choose the correct negative sentence: He ___ not a car.",
+    "options": {
+      "A": "have",
+      "B": "has",
+      "C": "haven't",
+      "D": "having"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"has\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"has\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Choose the correct question: ___ you got a computer",
+    "options": {
+      "A": "Has",
+      "B": "Have",
+      "C": "Do",
+      "D": "Are"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Choose the correct sentence: They ___ many friends.",
+    "options": {
+      "A": "has",
+      "B": "had",
+      "C": "have",
+      "D": "having"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Choose the correct question: ___ she got a brother",
+    "options": {
+      "A": "Have",
+      "B": "Does",
+      "C": "Did",
+      "D": "Has"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Has\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Has\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Choose the correct negative form: I ___ not got a pen.",
+    "options": {
+      "A": "have",
+      "B": "has",
+      "C": "am",
+      "D": "are"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"have\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]

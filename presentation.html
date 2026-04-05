@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentation - English with Mr.Sam</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="level-header">
+  <div class="logo"><img src="assets/images/logo.png" alt="English with Mr.Sam"></div>
+</header>
+
+<main class="presentation-page" data-presentation-page>
+  <section class="presentation-card">
+    <div class="presentation-topbar">
+      <h1 id="presentation-title" class="presentation-title">Lesson presentation</h1>
+      <a id="presentation-back-btn" href="lesson.html" class="btn lesson-nav-btn">Back to lesson</a>
+    </div>
+    <p id="presentation-note" class="presentation-note">Loading presentation...</p>
+    <div class="presentation-frame-shell">
+      <iframe id="presentation-frame" title="Lesson presentation" loading="lazy"></iframe>
+    </div>
+  </section>
+</main>
+
+<script src="js/presentations.js"></script>
+<script src="js/script.js"></script>
+<script>
+  (function () {
+    const page = document.querySelector("[data-presentation-page]");
+    if (!page) {
+      return;
+    }
+    const frameEl = document.getElementById("presentation-frame");
+    const noteEl = document.getElementById("presentation-note");
+    if (!frameEl || frameEl.src) {
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const course = (params.get("course") || "a1").toLowerCase();
+    const lessonNumber = Number(params.get("lesson")) || 1;
+    let token = "";
+    try {
+      const raw = localStorage.getItem("ewms_auth_state");
+      const parsed = raw ? JSON.parse(raw) : null;
+      token = (parsed && (parsed.sessionToken || parsed.session_token)) || "";
+    } catch (error) {
+      token = "";
+    }
+    if (!token) {
+      if (noteEl) {
+        noteEl.textContent = "Please log in to view this presentation.";
+      }
+      return;
+    }
+    const baseUrl = window.API_BASE_URL || "http://127.0.0.1:8000";
+    const src = `${baseUrl}/api/presentation?course=${encodeURIComponent(course)}&lesson=${lessonNumber}&session_token=${encodeURIComponent(
+      token
+    )}`;
+    const markLoaded = () => {
+      if (noteEl) {
+        noteEl.textContent = "";
+      }
+    };
+    const markFailed = () => {
+      if (noteEl) {
+        noteEl.textContent = "Failed to load presentation.";
+      }
+    };
+    frameEl.addEventListener("load", markLoaded, { once: true });
+    frameEl.addEventListener("error", markFailed, { once: true });
+    setTimeout(markFailed, 12000);
+    frameEl.src = `${src}#toolbar=0&navpanes=0&scrollbar=0`;
+  })();
+</script>
+</body>
+</html>

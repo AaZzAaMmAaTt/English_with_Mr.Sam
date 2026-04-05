@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "question": "What is a noun",
+    "options": {
+      "A": "A word that shows an action",
+      "B": "A word for a person, place, or thing",
+      "C": "A word that describes a verb",
+      "D": "A word that connects sentences"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"A word for a person, place, or thing\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"A word for a person, place, or thing\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "Which word is a noun",
+    "options": {
+      "A": "run",
+      "B": "quickly",
+      "C": "dog",
+      "D": "fast"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"dog\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"dog\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Which sentence has a noun",
+    "options": {
+      "A": "She runs fast.",
+      "B": "The boy is happy.",
+      "C": "Run quickly.",
+      "D": "Very fast."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The boy is happy.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The boy is happy.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Which word is a noun",
+    "options": {
+      "A": "blue",
+      "B": "happiness",
+      "C": "quickly",
+      "D": "run"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"happiness\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"happiness\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "Which word is the noun in this sentence: The cat is sleeping.",
+    "options": {
+      "A": "the",
+      "B": "cat",
+      "C": "is",
+      "D": "sleeping"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"cat\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"cat\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Which word is a person noun",
+    "options": {
+      "A": "teacher",
+      "B": "school",
+      "C": "table",
+      "D": "water"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"teacher\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"teacher\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Which word is a place noun",
+    "options": {
+      "A": "city",
+      "B": "run",
+      "C": "beautiful",
+      "D": "quickly"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"city\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"city\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Which word is a thing noun",
+    "options": {
+      "A": "jump",
+      "B": "book",
+      "C": "happy",
+      "D": "slowly"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"book\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"book\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Which word is a noun",
+    "options": {
+      "A": "sing",
+      "B": "singer",
+      "C": "singing",
+      "D": "sang"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"singer\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"singer\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Which word is the noun in this sentence: My friend likes music.",
+    "options": {
+      "A": "likes",
+      "B": "music",
+      "C": "my",
+      "D": "likes"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"music\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"music\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Which word is a noun",
+    "options": {
+      "A": "quickly",
+      "B": "computer",
+      "C": "run",
+      "D": "tall"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"computer\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"computer\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Which sentence contains a noun",
+    "options": {
+      "A": "Run fast.",
+      "B": "The car is red.",
+      "C": "Quickly go.",
+      "D": "Very tall."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The car is red.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The car is red.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Which word is a noun",
+    "options": {
+      "A": "beautiful",
+      "B": "beauty",
+      "C": "beautifully",
+      "D": "beautify"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"beauty\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"beauty\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Which word is a proper noun",
+    "options": {
+      "A": "city",
+      "B": "country",
+      "C": "Samarkand",
+      "D": "river"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Samarkand\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Samarkand\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Which word is the noun in this sentence: The students read a book.",
+    "options": {
+      "A": "read",
+      "B": "students",
+      "C": "a",
+      "D": "the"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"students\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"students\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]

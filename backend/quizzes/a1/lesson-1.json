@@ -1,0 +1,229 @@
+[
+  {
+    "id": 1,
+    "question": "What letter comes after D",
+    "options": {
+      "A": "C",
+      "B": "E",
+      "C": "F",
+      "D": "G"
+    },
+    "correct": "B",
+    "explanation": "The English alphabet follows a fixed order. Around D the sequence is ... C, D, E, F ..., so the next letter is the one right after D.",
+    "explanation_simple": "Alphabet order goes ... C, D, E ... so the next letter is E.",
+    "explanation_detailed": "The alphabet is a fixed sequence. If you look around D, the letters are C, D, E, F. The letter that comes immediately after D is E, so that option is correct.",
+    "explanation_translations": {
+      "uz": "Ingliz alifbosi qat'iy tartibda ketadi. D atrofida ... C, D, E, F ... bo'ladi, shuning uchun keyingi harf E."
+    }
+  },
+  {
+    "id": 2,
+    "question": "What letter comes before N",
+    "options": {
+      "A": "L",
+      "B": "M",
+      "C": "O",
+      "D": "K"
+    },
+    "correct": "B",
+    "explanation": "Look at the sequence ... L, M, N, O .... The letter just before N is the one immediately to its left in that sequence.",
+    "explanation_simple": "Look at the sequence ...",
+    "explanation_detailed": "Look at the sequence ... L, M, N, O .... The letter just before N is the one immediately to its left in that sequence.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Which of these is the first letter in the English alphabet",
+    "options": {
+      "A": "Z",
+      "B": "A",
+      "C": "B",
+      "D": "C"
+    },
+    "correct": "B",
+    "explanation": "The alphabet begins with the first letters in order: A, B, C, D, E. The correct choice is the very first letter of that list.",
+    "explanation_simple": "The alphabet begins with the first letters in order: A, B, C, D, E.",
+    "explanation_detailed": "The alphabet begins with the first letters in order: A, B, C, D, E. The correct choice is the very first letter of that list.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Which of these is the last letter in the English alphabet",
+    "options": {
+      "A": "Y",
+      "B": "Z",
+      "C": "X",
+      "D": "W"
+    },
+    "correct": "B",
+    "explanation": "The alphabet ends with the final letters: V, W, X, Y, Z. The correct choice is the last letter in that ending list.",
+    "explanation_simple": "The alphabet ends with the final letters: V, W, X, Y, Z.",
+    "explanation_detailed": "The alphabet ends with the final letters: V, W, X, Y, Z. The correct choice is the last letter in that ending list.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "How many letters are there in the English alphabet",
+    "options": {
+      "A": "25",
+      "B": "26",
+      "C": "27",
+      "D": "28"
+    },
+    "correct": "B",
+    "explanation": "The English alphabet has a fixed total number of letters. If you count from A to Z, you reach 26, not 25 or 28.",
+    "explanation_simple": "The English alphabet has a fixed total number of letters.",
+    "explanation_detailed": "The English alphabet has a fixed total number of letters. If you count from A to Z, you reach 26, not 25 or 28.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Which group of letters is in the correct order",
+    "options": {
+      "A": "A, C, B, D",
+      "B": "M, N, O, P",
+      "C": "Q, S, R, T",
+      "D": "X, W, Y, Z"
+    },
+    "correct": "B",
+    "explanation": "Correct order means the letters go forward without jumping back. Scan each option and pick the one that moves step by step forward.",
+    "explanation_simple": "Correct order means the letters go forward without jumping back.",
+    "explanation_detailed": "Correct order means the letters go forward without jumping back. Scan each option and pick the one that moves step by step forward.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Which of these letters is a vowel",
+    "options": {
+      "A": "B",
+      "B": "C",
+      "C": "A",
+      "D": "F"
+    },
+    "correct": "C",
+    "explanation": "Vowels are the letters A, E, I, O, U. Choose the option that is one of these vowels.",
+    "explanation_simple": "Vowels are the letters A, E, I, O, U.",
+    "explanation_detailed": "Vowels are the letters A, E, I, O, U. Choose the option that is one of these vowels.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Which of these letters is a consonant",
+    "options": {
+      "A": "O",
+      "B": "U",
+      "C": "E",
+      "D": "T"
+    },
+    "correct": "D",
+    "explanation": "Consonants are all letters that are not vowels. Pick the option that is not A, E, I, O, or U.",
+    "explanation_simple": "Consonants are all letters that are not vowels.",
+    "explanation_detailed": "Consonants are all letters that are not vowels. Pick the option that is not A, E, I, O, or U.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct spelling of the number 13:",
+    "options": {
+      "A": "Therty",
+      "B": "Thirteen",
+      "C": "Threeten",
+      "D": "Thirty"
+    },
+    "correct": "B",
+    "explanation": "Numbers from 13 to 19 end with '-teen'. For 13, the spelling uses 'thir-' + 'teen', not a '-ty' ending.",
+    "explanation_simple": "Numbers from 13 to 19 end with '-teen'.",
+    "explanation_detailed": "Numbers from 13 to 19 end with '-teen'. For 13, the spelling uses 'thir-' + 'teen', not a '-ty' ending.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the correct spelling of the number 40:",
+    "options": {
+      "A": "Fourty",
+      "B": "Fortee",
+      "C": "Forty",
+      "D": "Fourtie"
+    },
+    "correct": "C",
+    "explanation": "The number 40 is a special spelling: it drops the 'u' from 'four'. Any form like 'fourty' or with extra vowels is incorrect.",
+    "explanation_simple": "The number 40 is a special spelling: it drops the 'u' from 'four'.",
+    "explanation_detailed": "The number 40 is a special spelling: it drops the 'u' from 'four'. Any form like 'fourty' or with extra vowels is incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Choose the correct spelling of the number 80:",
+    "options": {
+      "A": "Eighty",
+      "B": "Eightty",
+      "C": "Eightee",
+      "D": "Eighti"
+    },
+    "correct": "A",
+    "explanation": "Eighty keeps the 'gh' from 'eight' and ends with '-ty'. Avoid spellings with double 't' or extra 'ee'.",
+    "explanation_simple": "Eighty keeps the 'gh' from 'eight' and ends with '-ty'.",
+    "explanation_detailed": "Eighty keeps the 'gh' from 'eight' and ends with '-ty'. Avoid spellings with double 't' or extra 'ee'.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "What number comes after twenty-nine",
+    "options": {
+      "A": "Twenty-eight",
+      "B": "Thirty",
+      "C": "Thirty-one",
+      "D": "Twenty-seven"
+    },
+    "correct": "B",
+    "explanation": "After twenty-nine comes the next number in order. The correct option should be the word for 30.",
+    "explanation_simple": "After twenty-nine comes the next number in order.",
+    "explanation_detailed": "After twenty-nine comes the next number in order. The correct option should be the word for 30.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "What number comes before twenty",
+    "options": {
+      "A": "Nineteen",
+      "B": "Twenty-one",
+      "C": "Eighteen",
+      "D": "Twenty-two"
+    },
+    "correct": "A",
+    "explanation": "Before twenty comes the previous number in order. Choose the word that represents 19.",
+    "explanation_simple": "Before twenty comes the previous number in order.",
+    "explanation_detailed": "Before twenty comes the previous number in order. Choose the word that represents 19.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Which number word is written correctly",
+    "options": {
+      "A": "Sixty",
+      "B": "Sixti",
+      "C": "Sixtie",
+      "D": "Sixthy"
+    },
+    "correct": "A",
+    "explanation": "Sixty is spelled with an 'x' and ends in '-ty'. Options with extra letters like -ti or -tie are misspellings.",
+    "explanation_simple": "Sixty is spelled with an 'x' and ends in '-ty'.",
+    "explanation_detailed": "Sixty is spelled with an 'x' and ends in '-ty'. Options with extra letters like -ti or -tie are misspellings.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Which of these numbers is the largest",
+    "options": {
+      "A": "Ninety",
+      "B": "Sixty",
+      "C": "Seventy",
+      "D": "Fifty"
+    },
+    "correct": "A",
+    "explanation": "Compare the values: fifty (50), sixty (60), seventy (70), ninety (90). The largest value is 90.",
+    "explanation_simple": "Compare the values: fifty (50), sixty (60), seventy (70), ninety (90).",
+    "explanation_detailed": "Compare the values: fifty (50), sixty (60), seventy (70), ninety (90). The largest value is 90.",
+    "explanation_translations": {}
+  }
+]

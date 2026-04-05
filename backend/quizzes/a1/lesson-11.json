@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "question": "Which sentence is in Present Simple Tense",
+    "options": {
+      "A": "I am reading a book now.",
+      "B": "I read a book every day.",
+      "C": "I was reading a book yesterday.",
+      "D": "I will read a book tomorrow."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I read a book every day.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I read a book every day.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "What is the correct form' She ___ TV every evening.",
+    "options": {
+      "A": "watch",
+      "B": "watched",
+      "C": "watches",
+      "D": "watching"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"watches\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"watches\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct sentence:",
+    "options": {
+      "A": "He play football every Sunday.",
+      "B": "He plays football every Sunday.",
+      "C": "He playing football every Sunday.",
+      "D": "He is play football every Sunday."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"He plays football every Sunday.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"He plays football every Sunday.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Which of the following shows a habit",
+    "options": {
+      "A": "She is watching TV now.",
+      "B": "She watched TV yesterday.",
+      "C": "She watches TV every day.",
+      "D": "She will watch TV tomorrow."
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"She watches TV every day.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"She watches TV every day.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "What is the correct negative form' He ___ play tennis every day.",
+    "options": {
+      "A": "do not",
+      "B": "does not",
+      "C": "didn't",
+      "D": "isn't"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"does not\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"does not\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct question form: ___ she go to school every morning",
+    "options": {
+      "A": "Is",
+      "B": "Do",
+      "C": "Does",
+      "D": "Did"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Does\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Does\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Which verb form is correct with I / we / you / they",
+    "options": {
+      "A": "goes",
+      "B": "play",
+      "C": "plays",
+      "D": "watches"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"play\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"play\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "What is the correct form' My brother ___ football on Sundays.",
+    "options": {
+      "A": "play",
+      "B": "plays",
+      "C": "playing",
+      "D": "is play"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"plays\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"plays\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct negative: We ___ go to school on Sundays.",
+    "options": {
+      "A": "not",
+      "B": "doesn't",
+      "C": "don't",
+      "D": "aren't"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"don't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"don't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the sentence that expresses a fact.",
+    "options": {
+      "A": "The sun rises in the east.",
+      "B": "The sun is rising in the east.",
+      "C": "The sun rose in the east.",
+      "D": "The sun will rise in the east."
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The sun rises in the east.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"The sun rises in the east.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Find the wrong sentence.",
+    "options": {
+      "A": "He goes to school.",
+      "B": "She eat breakfast every morning.",
+      "C": "They play tennis.",
+      "D": "We go to work every day."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"She eat breakfast every morning.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"She eat breakfast every morning.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Choose the right question: ___ you play football",
+    "options": {
+      "A": "Do",
+      "B": "Does",
+      "C": "Are",
+      "D": "Did"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Do\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Do\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Choose the correct sentence.",
+    "options": {
+      "A": "I not play football.",
+      "B": "I doesn't play football.",
+      "C": "I don't play football.",
+      "D": "I am not play football."
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I don't play football.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I don't play football.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Which of the following sentences is interrogative",
+    "options": {
+      "A": "He plays football every day.",
+      "B": "Does he play football every day'",
+      "C": "He does not play football every day.",
+      "D": "He playing football every day."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Does he play football every day'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Does he play football every day'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "What do we add to verbs with he/she/it in Present Simple",
+    "options": {
+      "A": "-ing",
+      "B": "-ed",
+      "C": "-s or -es",
+      "D": "nothing"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"-s or -es\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"-s or -es\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]

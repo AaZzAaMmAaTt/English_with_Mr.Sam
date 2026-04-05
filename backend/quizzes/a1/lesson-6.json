@@ -1,0 +1,452 @@
+[
+  {
+    "id": 1,
+    "question": "Choose the correct word: This is ___ book.",
+    "options": {
+      "A": "my",
+      "B": "me",
+      "C": "mine",
+      "D": "I"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"my\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"my\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct sentence: ___ brother is a doctor.",
+    "options": {
+      "A": "He",
+      "B": "Him",
+      "C": "Hers",
+      "D": "His"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"His\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"His\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct pronoun: They love ___ parents.",
+    "options": {
+      "A": "them",
+      "B": "their",
+      "C": "theirs",
+      "D": "they"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"their\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"their\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Choose the correct option: We are in ___ classroom.",
+    "options": {
+      "A": "we",
+      "B": "ours",
+      "C": "our",
+      "D": "us"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"our\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"our\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "Choose the correct translation: “Её собака”.",
+    "options": {
+      "A": "Her dog",
+      "B": "His dog",
+      "C": "Their dog",
+      "D": "My dog"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Her dog\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Her dog\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct form: He left ___ phone at home.",
+    "options": {
+      "A": "him",
+      "B": "he",
+      "C": "his",
+      "D": "theirs"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"his\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"his\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct word: I like ___ teacher.",
+    "options": {
+      "A": "you",
+      "B": "yours",
+      "C": "she",
+      "D": "your"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"your\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"your\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Choose the correct option: The cat is eating ___ food.",
+    "options": {
+      "A": "it",
+      "B": "its",
+      "C": "it's",
+      "D": "theirs"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"its\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"its\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct form: We love ___ school.",
+    "options": {
+      "A": "our",
+      "B": "ours",
+      "C": "us",
+      "D": "we"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"our\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"our\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the correct word: Is this ___ pen",
+    "options": {
+      "A": "you",
+      "B": "your",
+      "C": "yours",
+      "D": "they"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"your\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"your\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Choose the correct option: They're cleaning ___ room now.",
+    "options": {
+      "A": "them",
+      "B": "they",
+      "C": "theirs",
+      "D": "their"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"their\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"their\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Choose the correct form: He forgot ___ bag at home.",
+    "options": {
+      "A": "his",
+      "B": "he",
+      "C": "him",
+      "D": "her"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"his\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"his\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Choose the correct translation: “Наша машина новая.”",
+    "options": {
+      "A": "Ours car is new.",
+      "B": "We car is new.",
+      "C": "Our car is new.",
+      "D": "Us car is new."
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Our car is new.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Our car is new.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Choose the correct form: This is ___ house.",
+    "options": {
+      "A": "me",
+      "B": "my",
+      "C": "mine",
+      "D": "I"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"my\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"my\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Choose the correct sentence: She didn't see ___ keys.",
+    "options": {
+      "A": "hers",
+      "B": "she",
+      "C": "they",
+      "D": "her"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"her\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"her\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 16,
+    "question": "Choose the correct sentence: This book is ___.",
+    "options": {
+      "A": "my",
+      "B": "mine",
+      "C": "me",
+      "D": "I"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mine\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mine\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 17,
+    "question": "Choose the correct form: Is this pen ___",
+    "options": {
+      "A": "you",
+      "B": "your",
+      "C": "yours",
+      "D": "you're"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"yours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"yours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 18,
+    "question": "Choose the correct word: That phone is not his, it's ___.",
+    "options": {
+      "A": "hers",
+      "B": "her",
+      "C": "she",
+      "D": "he"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"hers\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"hers\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 19,
+    "question": "Choose the correct sentence: Those shoes are ___.",
+    "options": {
+      "A": "our",
+      "B": "we",
+      "C": "us",
+      "D": "ours"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 20,
+    "question": "Choose the correct translation: “Этот стол наш.”",
+    "options": {
+      "A": "This table is our.",
+      "B": "This table is ours.",
+      "C": "This table is we.",
+      "D": "This table ours."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This table is ours.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"This table is ours.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 21,
+    "question": "Choose the correct option: The cat ate its food, not ___.",
+    "options": {
+      "A": "their",
+      "B": "them",
+      "C": "theirs",
+      "D": "they"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"theirs\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"theirs\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 22,
+    "question": "Choose the correct form: This car is ___, not theirs.",
+    "options": {
+      "A": "ours",
+      "B": "our",
+      "C": "we",
+      "D": "us"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 23,
+    "question": "Choose the correct sentence: That's not my jacket, it's ___.",
+    "options": {
+      "A": "your",
+      "B": "you",
+      "C": "you're",
+      "D": "yours"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"yours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"yours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 24,
+    "question": "Choose the correct form: Whose book is this' It's ___.",
+    "options": {
+      "A": "him",
+      "B": "his",
+      "C": "he",
+      "D": "he's"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"his\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"his\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 25,
+    "question": "Choose the correct option: Her house is bigger than ___.",
+    "options": {
+      "A": "our",
+      "B": "we",
+      "C": "ours",
+      "D": "us"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 26,
+    "question": "Choose the correct translation: “Это не мой телефон, это её.”",
+    "options": {
+      "A": "It's not my phone, it's hers.",
+      "B": "It's not my phone, it's her.",
+      "C": "It's not mine phone, it's hers.",
+      "D": "It's not mine, it's her."
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"It's not my phone, it's hers.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"It's not my phone, it's hers.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 27,
+    "question": "Choose the correct sentence: These bags are ___.",
+    "options": {
+      "A": "their",
+      "B": "they",
+      "C": "them",
+      "D": "theirs"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"theirs\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"theirs\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 28,
+    "question": "Choose the correct form: Is this book yours or ___",
+    "options": {
+      "A": "my",
+      "B": "mine",
+      "C": "me",
+      "D": "I"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mine\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mine\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 29,
+    "question": "Choose the correct option: His car is red, ___ is blue.",
+    "options": {
+      "A": "we",
+      "B": "us",
+      "C": "ours",
+      "D": "our"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"ours\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 30,
+    "question": "Choose the correct sentence: That pencil isn't hers, it's ___.",
+    "options": {
+      "A": "my",
+      "B": "me",
+      "C": "I",
+      "D": "mine"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mine\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mine\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]

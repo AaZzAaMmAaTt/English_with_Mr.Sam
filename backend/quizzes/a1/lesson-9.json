@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "question": "Choose the correct form: This is my ___ bag.",
+    "options": {
+      "A": "mother",
+      "B": "mothers",
+      "C": "mother's",
+      "D": "mothers'"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mother's\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"mother's\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct form: The ___ names are Ali and Aziz.",
+    "options": {
+      "A": "boys'",
+      "B": "boy's",
+      "C": "boys's",
+      "D": "boy"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"boys'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"boys'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct sentence: ___ book is on the desk. (belongs to Sunnatullo)",
+    "options": {
+      "A": "Sunnatullo",
+      "B": "Sunnatullo's",
+      "C": "Sunnatullos",
+      "D": "Sunnatullo'"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Sunnatullo's\". The hint 'belongs to Sunnatullo' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Sunnatullo's\". The hint 'belongs to Sunnatullo' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Choose the correct form: My ___ friends are very kind.",
+    "options": {
+      "A": "brother'",
+      "B": "brothers",
+      "C": "brother",
+      "D": "brothers'"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"brothers'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"brothers'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "Choose the correct sentence: The ___ cars are new. (belong to the teachers)",
+    "options": {
+      "A": "teacher'",
+      "B": "teachers'",
+      "C": "teachers",
+      "D": "teacher"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"teachers'\". The hint 'belong to the teachers' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"teachers'\". The hint 'belong to the teachers' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct answer: This is ___ phone. (belongs to Azim)",
+    "options": {
+      "A": "Azims",
+      "B": "Azim",
+      "C": "Azim's",
+      "D": "Azims'"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Azim's\". The hint 'belongs to Azim' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Azim's\". The hint 'belongs to Azim' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct sentence: The ___ color is red. (car)",
+    "options": {
+      "A": "car's",
+      "B": "car",
+      "C": "cars",
+      "D": "cars'"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"car's\". The hint 'car' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"car's\". The hint 'car' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Choose the correct form: The ___ house is very big. (family)",
+    "options": {
+      "A": "families'",
+      "B": "family",
+      "C": "familys",
+      "D": "family's"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"family's\". The hint 'family' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"family's\". The hint 'family' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct form: The ___ books are on the shelf. (students)",
+    "options": {
+      "A": "student's",
+      "B": "students'",
+      "C": "students",
+      "D": "students's"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"students'\". The hint 'students' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"students'\". The hint 'students' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the correct sentence: This is my ___ name. (friend)",
+    "options": {
+      "A": "friends",
+      "B": "friend",
+      "C": "friend's",
+      "D": "friends'"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"friend's\". The hint 'friend' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"friend's\". The hint 'friend' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Choose the correct sentence: The keys ___ the door are on the table.",
+    "options": {
+      "A": "of",
+      "B": "in",
+      "C": "for",
+      "D": "at"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Choose the correct sentence: The color ___ the wall is white.",
+    "options": {
+      "A": "in",
+      "B": "on",
+      "C": "of",
+      "D": "at"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Choose the correct sentence: The case ___ the phone is black.",
+    "options": {
+      "A": "of",
+      "B": "for",
+      "C": "in",
+      "D": "with"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"for\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"for\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Choose the correct form: The legs ___ the chair are short.",
+    "options": {
+      "A": "for",
+      "B": "on",
+      "C": "in",
+      "D": "of"
+    },
+    "correct": "D",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Choose the correct sentence: The name ___ this street is Amir Temur.",
+    "options": {
+      "A": "of",
+      "B": "at",
+      "C": "on",
+      "D": "to"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"of\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]

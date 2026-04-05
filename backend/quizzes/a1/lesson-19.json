@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "question": "Choose the correct sentence:",
+    "options": {
+      "A": "I go to school tomorrow.",
+      "B": "I will go to school tomorrow.",
+      "C": "I going to school tomorrow.",
+      "D": "I am go to school tomorrow."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I will go to school tomorrow.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I will go to school tomorrow.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct translation: вЂњShe will travel next week.вЂќ",
+    "options": {
+      "A": "РћРЅР° РїСѓС‚РµС€РµСЃС‚РІСѓРµС‚ РєР°Р¶РґСѓСЋ РЅРµРґРµР»СЋ.",
+      "B": "РћРЅР° РїСѓС‚РµС€РµСЃС‚РІРѕРІР°Р»Р° РЅР° РїСЂРѕС€Р»РѕР№ РЅРµРґРµР»Рµ.",
+      "C": "РћРЅР° Р±СѓРґРµС‚ РїСѓС‚РµС€РµСЃС‚РІРѕРІР°С‚СЊ РЅР° СЃР»РµРґСѓСЋС‰РµР№ РЅРµРґРµР»Рµ.",
+      "D": "РћРЅР° РїСѓС‚РµС€РµСЃС‚РІСѓРµС‚ СЃРµР№С‡Р°СЃ."
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РћРЅР° Р±СѓРґРµС‚ РїСѓС‚РµС€РµСЃС‚РІРѕРІР°С‚СЊ РЅР° СЃР»РµРґСѓСЋС‰РµР№ РЅРµРґРµР»Рµ.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РћРЅР° Р±СѓРґРµС‚ РїСѓС‚РµС€РµСЃС‚РІРѕРІР°С‚СЊ РЅР° СЃР»РµРґСѓСЋС‰РµР№ РЅРµРґРµР»Рµ.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct negative form: He ___ play football tomorrow.",
+    "options": {
+      "A": "won't",
+      "B": "doesn't",
+      "C": "didn't",
+      "D": "isn't"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 4,
+    "question": "Choose the correct question: ___ you help me tomorrow' (Future Simple)",
+    "options": {
+      "A": "Do",
+      "B": "Are",
+      "C": "Will",
+      "D": "Did"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 5,
+    "question": "Choose the correct sentence: They ___ meet us at 5 p.m. tomorrow. (Future Simple)",
+    "options": {
+      "A": "will",
+      "B": "was",
+      "C": "were",
+      "D": "are"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct answer: I think it ___ rain tomorrow.",
+    "options": {
+      "A": "will",
+      "B": "is",
+      "C": "was",
+      "D": "do"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct negative form: We ___ go to school next week.",
+    "options": {
+      "A": "not",
+      "B": "don't",
+      "C": "won't",
+      "D": "didn't"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 8,
+    "question": "Choose the correct sentence: He ___ be a doctor one day. (Future Simple)",
+    "options": {
+      "A": "is",
+      "B": "was",
+      "C": "will",
+      "D": "are"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 9,
+    "question": "Choose the correct question: ___ she come to the party tomorrow' (Future Simple)",
+    "options": {
+      "A": "Do",
+      "B": "Does",
+      "C": "Will",
+      "D": "Did"
+    },
+    "correct": "C",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 10,
+    "question": "Choose the correct sentence: I will not = ___",
+    "options": {
+      "A": "willn't",
+      "B": "won't",
+      "C": "will no",
+      "D": "won't be"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 11,
+    "question": "Choose the correct translation: вЂњI will be a teacher.вЂќ",
+    "options": {
+      "A": "РЇ Р±С‹Р» СѓС‡РёС‚РµР»РµРј.",
+      "B": "РЇ Р±СѓРґСѓ СѓС‡РёС‚РµР»РµРј.",
+      "C": "РЇ РµСЃС‚СЊ СѓС‡РёС‚РµР»СЊ.",
+      "D": "РЇ Р±С‹Р» Р±С‹ СѓС‡РёС‚РµР»РµРј."
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РЇ Р±СѓРґСѓ СѓС‡РёС‚РµР»РµРј.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РЇ Р±СѓРґСѓ СѓС‡РёС‚РµР»РµРј.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 12,
+    "question": "Choose the correct sentence: They think we ___ be late tomorrow. (Future Simple)",
+    "options": {
+      "A": "are",
+      "B": "will",
+      "C": "was",
+      "D": "were"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 13,
+    "question": "Choose the correct form: I ___ work with you next week. (Future Simple)",
+    "options": {
+      "A": "am",
+      "B": "will",
+      "C": "did",
+      "D": "do"
+    },
+    "correct": "B",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 14,
+    "question": "Choose the correct question: ___ it be sunny tomorrow",
+    "options": {
+      "A": "Will",
+      "B": "Does",
+      "C": "Is",
+      "D": "Was"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  },
+  {
+    "id": 15,
+    "question": "Choose the correct sentence: He believes he ___ win the competition next year. (Future Simple)",
+    "options": {
+      "A": "will",
+      "B": "is",
+      "C": "did",
+      "D": "do"
+    },
+    "correct": "A",
+    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
+    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation_translations": {}
+  }
+]
