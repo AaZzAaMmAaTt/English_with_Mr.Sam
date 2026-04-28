@@ -70,7 +70,7 @@ def build_menu_keyboard(lang: str):
         "inline_keyboard": [
             [
                 {"text": i18n.label(lang, "calendar"), "callback_data": "menu_calendar"},
-                {"text": i18n.label(lang, "daily"), "callback_data": "menu_daily"},
+                {"text": i18n.label(lang, "parents"), "callback_data": "menu_parents"},
             ],
             [
                 {"text": i18n.label(lang, "tip"), "callback_data": "menu_tip"},
@@ -82,6 +82,45 @@ def build_menu_keyboard(lang: str):
             ],
             [
                 {"text": i18n.label(lang, "back"), "callback_data": "open_start"},
+            ],
+        ]
+    }
+
+
+def build_parents_root_keyboard(lang: str):
+    return {
+        "inline_keyboard": [
+            [
+                {"text": i18n.label(lang, "add_parent"), "callback_data": "parents_add"},
+            ],
+            [
+                {"text": i18n.label(lang, "back"), "callback_data": "open_menu"},
+            ],
+        ]
+    }
+
+
+def build_parents_cancel_keyboard(lang: str):
+    return {
+        "inline_keyboard": [
+            [
+                {"text": i18n.label(lang, "cancel"), "callback_data": "parents_cancel"},
+                {"text": i18n.label(lang, "back"), "callback_data": "open_menu"},
+            ],
+        ]
+    }
+
+
+def build_parent_relation_keyboard(lang: str):
+    return {
+        "inline_keyboard": [
+            [
+                {"text": i18n.label(lang, "mother"), "callback_data": "parents_rel:mother"},
+                {"text": i18n.label(lang, "father"), "callback_data": "parents_rel:father"},
+            ],
+            [
+                {"text": i18n.label(lang, "cancel"), "callback_data": "parents_cancel"},
+                {"text": i18n.label(lang, "back"), "callback_data": "open_menu"},
             ],
         ]
     }

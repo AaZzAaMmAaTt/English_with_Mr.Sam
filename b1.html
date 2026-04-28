@@ -4,14 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>B1 Course - English with Mr.Sam</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20260427d">
 </head>
 <body>
 
 <header class="level-header">
+  <div class="level-header-actions level-header-actions-left">
+    <button id="student-notifications-btn" class="btn student-notifications-btn" type="button" hidden>
+      Notifications
+      <span id="student-notifications-badge" class="admin-requests-badge" hidden>0</span>
+    </button>
+  </div>
   <div class="logo"><img src="assets/images/logo.png" alt="English with Mr.Sam"></div>
-  <a href="index.html" class="btn">Home</a>
-</header>
+	  <div class="level-header-actions level-header-actions-right">
+	    <button id="admin-lessons-edit-btn" class="btn admin-lessons-edit-btn" type="button" hidden>Edit Menu</button>
+	    <a href="index.html" class="btn">Home</a>
+	  </div>
+	</header>
 
 <main class="lessons-page">
   <section class="lessons-header">
@@ -63,8 +72,20 @@
   </section>
 </main>
 
-<script src="js/script.js"></script>
+<script src="js/script.js?v=20260427d"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
 
 

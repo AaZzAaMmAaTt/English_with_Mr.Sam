@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "question": "Choose the correct option: I have ___ friends in London.",
+    "question": "Fill in the blank: I have ___ friends in London.",
     "options": {
       "A": "any",
       "B": "some",
@@ -9,9 +9,9 @@
       "D": "much"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"some\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"some\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Words like some/any/no/anything help us talk about quantity when we don’t say an exact number. First check: is the sentence positive, negative, or a question?",
+    "explanation_simple": "Positive → some; negative/questions → any; zero → no.",
+    "explanation_detailed": "Step 1: Check if the sentence is positive (no “not”) or negative (has “not”).\nStep 2: In positive sentences, we often use the word for “some (a little / a few)”.\nStep 3: In negative sentences, we often use the word used with negatives.\nStep 4: If the meaning is “zero”, choose the word that means “nothing / zero”.\nStep 5: Choose the option that matches the sentence type and meaning.",
     "explanation_translations": {}
   },
   {
@@ -24,9 +24,9 @@
       "D": "I haven't no sugar."
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I don't have any sugar.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I don't have any sugar.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks how we use some/any/no in questions and negatives. Look at whether it’s a question, an offer, or a negative sentence.",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: If it is a question, English often uses the question/negative word (not the positive word).\nStep 2: But offers/requests (Would you like…?) often use the positive word because we expect ‘yes’.\nStep 3: If it is negative, use the negative/question word (or use ‘no’ to mean zero).\nStep 4: Avoid double negatives (two negatives in one sentence) because they are not standard in English.\nStep 5: Choose the sentence that follows these rules.",
     "explanation_translations": {}
   },
   {
@@ -39,14 +39,14 @@
       "D": "Have you some money'"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Do you have any money'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Do you have any money'\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks how we use some/any/no in questions and negatives. Look at whether it’s a question, an offer, or a negative sentence.",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: If it is a question, English often uses the question/negative word (not the positive word).\nStep 2: But offers/requests (Would you like…?) often use the positive word because we expect ‘yes’.\nStep 3: If it is negative, use the negative/question word (or use ‘no’ to mean zero).\nStep 4: Avoid double negatives (two negatives in one sentence) because they are not standard in English.\nStep 5: Choose the sentence that follows these rules.",
     "explanation_translations": {}
   },
   {
     "id": 4,
-    "question": "Choose the correct option: There are ___ apples on the table.",
+    "question": "Fill in the blank: There are ___ apples on the table.",
     "options": {
       "A": "some",
       "B": "any",
@@ -54,9 +54,9 @@
       "D": "much"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"some\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"some\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Words like some/any/no/anything help us talk about quantity when we don’t say an exact number. First check: is the sentence positive, negative, or a question?",
+    "explanation_simple": "Positive → some; negative/questions → any; zero → no.",
+    "explanation_detailed": "Step 1: Check if the sentence is positive (no “not”) or negative (has “not”).\nStep 2: In positive sentences, we often use the word for “some (a little / a few)”.\nStep 3: In negative sentences, we often use the word used with negatives.\nStep 4: If the meaning is “zero”, choose the word that means “nothing / zero”.\nStep 5: Choose the option that matches the sentence type and meaning.",
     "explanation_translations": {}
   },
   {
@@ -69,9 +69,9 @@
       "D": "All of the above."
     },
     "correct": "D",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"All of the above.\". The hint 'negative' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"All of the above.\". The hint 'negative' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This question is about different correct ways to say “zero” or “not any”.",
+    "explanation_simple": "You can say “not any” or “no” (but don’t use two negatives together).",
+    "explanation_detailed": "Step 1: Read each sentence option and find its meaning: negative vs ‘zero’.\nStep 2: In English, a negative sentence can use: do/does + not + any.\nStep 3: Another way is using ‘no’ (meaning zero) without an extra ‘not’.\nStep 4: Some forms are both acceptable and mean the same thing.\nStep 5: Choose the option that matches that idea.",
     "explanation_translations": {}
   },
   {
@@ -84,14 +84,14 @@
       "D": "You like some tea'"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Would you like some tea'\". The hint 'offer' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Would you like some tea'\". The hint 'offer' tells you the meaning or ownership, so choose the form that expresses it clearly. Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks how we use some/any/no in questions and negatives. Look at whether it’s a question, an offer, or a negative sentence.",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: If it is a question, English often uses the question/negative word (not the positive word).\nStep 2: But offers/requests (Would you like…?) often use the positive word because we expect ‘yes’.\nStep 3: If it is negative, use the negative/question word (or use ‘no’ to mean zero).\nStep 4: Avoid double negatives (two negatives in one sentence) because they are not standard in English.\nStep 5: Choose the sentence that follows these rules.",
     "explanation_translations": {}
   },
   {
     "id": 7,
-    "question": "Choose the correct question: ___ there any students in the class",
+    "question": "Fill in the blank: ___ there any students in the class",
     "options": {
       "A": "Are",
       "B": "Is",
@@ -99,14 +99,14 @@
       "D": "Have"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Are\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Are\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Look at the noun (students = plural). Choose the correct form of ‘to be’ for a question.",
+    "explanation_simple": "Plural noun → Are there… ?",
+    "explanation_detailed": "Step 1: This is a question about ‘there is/there are’.\nStep 2: Use ‘Are’ with plural (students) and ‘Is’ with singular (a student).\nStep 3: Then choose the option that matches the noun number.",
     "explanation_translations": {}
   },
   {
     "id": 8,
-    "question": "Choose the correct option: I have ___ milk left. (a small amount)",
+    "question": "Fill in the blank: I have ___ milk left. (a small amount)",
     "options": {
       "A": "some",
       "B": "any",
@@ -114,14 +114,14 @@
       "D": "no"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint 'a small amount' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint 'a small amount' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Words like some/any/no/anything help us talk about quantity when we don’t say an exact number. First check: is the sentence positive, negative, or a question?",
+    "explanation_simple": "Positive → some; negative/questions → any; zero → no.",
+    "explanation_detailed": "Step 1: Check if the sentence is positive (no “not”) or negative (has “not”).\nStep 2: In positive sentences, we often use the word for “some (a little / a few)”.\nStep 3: In negative sentences, we often use the word used with negatives.\nStep 4: If the meaning is “zero”, choose the word that means “nothing / zero”.\nStep 5: Choose the option that matches the sentence type and meaning.",
     "explanation_translations": {}
   },
   {
     "id": 9,
-    "question": "Choose the correct negative: She doesn't have ___ time today.",
+    "question": "Fill in the blank: Choose the correct negative: She doesn't have ___ time today.",
     "options": {
       "A": "some",
       "B": "any",
@@ -129,14 +129,14 @@
       "D": "few"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"any\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"any\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Words like some/any/no/anything help us talk about quantity when we don’t say an exact number. First check: is the sentence positive, negative, or a question?",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: Decide: positive, negative, or question.\nStep 2: Use some/any/no with the correct sentence type.\nStep 3: Avoid double negatives.",
     "explanation_translations": {}
   },
   {
     "id": 10,
-    "question": "Choose the correct sentence: There are ___ people in the room. (only 3-4)",
+    "question": "Fill in the blank: There are ___ people in the room. (only 3-4)",
     "options": {
       "A": "some",
       "B": "no",
@@ -144,9 +144,9 @@
       "D": "a few"
     },
     "correct": "D",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a few\". The hint 'only 3-4' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a few\". The hint 'only 3-4' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Words like some/any/no/anything help us talk about quantity when we don’t say an exact number. First check: is the sentence positive, negative, or a question?",
+    "explanation_simple": "Positive → some; negative/questions → any; zero → no.",
+    "explanation_detailed": "Step 1: Check if the sentence is positive (no “not”) or negative (has “not”).\nStep 2: In positive sentences, we often use the word for “some (a little / a few)”.\nStep 3: In negative sentences, we often use the word used with negatives.\nStep 4: If the meaning is “zero”, choose the word that means “nothing / zero”.\nStep 5: Choose the option that matches the sentence type and meaning.",
     "explanation_translations": {}
   },
   {
@@ -159,9 +159,9 @@
       "D": "I have any brothers."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I have no brothers.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I have no brothers.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks how we use some/any/no in questions and negatives. Look at whether it’s a question, an offer, or a negative sentence.",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: If it is a question, English often uses the question/negative word (not the positive word).\nStep 2: But offers/requests (Would you like…?) often use the positive word because we expect ‘yes’.\nStep 3: If it is negative, use the negative/question word (or use ‘no’ to mean zero).\nStep 4: Avoid double negatives (two negatives in one sentence) because they are not standard in English.\nStep 5: Choose the sentence that follows these rules.",
     "explanation_translations": {}
   },
   {
@@ -174,9 +174,9 @@
       "D": "I didn't saw any birds."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I saw some birds.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I saw some birds.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks some/any in a past positive sentence. Look at whether the sentence is positive and in the past.",
+    "explanation_simple": "Past positive (saw) → often some.",
+    "explanation_detailed": "Step 1: This sentence is about the past (saw).\nStep 2: In positive past sentences, we often use the positive word for quantity (some), not the question/negative word.\nStep 3: Avoid incorrect past forms (like ‘didn't saw’).\nStep 4: Choose the option that matches a correct past positive sentence.",
     "explanation_translations": {}
   },
   {
@@ -189,9 +189,9 @@
       "D": "every"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"any\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"any\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks how we use some/any/no in questions and negatives. Look at whether it’s a question, an offer, or a negative sentence.",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: If it is a question, English often uses the question/negative word (not the positive word).\nStep 2: But offers/requests (Would you like…?) often use the positive word because we expect ‘yes’.\nStep 3: If it is negative, use the negative/question word (or use ‘no’ to mean zero).\nStep 4: Avoid double negatives (two negatives in one sentence) because they are not standard in English.\nStep 5: Choose the sentence that follows these rules.",
     "explanation_translations": {}
   },
   {
@@ -204,9 +204,9 @@
       "D": "I haven't some problems."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I have some problems.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I have some problems.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Words like some/any/no/anything help us talk about quantity when we don’t say an exact number. First check: is the sentence positive, negative, or a question?",
+    "explanation_simple": "Positive → some; negative/questions → any; zero → no.",
+    "explanation_detailed": "Step 1: Check if the sentence is positive (no “not”) or negative (has “not”).\nStep 2: In positive sentences, we often use the word for “some (a little / a few)”.\nStep 3: In negative sentences, we often use the word used with negatives.\nStep 4: If the meaning is “zero”, choose the word that means “nothing / zero”.\nStep 5: Choose the option that matches the sentence type and meaning.",
     "explanation_translations": {}
   },
   {
@@ -219,9 +219,9 @@
       "D": "I don't have anythings."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I don't have anything.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I don't have anything.\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This checks how we use some/any/no in questions and negatives. Look at whether it’s a question, an offer, or a negative sentence.",
+    "explanation_simple": "Positive → often some. Negative/questions → often any. no = zero. Offers/requests often use some.",
+    "explanation_detailed": "Step 1: If it is a question, English often uses the question/negative word (not the positive word).\nStep 2: But offers/requests (Would you like…?) often use the positive word because we expect ‘yes’.\nStep 3: If it is negative, use the negative/question word (or use ‘no’ to mean zero).\nStep 4: Avoid double negatives (two negatives in one sentence) because they are not standard in English.\nStep 5: Choose the sentence that follows these rules.",
     "explanation_translations": {}
   }
 ]

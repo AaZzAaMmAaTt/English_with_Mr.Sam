@@ -68,7 +68,13 @@ def _lesson_url(profile: dict) -> str:
     base = config.SITE_WEB_URL.rstrip("/")
     if not base:
         return ""
-    return f"{base}/{level.lower()}.html"
+    try:
+        next_required = int(profile.get("next_required_lesson_number") or 1)
+    except (TypeError, ValueError):
+        next_required = 1
+    next_required = max(1, next_required)
+    course = level.lower()
+    return f"{base}/lesson.html?course={course}&lesson={next_required}"
 
 
 def _parse_time(raw: str, fallback: dt_time) -> dt_time:

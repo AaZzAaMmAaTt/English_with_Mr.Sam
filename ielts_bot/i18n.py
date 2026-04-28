@@ -4,6 +4,7 @@ BUTTONS = {
     "news": {"ru": "📰 Новости", "en": "📰 News"},
     "calendar": {"ru": "📅 Календарь уроков", "en": "📅 Lesson Calendar"},
     "daily": {"ru": "📆 Материал дня", "en": "📆 Daily Material"},
+    "parents": {"ru": "👨‍👩‍👧 Родители", "en": "👨‍👩‍👧 Parents"},
     "tip": {"ru": "💡 Совет IELTS", "en": "💡 IELTS Tip"},
     "recommend": {"ru": "🎯 Рекомендации", "en": "🎯 Recommendations"},
     "level": {"ru": "📊 Уровень", "en": "📊 Level"},
@@ -29,6 +30,10 @@ BUTTONS = {
     "admin_mark_delete": {"ru": "Delete", "en": "Delete"},
     "tasks": {"ru": "✅ Сегодняшние задачи", "en": "✅ Today Tasks"},
     "back": {"ru": "⬅️ Назад", "en": "⬅️ Back"},
+    "cancel": {"ru": "❌ Отмена", "en": "❌ Cancel"},
+    "add_parent": {"ru": "➕ Добавить родителя", "en": "➕ Add parent"},
+    "mother": {"ru": "👩 Мать", "en": "👩 Mother"},
+    "father": {"ru": "👨 Отец", "en": "👨 Father"},
     "lang_ru": {"ru": "🇷🇺 Русский", "en": "🇷🇺 Russian"},
     "lang_en": {"ru": "🇬🇧 English", "en": "🇬🇧 English"},
     "open_lesson": {"ru": "▶️ Открыть урок", "en": "▶️ Open lesson"},
@@ -54,10 +59,11 @@ STRINGS = {
             "/news — последние новости\n"
             "/menu — открыть меню\n"
             "/profile — профиль\n"
-            "/daily — материал дня\n"
+            "/parents — родители\n"
             "/tip — совет IELTS\n"
             "/recommend — рекомендации по уровню\n"
             "/language — выбрать язык\n"
+            "/logout — выйти из аккаунта\n"
             "/myid — показать chat_id\n"
             "/help — помощь"
         ),
@@ -68,10 +74,11 @@ STRINGS = {
             "/news — latest news\n"
             "/menu — open menu\n"
             "/profile — profile\n"
-            "/daily — daily material\n"
+            "/parents — parents\n"
             "/tip — IELTS tip\n"
             "/recommend — level recommendations\n"
             "/language — choose language\n"
+            "/logout — log out\n"
             "/myid — show chat_id\n"
             "/help — help"
         ),
@@ -87,6 +94,38 @@ STRINGS = {
     "daily_title": {
         "ru": "<b>Материал дня</b>\n{text}",
         "en": "<b>Daily material</b>\n{text}",
+    },
+    "parents_title": {
+        "ru": "<b>Родители</b>\n{items}",
+        "en": "<b>Parents</b>\n{items}",
+    },
+    "parents_empty": {
+        "ru": "Пока не добавлено ни одного родителя.",
+        "en": "No parents added yet.",
+    },
+    "parent_add_phone": {
+        "ru": "Введите номер телефона родителя (например, +998901234567).",
+        "en": "Enter the parent's phone number (e.g., +998901234567).",
+    },
+    "parent_add_first_name": {
+        "ru": "Введите имя родителя.",
+        "en": "Enter the parent's first name.",
+    },
+    "parent_add_last_name": {
+        "ru": "Введите фамилию родителя.",
+        "en": "Enter the parent's last name.",
+    },
+    "parent_add_relation": {
+        "ru": "Кем он/она вам приходится?",
+        "en": "Who is this person to you?",
+    },
+    "parent_phone_error": {
+        "ru": "Пожалуйста, введите корректный номер телефона.",
+        "en": "Please enter a valid phone number.",
+    },
+    "parent_saved": {
+        "ru": "✅ Родитель добавлен.",
+        "en": "✅ Parent saved.",
     },
     "tip_title": {
         "ru": "<b>Совет IELTS</b>\n{text}",
@@ -403,6 +442,30 @@ STRINGS = {
     "phone_request": {
         "ru": "Пожалуйста, отправьте номер телефона текстом (тот, что в аккаунте на платформе).",
         "en": "Please send your phone number as text (the one used on the platform).",
+    },
+    "login_user_not_found": {
+        "ru": "❌ Пользователь с таким номером телефона не найден.\n\nСоздать аккаунт можно здесь: {link}",
+        "en": "❌ No user found with this phone number.\n\nCreate an account here: {link}",
+    },
+    "login_username_request": {
+        "ru": "Введите логин (username) от аккаунта на платформе.",
+        "en": "Enter your platform username (login).",
+    },
+    "login_password_request": {
+        "ru": "Введите пароль от аккаунта.",
+        "en": "Enter your account password.",
+    },
+    "login_invalid": {
+        "ru": "❌ Неверный логин или пароль. Попробуйте еще раз.",
+        "en": "❌ Invalid username or password. Please try again.",
+    },
+    "login_success": {
+        "ru": "✅ Вход выполнен. Добро пожаловать, {name}!",
+        "en": "✅ Logged in. Welcome, {name}!",
+    },
+    "logout_done": {
+        "ru": "✅ Вы вышли из аккаунта в боте.",
+        "en": "✅ You have logged out of the bot account.",
     },
     "phone_button": {
         "ru": "Отправить номер телефона",

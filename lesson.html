@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lesson - English with Mr.Sam</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20260427d">
 </head>
 <body>
 
@@ -27,19 +27,17 @@
       </button>
     </div>
     <div class="lesson-player-actions">
-      <a id="back-lessons-btn" href="a1.html" class="btn lesson-nav-btn">Go to lessons</a>
+      <a id="go-tasks-btn" href="tasks.html?course=a1&lesson=1" class="btn lesson-nav-btn lesson-nav-btn-primary lesson-nav-btn-tasks">Go to tasks</a>
       <a id="lesson-presentation-btn" href="presentation.html?course=a1&lesson=1" class="btn lesson-nav-btn lesson-nav-btn-presentation">Lesson presentation</a>
-      <div class="lesson-actions-right">
-        <button id="lesson-homework-btn" class="btn lesson-nav-btn" type="button">Homework</button>
-        <a id="go-tasks-btn" href="tasks.html?course=a1&lesson=1" class="btn lesson-nav-btn lesson-nav-btn-primary">Go to tasks</a>
-      </div>
+      <button id="lesson-homework-btn" class="btn lesson-nav-btn lesson-nav-btn-homework" type="button">Homework</button>
+      <a id="back-lessons-btn" href="a1.html" class="btn lesson-nav-btn lesson-nav-btn-back">Go to lessons</a>
     </div>
   </section>
 </main>
 
 <div id="homework-gate-modal" class="homework-gate-modal" aria-hidden="true">
   <div class="homework-gate-card" role="dialog" aria-modal="true" aria-labelledby="homework-gate-title">
-    <h3 id="homework-gate-title">Please, do the lessons tasks first</h3>
+    <h3 id="homework-gate-title">Please, do the lesson's tasks first</h3>
     <p>Complete the lesson tasks to unlock homework submission.</p>
     <div class="homework-gate-actions">
       <button id="homework-gate-tasks" type="button" class="btn lesson-nav-btn lesson-nav-btn-primary">Go to tasks</button>
@@ -48,8 +46,7 @@
   </div>
 </div>
 
-<script src="js/presentations.js"></script>
-<script src="js/script.js"></script>
+<script src="js/presentations.js?v=202604061"></script>
+<script src="js/script.js?v=20260427d"></script>
 </body>
 </html>
-

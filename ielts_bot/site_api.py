@@ -148,3 +148,31 @@ def admin_upload_payment_check(payload: dict) -> dict:
     data = dict(payload or {})
     data["admin_username"] = config.SITE_ADMIN_USERNAME
     return _post_json("/api/admin/payment-checks/upload", data, timeout=8.0)
+
+
+def link_telegram_chat_id(phone: str, chat_id: int) -> bool:
+    if not phone or not chat_id:
+        return False
+    token = getattr(config, "BOT_SYNC_TOKEN", "") or ""
+    params = {
+        "phone": phone,
+        "chat_id": str(int(chat_id)),
+    }
+    if token:
+        params["token"] = token
+    url = f"{config.SITE_API_URL}/api/bot/link-chat?{urllib.parse.urlencode(params)}"
+    try:
+        with urllib.request.urlopen(url, timeout=2.5) as response:
+            payload = response.read().decode("utf-8", errors="ignore")
+    except urllib.error.URLError:
+        return False
+    try:
+        data = json.loads(payload)
+    except json.JSONDecodeError:
+        return False
+    return isinstance(data, dict) and data.get("status") == "linked"
+
+
+def bot_login(phone: str, username: str, password: str) -> dict:
+    payload = {"phone": phone or "", "username": username or "", "password": password or ""}
+    return _post_json("/api/bot/login", payload, timeout=4.0)

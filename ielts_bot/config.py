@@ -58,6 +58,7 @@ LONG_POLL_TIMEOUT = int(os.environ.get("BOT_LONG_POLL_TIMEOUT", "30") or 30)
 SITE_API_URL = os.environ.get("SITE_API_URL", "http://127.0.0.1:8000").rstrip("/")
 SITE_WEB_URL = os.environ.get("SITE_WEB_URL", SITE_API_URL).rstrip("/")
 SITE_ADMIN_USERNAME = os.environ.get("SITE_ADMIN_USERNAME", "azamat_admin").strip()
+BOT_SYNC_TOKEN = os.environ.get("BOT_SYNC_TOKEN", "").strip()
 LESSON_NOTIFY_ENABLED = os.environ.get("BOT_LESSON_NOTIFY", "1").strip().lower() not in {"0", "false", "no", "off"}
 LESSON_NOTIFY_WINDOW_MIN = int(os.environ.get("BOT_LESSON_NOTIFY_WINDOW_MIN", "60") or 60)
 LESSON_NOTIFY_POLL_SECONDS = int(os.environ.get("BOT_LESSON_NOTIFY_POLL_SECONDS", "300") or 300)

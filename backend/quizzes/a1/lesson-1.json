@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "question": "What letter comes after D",
+    "question": "Fill in the blank: The letter after D is ___.",
     "options": {
       "A": "C",
       "B": "E",
@@ -9,16 +9,13 @@
       "D": "G"
     },
     "correct": "B",
-    "explanation": "The English alphabet follows a fixed order. Around D the sequence is ... C, D, E, F ..., so the next letter is the one right after D.",
-    "explanation_simple": "Alphabet order goes ... C, D, E ... so the next letter is E.",
-    "explanation_detailed": "The alphabet is a fixed sequence. If you look around D, the letters are C, D, E, F. The letter that comes immediately after D is E, so that option is correct.",
-    "explanation_translations": {
-      "uz": "Ingliz alifbosi qat'iy tartibda ketadi. D atrofida ... C, D, E, F ... bo'ladi, shuning uchun keyingi harf E."
-    }
+    "explanation": "Alphabet order is: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z. Find the letter that comes right after D in this sequence.",
+    "explanation_simple": "Say the alphabet in order and choose the next letter after D.",
+    "explanation_detailed": "Start from A and go forward: A, B, C, D, E, F... When you reach D, the very next letter you say is the one that comes after it. Pick that next letter."
   },
   {
     "id": 2,
-    "question": "What letter comes before N",
+    "question": "Fill in the blank: The letter before N is ___.",
     "options": {
       "A": "L",
       "B": "M",
@@ -26,14 +23,13 @@
       "D": "K"
     },
     "correct": "B",
-    "explanation": "Look at the sequence ... L, M, N, O .... The letter just before N is the one immediately to its left in that sequence.",
-    "explanation_simple": "Look at the sequence ...",
-    "explanation_detailed": "Look at the sequence ... L, M, N, O .... The letter just before N is the one immediately to its left in that sequence.",
-    "explanation_translations": {}
+    "explanation": "Alphabet order is: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z. Find the letter that comes right before N in this sequence.",
+    "explanation_simple": "Find the letter just before N in the alphabet.",
+    "explanation_detailed": "Move through the alphabet: ... L, M, N, O ... The letter before N is the one you say right before N in that sequence."
   },
   {
     "id": 3,
-    "question": "Which of these is the first letter in the English alphabet",
+    "question": "Fill in the blank: The first letter in the English alphabet is ___.",
     "options": {
       "A": "Z",
       "B": "A",
@@ -41,14 +37,13 @@
       "D": "C"
     },
     "correct": "B",
-    "explanation": "The alphabet begins with the first letters in order: A, B, C, D, E. The correct choice is the very first letter of that list.",
-    "explanation_simple": "The alphabet begins with the first letters in order: A, B, C, D, E.",
-    "explanation_detailed": "The alphabet begins with the first letters in order: A, B, C, D, E. The correct choice is the very first letter of that list.",
-    "explanation_translations": {}
+    "explanation": "Alphabet order is: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z. Use this sequence to pick the first letter.",
+    "explanation_simple": "Pick the very first letter of ABC.",
+    "explanation_detailed": "Think of the alphabet you learned: it begins with the first letter in the ABC song. That first letter is the answer."
   },
   {
     "id": 4,
-    "question": "Which of these is the last letter in the English alphabet",
+    "question": "Fill in the blank: The last letter in the English alphabet is ___.",
     "options": {
       "A": "Y",
       "B": "Z",
@@ -56,14 +51,13 @@
       "D": "W"
     },
     "correct": "B",
-    "explanation": "The alphabet ends with the final letters: V, W, X, Y, Z. The correct choice is the last letter in that ending list.",
-    "explanation_simple": "The alphabet ends with the final letters: V, W, X, Y, Z.",
-    "explanation_detailed": "The alphabet ends with the final letters: V, W, X, Y, Z. The correct choice is the last letter in that ending list.",
-    "explanation_translations": {}
+    "explanation": "Alphabet order is: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z. Use this sequence to pick the last letter.",
+    "explanation_simple": "Pick the very last letter of ABC.",
+    "explanation_detailed": "Think of the end of the alphabet: ... V, W, X, Y, Z. The last letter in the whole sequence is the answer."
   },
   {
     "id": 5,
-    "question": "How many letters are there in the English alphabet",
+    "question": "Fill in the blank: There are ___ letters in the English alphabet.",
     "options": {
       "A": "25",
       "B": "26",
@@ -71,10 +65,9 @@
       "D": "28"
     },
     "correct": "B",
-    "explanation": "The English alphabet has a fixed total number of letters. If you count from A to Z, you reach 26, not 25 or 28.",
-    "explanation_simple": "The English alphabet has a fixed total number of letters.",
-    "explanation_detailed": "The English alphabet has a fixed total number of letters. If you count from A to Z, you reach 26, not 25 or 28.",
-    "explanation_translations": {}
+    "explanation": "There are 5 vowels and 21 consonants in English. Add them together to get the total number of letters.",
+    "explanation_simple": "Count A to Z.",
+    "explanation_detailed": "The English alphabet has a fixed number of letters. If you count from A, B, C, all the way to Z, the number you get is the correct total."
   },
   {
     "id": 6,
@@ -86,10 +79,9 @@
       "D": "X, W, Y, Z"
     },
     "correct": "B",
-    "explanation": "Correct order means the letters go forward without jumping back. Scan each option and pick the one that moves step by step forward.",
-    "explanation_simple": "Correct order means the letters go forward without jumping back.",
-    "explanation_detailed": "Correct order means the letters go forward without jumping back. Scan each option and pick the one that moves step by step forward.",
-    "explanation_translations": {}
+    "explanation": "Alphabet order is: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z. Correct order means each letter follows the one before it with no jumps.",
+    "explanation_simple": "Pick the group that goes forward step by step.",
+    "explanation_detailed": "Look at each option and check the order. The correct group is the one where every next letter is the next one in the alphabet."
   },
   {
     "id": 7,
@@ -101,10 +93,9 @@
       "D": "F"
     },
     "correct": "C",
-    "explanation": "Vowels are the letters A, E, I, O, U. Choose the option that is one of these vowels.",
-    "explanation_simple": "Vowels are the letters A, E, I, O, U.",
-    "explanation_detailed": "Vowels are the letters A, E, I, O, U. Choose the option that is one of these vowels.",
-    "explanation_translations": {}
+    "explanation": "A vowel is one of the special letters we say with an open mouth: A, E, I, O, U. Choose the option that is one of these.",
+    "explanation_simple": "Vowels are A, E, I, O, U. Choose one of them.",
+    "explanation_detailed": "Vowels are a small group of five letters: A, E, I, O, U. Look at the options and pick the letter that belongs to this vowel group."
   },
   {
     "id": 8,
@@ -116,10 +107,9 @@
       "D": "T"
     },
     "correct": "D",
-    "explanation": "Consonants are all letters that are not vowels. Pick the option that is not A, E, I, O, or U.",
-    "explanation_simple": "Consonants are all letters that are not vowels.",
-    "explanation_detailed": "Consonants are all letters that are not vowels. Pick the option that is not A, E, I, O, or U.",
-    "explanation_translations": {}
+    "explanation": "A consonant is any letter that is not a vowel. Vowels are A, E, I, O, U.",
+    "explanation_simple": "Pick the letter that is not A, E, I, O, or U.",
+    "explanation_detailed": "First remember the vowels: A, E, I, O, U. A consonant is any other letter. Choose the option that is not in the vowel list."
   },
   {
     "id": 9,
@@ -131,10 +121,9 @@
       "D": "Thirty"
     },
     "correct": "B",
-    "explanation": "Numbers from 13 to 19 end with '-teen'. For 13, the spelling uses 'thir-' + 'teen', not a '-ty' ending.",
-    "explanation_simple": "Numbers from 13 to 19 end with '-teen'.",
-    "explanation_detailed": "Numbers from 13 to 19 end with '-teen'. For 13, the spelling uses 'thir-' + 'teen', not a '-ty' ending.",
-    "explanation_translations": {}
+    "explanation": "Numbers from 13 to 19 end with '-teen'. Use that pattern to choose the correct spelling.",
+    "explanation_simple": "Use the '-teen' ending for 13.",
+    "explanation_detailed": "For 13, English uses the base sound 'thir-' and adds '-teen'. Avoid spellings that use '-ty' or extra letters."
   },
   {
     "id": 10,
@@ -146,10 +135,9 @@
       "D": "Fourtie"
     },
     "correct": "C",
-    "explanation": "The number 40 is a special spelling: it drops the 'u' from 'four'. Any form like 'fourty' or with extra vowels is incorrect.",
-    "explanation_simple": "The number 40 is a special spelling: it drops the 'u' from 'four'.",
-    "explanation_detailed": "The number 40 is a special spelling: it drops the 'u' from 'four'. Any form like 'fourty' or with extra vowels is incorrect.",
-    "explanation_translations": {}
+    "explanation": "The number 40 is spelled with '-ty' and does not use the letter 'u' from 'four'.",
+    "explanation_simple": "40 drops the 'u' from 'four'.",
+    "explanation_detailed": "The correct spelling for 40 uses 'for-' plus '-ty'. It removes the 'u' in 'four' and does not add extra letters."
   },
   {
     "id": 11,
@@ -161,10 +149,9 @@
       "D": "Eighti"
     },
     "correct": "A",
-    "explanation": "Eighty keeps the 'gh' from 'eight' and ends with '-ty'. Avoid spellings with double 't' or extra 'ee'.",
-    "explanation_simple": "Eighty keeps the 'gh' from 'eight' and ends with '-ty'.",
-    "explanation_detailed": "Eighty keeps the 'gh' from 'eight' and ends with '-ty'. Avoid spellings with double 't' or extra 'ee'.",
-    "explanation_translations": {}
+    "explanation": "The number 80 keeps the 'gh' from 'eight' and ends with '-ty'.",
+    "explanation_simple": "Use 'eight' + '-ty'.",
+    "explanation_detailed": "Start with the word 'eight'. Keep the 'gh', then add the ending '-ty'. Avoid double letters or extra vowels."
   },
   {
     "id": 12,
@@ -176,10 +163,9 @@
       "D": "Twenty-seven"
     },
     "correct": "B",
-    "explanation": "After twenty-nine comes the next number in order. The correct option should be the word for 30.",
-    "explanation_simple": "After twenty-nine comes the next number in order.",
-    "explanation_detailed": "After twenty-nine comes the next number in order. The correct option should be the word for 30.",
-    "explanation_translations": {}
+    "explanation": "After twenty-nine, the next number in order is the answer.",
+    "explanation_simple": "Choose the next number after 29.",
+    "explanation_detailed": "Count forward: twenty-seven, twenty-eight, twenty-nine, then the next number. The word for that next number is correct."
   },
   {
     "id": 13,
@@ -191,10 +177,9 @@
       "D": "Twenty-two"
     },
     "correct": "A",
-    "explanation": "Before twenty comes the previous number in order. Choose the word that represents 19.",
-    "explanation_simple": "Before twenty comes the previous number in order.",
-    "explanation_detailed": "Before twenty comes the previous number in order. Choose the word that represents 19.",
-    "explanation_translations": {}
+    "explanation": "Before twenty is the number just one step back.",
+    "explanation_simple": "Choose the number before 20.",
+    "explanation_detailed": "Count backward from twenty: the number right before 20 is the correct choice."
   },
   {
     "id": 14,
@@ -206,10 +191,9 @@
       "D": "Sixthy"
     },
     "correct": "A",
-    "explanation": "Sixty is spelled with an 'x' and ends in '-ty'. Options with extra letters like -ti or -tie are misspellings.",
-    "explanation_simple": "Sixty is spelled with an 'x' and ends in '-ty'.",
-    "explanation_detailed": "Sixty is spelled with an 'x' and ends in '-ty'. Options with extra letters like -ti or -tie are misspellings.",
-    "explanation_translations": {}
+    "explanation": "The word for 60 ends with '-ty' and keeps the 'x' sound from six.",
+    "explanation_simple": "Choose the spelling with '-ty'.",
+    "explanation_detailed": "Start with 'six' and change the ending to '-ty'. The correct spelling keeps the x and does not add extra letters."
   },
   {
     "id": 15,
@@ -221,9 +205,8 @@
       "D": "Fifty"
     },
     "correct": "A",
-    "explanation": "Compare the values: fifty (50), sixty (60), seventy (70), ninety (90). The largest value is 90.",
-    "explanation_simple": "Compare the values: fifty (50), sixty (60), seventy (70), ninety (90).",
-    "explanation_detailed": "Compare the values: fifty (50), sixty (60), seventy (70), ninety (90). The largest value is 90.",
-    "explanation_translations": {}
+    "explanation": "Compare the sizes of the numbers and choose the biggest one.",
+    "explanation_simple": "Pick the largest number word.",
+    "explanation_detailed": "Think of the values: fifty = 50, sixty = 60, seventy = 70, ninety = 90. The largest value is the correct choice."
   }
 ]

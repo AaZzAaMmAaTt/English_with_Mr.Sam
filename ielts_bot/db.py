@@ -49,6 +49,12 @@ def ensure_db():
         cur.execute("ALTER TABLE bot_users ADD COLUMN pending_unlock_at TEXT NOT NULL DEFAULT ''")
     if "last_backlog_count" not in user_columns:
         cur.execute("ALTER TABLE bot_users ADD COLUMN last_backlog_count INTEGER NOT NULL DEFAULT 0")
+    if "site_username" not in user_columns:
+        cur.execute("ALTER TABLE bot_users ADD COLUMN site_username TEXT NOT NULL DEFAULT ''")
+    if "site_role" not in user_columns:
+        cur.execute("ALTER TABLE bot_users ADD COLUMN site_role TEXT NOT NULL DEFAULT ''")
+    if "site_full_name" not in user_columns:
+        cur.execute("ALTER TABLE bot_users ADD COLUMN site_full_name TEXT NOT NULL DEFAULT ''")
     cur.execute("UPDATE bot_users SET news_subscribed = 1 WHERE news_subscribed IS NULL OR news_subscribed != 1")
     cur.execute(
         "UPDATE bot_users SET language = ? WHERE language IS NULL OR language = ''",
@@ -84,6 +90,21 @@ def ensure_db():
         CREATE TABLE IF NOT EXISTS bot_meta (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL DEFAULT ''
+        )
+        """
+    )
+
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS bot_parents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_chat_id INTEGER NOT NULL,
+            phone TEXT NOT NULL DEFAULT '',
+            first_name TEXT NOT NULL DEFAULT '',
+            last_name TEXT NOT NULL DEFAULT '',
+            relation TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (user_chat_id) REFERENCES bot_users(chat_id)
         )
         """
     )
@@ -328,6 +349,63 @@ def set_user_phone(chat_id: int, phone: str):
     conn.close()
 
 
+def get_site_username(chat_id: int) -> str:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT site_username FROM bot_users WHERE chat_id = ?", (chat_id,))
+    row = cur.fetchone()
+    conn.close()
+    if row is None:
+        return ""
+    return str(row["site_username"] or "")
+
+
+def set_site_username(chat_id: int, username: str):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE bot_users SET site_username = ? WHERE chat_id = ?", (username or "", chat_id))
+    conn.commit()
+    conn.close()
+
+
+def get_site_role(chat_id: int) -> str:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT site_role FROM bot_users WHERE chat_id = ?", (chat_id,))
+    row = cur.fetchone()
+    conn.close()
+    if row is None:
+        return ""
+    return str(row["site_role"] or "")
+
+
+def set_site_role(chat_id: int, role: str):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE bot_users SET site_role = ? WHERE chat_id = ?", (role or "", chat_id))
+    conn.commit()
+    conn.close()
+
+
+def get_site_full_name(chat_id: int) -> str:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT site_full_name FROM bot_users WHERE chat_id = ?", (chat_id,))
+    row = cur.fetchone()
+    conn.close()
+    if row is None:
+        return ""
+    return str(row["site_full_name"] or "")
+
+
+def set_site_full_name(chat_id: int, full_name: str):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE bot_users SET site_full_name = ? WHERE chat_id = ?", (full_name or "", chat_id))
+    conn.commit()
+    conn.close()
+
+
 def get_cover_file_id(chat_id: int) -> str:
     conn = get_connection()
     cur = conn.cursor()
@@ -364,3 +442,55 @@ def set_profile_cover_file_id(chat_id: int, file_id: str):
     cur.execute("UPDATE bot_users SET profile_cover_file_id = ? WHERE chat_id = ?", (file_id or "", chat_id))
     conn.commit()
     conn.close()
+
+
+def add_parent(user_chat_id: int, phone: str, first_name: str, last_name: str, relation: str):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        INSERT INTO bot_parents (user_chat_id, phone, first_name, last_name, relation, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (user_chat_id, phone or "", first_name or "", last_name or "", relation or "", utc_now()),
+    )
+    conn.commit()
+    conn.close()
+
+
+def list_parents(user_chat_id: int) -> list[dict]:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT id, phone, first_name, last_name, relation, created_at
+        FROM bot_parents
+        WHERE user_chat_id = ?
+        ORDER BY id DESC
+        """,
+        (user_chat_id,),
+    )
+    rows = [dict(row) for row in cur.fetchall()]
+    conn.close()
+    return rows
+
+
+def delete_parents(user_chat_id: int):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM bot_parents WHERE user_chat_id = ?", (user_chat_id,))
+    conn.commit()
+    conn.close()
+
+
+def logout_user(chat_id: int):
+    """
+    Clears the bound account data for this Telegram chat_id so the user can log in again.
+    """
+    set_user_phone(chat_id, "")
+    set_user_level(chat_id, "")
+    set_site_username(chat_id, "")
+    set_site_role(chat_id, "")
+    set_site_full_name(chat_id, "")
+    delete_parents(chat_id)
+    clear_state(chat_id)

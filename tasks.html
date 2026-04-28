@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tasks - English with Mr.Sam</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20260427d">
 </head>
 <body>
 
@@ -17,6 +17,7 @@
   <section id="tasks-default-card" class="tasks-card">
     <h1 id="tasks-title">Lesson Tasks</h1>
     <p id="tasks-description">Complete the practice tasks for this lesson.</p>
+    <p id="tasks-runtime-status" class="tasks-runtime-status" hidden></p>
     <ol class="tasks-list">
       <li>Watch the full lesson video and take notes.</li>
       <li>Write 5 examples using the new vocabulary.</li>
@@ -24,20 +25,13 @@
       <li>Record a short speaking response (1-2 minutes).</li>
     </ol>
     <a id="tasks-open-lesson-btn" href="lesson.html?course=a1&lesson=1" class="btn lesson-nav-btn lesson-nav-btn-primary">Open lesson video</a>
-  </section>
-
-  <section id="homework-ready-card" class="homework-ready-card" hidden>
-    <h1 id="homework-ready-title">Homework is ready</h1>
-    <p id="homework-ready-text">You have already taken the quiz. You can retake it or open homework from the lesson page.</p>
-    <div class="homework-ready-actions">
-      <button id="homework-ready-retake" type="button" class="btn lesson-nav-btn">Retake quiz</button>
-    </div>
+    <button id="tasks-open-quiz-btn" type="button" class="btn lesson-nav-btn">Open tests</button>
   </section>
 
   <section id="alphabet-quiz-card" class="quiz-card" hidden>
     <div class="quiz-topbar">
       <h1 id="quiz-lesson-title">Lesson Quiz</h1>
-      <a id="quiz-open-lesson-btn" href="lesson.html?course=a1&lesson=1" class="btn lesson-nav-btn">Lesson</a>
+      <a id="quiz-open-lesson-btn" href="lesson.html?course=a1&lesson=1" class="btn lesson-nav-btn btn-exit">Back to lesson</a>
     </div>
 
     <p class="quiz-subtitle">Choose the correct answer and press Check.</p>
@@ -85,43 +79,42 @@
       <h3 id="quiz-explain-title">Explanation</h3>
       <button id="quiz-explain-close" type="button" class="quiz-explain-close" aria-label="Close explanation">Close</button>
     </div>
-    <p id="quiz-explain-question" class="quiz-explain-question"></p>
-    <p id="quiz-explain-text" class="quiz-explain-text"></p>
-    <div class="quiz-explain-actions">
-      <p class="quiz-explain-ask">Нужно проще, подробнее или на другом языке? / Soddaroq, batafsilroq yoki boshqa tilda?</p>
-      <div class="quiz-explain-options">
-        <button type="button" class="btn quiz-explain-option" data-explain-mode="simple">Проще / Osonroq</button>
-        <button type="button" class="btn quiz-explain-option" data-explain-mode="detailed">Подробнее / Batafsil</button>
-        <button type="button" class="btn quiz-explain-option" data-explain-mode="language">Другой язык / Boshqa til</button>
-      </div>
-      <div id="quiz-explain-lang" class="quiz-explain-lang" hidden>
-        <span class="quiz-explain-lang-label">Язык / Til</span>
-        <div class="quiz-explain-lang-dropdown">
-          <button id="quiz-explain-lang-trigger" class="quiz-explain-lang-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
-            <span id="quiz-explain-lang-flag" class="lang-flag lang-flag--eng" aria-hidden="true"></span>
-            <span id="quiz-explain-lang-value" class="quiz-explain-lang-value">Eng</span>
-            <span class="quiz-explain-lang-caret" aria-hidden="true"></span>
-          </button>
-          <div id="quiz-explain-lang-list" class="quiz-explain-lang-list" role="listbox">
-            <button type="button" class="quiz-explain-lang-item" data-lang="en" role="option">
-              <span class="lang-flag lang-flag--eng" aria-hidden="true"></span>
-              <span>Eng</span>
-            </button>
-            <button type="button" class="quiz-explain-lang-item" data-lang="ru" role="option">
-              <span class="lang-flag lang-flag--rus" aria-hidden="true"></span>
-              <span>Rus</span>
-            </button>
-            <button type="button" class="quiz-explain-lang-item" data-lang="uz" role="option">
-              <span class="lang-flag lang-flag--uzb" aria-hidden="true"></span>
-              <span>Uzb</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <p id="quiz-explain-note" class="quiz-explain-note" aria-live="polite"></p>
-    </div>
-  </div>
-</div>
+	    <p id="quiz-explain-question" class="quiz-explain-question"></p>
+	    <p id="quiz-explain-text" class="quiz-explain-text"></p>
+	    <div class="quiz-explain-actions">
+	      <p class="quiz-explain-ask">Need it simpler or more detailed?</p>
+	      <div class="quiz-explain-options">
+	        <button type="button" class="btn quiz-explain-option" data-explain-mode="simple">Simpler</button>
+	        <button type="button" class="btn quiz-explain-option" data-explain-mode="detailed">More detail</button>
+	      </div>
+	      <div id="quiz-explain-lang" class="quiz-explain-lang">
+	        <span class="quiz-explain-lang-label">Language</span>
+	        <div class="quiz-explain-lang-dropdown">
+	          <button id="quiz-explain-lang-trigger" class="quiz-explain-lang-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+	            <span id="quiz-explain-lang-flag" class="lang-flag lang-flag--eng" aria-hidden="true"></span>
+	            <span id="quiz-explain-lang-value" class="quiz-explain-lang-value">Eng</span>
+	            <span class="quiz-explain-lang-caret" aria-hidden="true"></span>
+	          </button>
+	          <div id="quiz-explain-lang-list" class="quiz-explain-lang-list" role="listbox">
+	            <button type="button" class="quiz-explain-lang-item" data-lang="en" role="option">
+	              <span class="lang-flag lang-flag--eng" aria-hidden="true"></span>
+	              <span>Eng</span>
+	            </button>
+	            <button type="button" class="quiz-explain-lang-item" data-lang="ru" role="option">
+	              <span class="lang-flag lang-flag--rus" aria-hidden="true"></span>
+	              <span>Русский</span>
+	            </button>
+	            <button type="button" class="quiz-explain-lang-item" data-lang="uz" role="option">
+	              <span class="lang-flag lang-flag--uzb" aria-hidden="true"></span>
+	              <span>O'zbekcha</span>
+	            </button>
+	          </div>
+	        </div>
+	      </div>
+	      <p id="quiz-explain-note" class="quiz-explain-note" aria-live="polite"></p>
+	    </div>
+	  </div>
+	</div>
 
 <div id="homework-modal" class="homework-modal" aria-hidden="true">
   <div class="homework-card" role="dialog" aria-modal="true" aria-labelledby="homework-title">
@@ -136,19 +129,31 @@
       <label class="homework-label" for="homework-text">Homework text</label>
       <textarea id="homework-text" class="homework-textarea" rows="6" placeholder="Write your answer here..."></textarea>
       <label class="homework-label" for="homework-file">Attach file (optional)</label>
-      <input id="homework-file" class="homework-file" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp3,.m4a,.wav">
+      <input id="homework-file" class="homework-file" type="file" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp3,.m4a,.wav">
+      <div id="homework-file-list" class="homework-file-list" hidden></div>
       <p class="homework-hint">Formats: PDF, DOC/DOCX, JPG/PNG, MP3/M4A/WAV. Max 10 MB.</p>
     </div>
     <div class="homework-actions">
       <button id="homework-upload-btn" type="button" class="btn homework-upload-btn">Submit homework</button>
-      <a id="homework-back-btn" href="a1.html" class="btn homework-back-btn">Back to lessons</a>
     </div>
     <p id="homework-status" class="homework-status" aria-live="polite"></p>
     <p id="homework-note" class="homework-note">Send your homework for feedback.</p>
   </div>
 </div>
 
-<script src="js/script.js"></script>
+<script src="js/script.js?v=20260427d"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
 

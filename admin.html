@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - English with Mr.Sam</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20260427d">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
       <h1>Admin Panel</h1>
       <p>Signed in as <strong id="admin-user">-</strong></p>
       <div class="admin-search-wrap">
-        <input id="admin-username-search" type="text" class="admin-username-search" placeholder="Search by username">
+        <input id="admin-username-search" type="text" class="admin-username-search" placeholder="Search by username or phone">
       </div>
       <div class="admin-head-actions">
         <button id="admin-search-btn" type="button" class="btn admin-search-btn">Search</button>
@@ -117,14 +117,19 @@
 
 <div id="admin-create-modal" class="admin-create-modal" aria-hidden="true">
   <div class="admin-create-modal-card">
-    <h3>Create User</h3>
-    <form id="admin-create-form" class="admin-create-form">
-      <input id="admin-create-name" type="text" placeholder="Name" readonly>
-      <input id="admin-create-phone" type="tel" placeholder="Phone" readonly>
-      <select id="admin-create-level" disabled>
-        <option value="">Level</option>
-        <option value="a1">A1</option>
-        <option value="a1-express">A1 Express</option>
+	    <h3 id="admin-create-title">Create User</h3>
+	    <form id="admin-create-form" class="admin-create-form">
+	      <select id="admin-create-role">
+	        <option value="student">Student</option>
+	        <option value="mentor">Mentor</option>
+	      </select>
+	      <input id="admin-create-name" type="text" placeholder="Name" readonly>
+	      <input id="admin-create-second-name" type="text" placeholder="Second Name" class="is-hidden">
+	      <input id="admin-create-phone" type="tel" placeholder="Phone" readonly>
+	      <select id="admin-create-level" disabled>
+	        <option value="">Level</option>
+	        <option value="a1">A1</option>
+	        <option value="a1-express">A1 Express</option>
         <option value="a2">A2</option>
         <option value="a2-express">A2 Express</option>
         <option value="b1">B1</option>
@@ -132,26 +137,31 @@
         <option value="b2">B2</option>
         <option value="b2-express">B2 Express</option>
       </select>
-      <div id="admin-create-schedule-group" class="admin-create-schedule-group">
-        <select id="admin-create-schedule">
-          <option value="mwf">Mon / Wed / Fri</option>
-          <option value="tthsa">Tue / Thu / Sat</option>
-        </select>
-        <p class="admin-create-hint">Express levels unlock daily.</p>
-      </div>
-      <input id="admin-create-username" type="text" placeholder="Username" readonly>
-      <input id="admin-create-password" type="text" placeholder="Password" readonly>
-      <button type="button" id="admin-create-payment-approval" class="btn admin-payment-approval-btn">
-        Payment Approval
-      </button>
-      <p id="admin-create-message" class="admin-create-message"></p>
-      <div class="admin-create-actions">
-        <button type="button" id="admin-create-cancel" class="btn admin-create-cancel-btn">Cancel</button>
-        <button type="submit" id="admin-create-submit" class="btn admin-create-submit-btn">Create</button>
-      </div>
-    </form>
-  </div>
-</div>
+	      <div id="admin-create-schedule-group" class="admin-create-schedule-group">
+	        <select id="admin-create-schedule">
+	          <option value="mwf">Mon / Wed / Fri</option>
+	          <option value="tthsa">Tue / Thu / Sat</option>
+	        </select>
+	        <p class="admin-create-hint">Express levels unlock daily.</p>
+	      </div>
+	      <select id="admin-create-mentor" class="is-hidden">
+	        <option value="">Choose Mentor</option>
+	      </select>
+	      <input id="admin-create-username" type="text" placeholder="Username" readonly>
+	      <input id="admin-create-password" type="text" placeholder="Password" readonly>
+	      <input id="admin-create-profile-photo" type="file" accept=".png,.jpg,.jpeg,.webp" hidden>
+	      <button type="button" id="admin-create-payment-approval" class="btn admin-payment-approval-btn">
+	        Payment Approval
+	      </button>
+	      <p id="admin-create-profile-photo-message" class="admin-create-message"></p>
+	      <p id="admin-create-message" class="admin-create-message"></p>
+	      <div class="admin-create-actions">
+	        <button type="button" id="admin-create-cancel" class="btn admin-create-cancel-btn">Cancel</button>
+	        <button type="submit" id="admin-create-submit" class="btn admin-create-submit-btn">Create</button>
+	      </div>
+	    </form>
+	  </div>
+	</div>
 
 <div id="admin-edit-modal" class="admin-create-modal" aria-hidden="true">
   <div class="admin-create-modal-card">
@@ -175,7 +185,7 @@
         <option value="tthsa">Tue / Thu / Sat</option>
       </select>
       <p class="admin-create-hint">Express levels unlock daily.</p>
-      <input id="admin-edit-username" type="text" placeholder="Username" disabled>
+      <input id="admin-edit-username" type="text" placeholder="Username" required>
       <input id="admin-edit-password" type="text" placeholder="New password (optional)" minlength="6">
       <p id="admin-edit-message" class="admin-create-message"></p>
       <div class="admin-create-actions">
@@ -183,6 +193,20 @@
         <button type="submit" id="admin-edit-submit" class="btn admin-create-submit-btn">Save</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div id="admin-user-info-modal" class="admin-create-modal admin-user-info-modal" aria-hidden="true">
+  <div class="admin-create-modal-card admin-user-info-card">
+    <div class="admin-manage-topbar">
+      <h3 id="admin-user-info-title">More Info</h3>
+      <div class="admin-mentors-top-actions">
+        <button type="button" id="admin-user-info-edit" class="btn admin-payment-approval-btn">Edit</button>
+        <button type="button" id="admin-user-info-close" class="btn admin-manage-close-btn">Close</button>
+      </div>
+    </div>
+    <p id="admin-user-info-note" class="admin-delete-note">Select a user to view details.</p>
+    <div id="admin-user-info-body" class="admin-user-info-body"></div>
   </div>
 </div>
 
@@ -320,7 +344,10 @@
   <div class="admin-create-queue-modal-card">
     <div class="admin-create-queue-topbar">
       <h3>Create Users</h3>
-      <button type="button" id="admin-create-queue-close" class="btn admin-create-queue-close-btn">Close</button>
+      <div class="admin-create-queue-top-actions">
+        <button type="button" id="admin-create-queue-manual" class="btn admin-create-queue-manual-btn">Add manually</button>
+        <button type="button" id="admin-create-queue-close" class="btn admin-create-queue-close-btn">Close</button>
+      </div>
     </div>
     <p id="admin-create-queue-note" class="admin-create-queue-note">Incoming purchase requests.</p>
     <div id="admin-create-queue-list" class="admin-create-queue-list"></div>
@@ -529,7 +556,19 @@
   </div>
 </div>
 
-<script src="js/script.js"></script>
+<script src="js/script.js?v=20260427d"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
 

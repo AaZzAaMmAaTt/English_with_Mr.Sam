@@ -70,11 +70,28 @@ def _store_profile_cover_file_id(chat_id: int, result: Optional[dict]):
 
 
 def render_start_message(chat_id: int, first_name: str, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
+    site_full_name = ""
+    try:
+        site_full_name = str(db.get_site_full_name(chat_id) or "").strip()
+    except Exception:
+        site_full_name = ""
+    if not site_full_name:
+        try:
+            phone = db.get_user_phone(chat_id)
+            profile = site_api.fetch_profile_by_phone(phone)
+            if isinstance(profile, dict):
+                fetched_name = str(profile.get("full_name") or "").strip()
+                if fetched_name:
+                    db.set_site_full_name(chat_id, fetched_name)
+                    site_full_name = fetched_name
+        except Exception:
+            pass
+    display_name = site_full_name or first_name or ("друг" if lang == "ru" else "friend")
     text = i18n.t(
         lang,
         "start_caption",
         bot_name=escape_html(config.BOT_NAME),
-        name=escape_html(first_name or ("друг" if lang == "ru" else "friend")),
+        name=escape_html(display_name),
     )
     markup = keyboards.build_start_keyboard(lang)
     local_cover = os.path.join(config.BASE_DIR.parent, "assets", "images", "cover.jpg")
@@ -89,7 +106,8 @@ def render_start_message(chat_id: int, first_name: str, lang: str, message_id: O
 
 def handle_start(chat_id: int, first_name: str, lang: str):
     phone = db.get_user_phone(chat_id)
-    if not phone:
+    site_username = db.get_site_username(chat_id)
+    if not phone or not site_username:
         db.set_state(chat_id, "awaiting_phone")
         telegram_api.send_message(
             chat_id,
@@ -103,6 +121,26 @@ def handle_start(chat_id: int, first_name: str, lang: str):
 def handle_help(chat_id: int, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
     text = i18n.t(lang, "help")
     _replace_with_text(chat_id, message_id, has_photo, text, reply_markup=keyboards.build_back_to_menu_keyboard(lang))
+
+
+def handle_logout(chat_id: int, lang: str):
+    db.logout_user(chat_id)
+    db.set_state(chat_id, "awaiting_phone")
+    telegram_api.send_message(
+        chat_id,
+        i18n.t(lang, "logout_done") + "\n\n" + i18n.t(lang, "phone_request"),
+        reply_markup=keyboards.build_remove_keyboard(lang),
+    )
+
+
+def handle_login(chat_id: int, lang: str, first_name: str = ""):
+    db.logout_user(chat_id)
+    db.set_state(chat_id, "awaiting_phone")
+    telegram_api.send_message(
+        chat_id,
+        i18n.t(lang, "phone_request"),
+        reply_markup=keyboards.build_remove_keyboard(lang),
+    )
 
 
 def render_menu(chat_id: int, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
@@ -654,6 +692,75 @@ def handle_lesson_calendar(chat_id: int, lang: str):
 def handle_daily_material(chat_id: int, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
     text = i18n.t(lang, "daily_title", text=escape_html(content.pick_daily_material()))
     _replace_with_text(chat_id, message_id, has_photo, text, reply_markup=keyboards.build_back_to_menu_keyboard(lang))
+
+
+def _normalize_phone_input(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value:
+        return ""
+    cleaned = re.sub(r"[()\s\-._]", "", value)
+    if cleaned.startswith("00"):
+        cleaned = "+" + cleaned[2:]
+    cleaned = re.sub(r"[^+\d]", "", cleaned)
+    if cleaned.count("+") > 1:
+        cleaned = cleaned.replace("+", "")
+        cleaned = "+" + cleaned
+    if cleaned.startswith("+"):
+        cleaned = "+" + re.sub(r"\D", "", cleaned[1:])
+    else:
+        cleaned = re.sub(r"\D", "", cleaned)
+    return cleaned
+
+
+def _format_parent_line(item: dict, lang: str) -> str:
+    relation = str(item.get("relation") or "").strip().lower()
+    relation_label = ""
+    if relation == "mother":
+        relation_label = i18n.label(lang, "mother")
+    elif relation == "father":
+        relation_label = i18n.label(lang, "father")
+    first_name = escape_html(str(item.get("first_name") or "").strip())
+    last_name = escape_html(str(item.get("last_name") or "").strip())
+    phone = escape_html(str(item.get("phone") or "").strip())
+    full_name = " ".join([p for p in [first_name, last_name] if p]).strip() or "—"
+    head = f"{relation_label} — {full_name}" if relation_label else full_name
+    return f"• {head}\n  {phone}" if phone else f"• {head}"
+
+
+def render_parents(chat_id: int, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
+    phone = db.get_user_phone(chat_id)
+    if not phone:
+        _set_state_with_payload(chat_id, "awaiting_phone", {"next": "parents"})
+        telegram_api.send_message(
+            chat_id,
+            i18n.t(lang, "phone_request"),
+            reply_markup=keyboards.build_remove_keyboard(lang),
+        )
+        return
+    items = db.list_parents(chat_id)
+    if not items:
+        body = i18n.t(lang, "parents_empty")
+    else:
+        body = "\n\n".join([_format_parent_line(item, lang) for item in items[:10]])
+    text = i18n.t(lang, "parents_title", items=body)
+    _replace_with_text(
+        chat_id,
+        message_id,
+        has_photo,
+        text,
+        reply_markup=keyboards.build_parents_root_keyboard(lang),
+    )
+
+
+def start_add_parent_flow(chat_id: int, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
+    phone = db.get_user_phone(chat_id)
+    if not phone:
+        _set_state_with_payload(chat_id, "awaiting_phone", {"next": "parents"})
+        _replace_with_text(chat_id, message_id, has_photo, i18n.t(lang, "phone_request"), reply_markup=keyboards.build_remove_keyboard(lang))
+        return
+    _set_state_with_payload(chat_id, "awaiting_parent_phone", {})
+    text = i18n.t(lang, "parent_add_phone")
+    _replace_with_text(chat_id, message_id, has_photo, text, reply_markup=keyboards.build_parents_cancel_keyboard(lang))
 
 
 def handle_tip(chat_id: int, lang: str, message_id: Optional[int] = None, has_photo: bool = False):
@@ -1405,13 +1512,79 @@ def handle_text(chat_id: int, role: str, first_name: str, text: str, lang: str):
         handle_admin_create_user_input(chat_id, lang, state.get("state") or "", normalized)
         return
     if state and state.get("state") == "awaiting_phone":
-        digits = re.sub(r"\D", "", normalized)
+        phone_norm = _normalize_phone_input(normalized)
+        digits = re.sub(r"\D", "", phone_norm)
         if len(digits) < 7:
             telegram_api.send_message(chat_id, i18n.t(lang, "phone_error"), reply_markup=keyboards.build_remove_keyboard(lang))
             return
-        db.set_user_phone(chat_id, normalized)
+        profile = None
+        try:
+            profile = site_api.fetch_profile_by_phone(phone_norm)
+        except Exception:
+            profile = None
+        if not profile:
+            link = f"{config.SITE_WEB_URL.rstrip('/')}/index.html"
+            telegram_api.send_message(
+                chat_id,
+                i18n.t(lang, "login_user_not_found", link=escape_html(link)),
+                reply_markup=keyboards.build_remove_keyboard(lang),
+            )
+            db.set_state(chat_id, "awaiting_phone")
+            return
+        payload = _load_state_payload(state)
+        payload["phone"] = phone_norm
+        _set_state_with_payload(chat_id, "awaiting_login_username", payload)
+        telegram_api.send_message(
+            chat_id,
+            i18n.t(lang, "login_username_request"),
+            reply_markup=keyboards.build_remove_keyboard(lang),
+        )
+        return
+    if state and state.get("state") == "awaiting_login_username":
+        if not normalized:
+            telegram_api.send_message(chat_id, i18n.t(lang, "login_username_request"), reply_markup=keyboards.build_remove_keyboard(lang))
+            return
+        payload = _load_state_payload(state)
+        payload["username"] = normalized
+        _set_state_with_payload(chat_id, "awaiting_login_password", payload)
+        telegram_api.send_message(chat_id, i18n.t(lang, "login_password_request"), reply_markup=keyboards.build_remove_keyboard(lang))
+        return
+    if state and state.get("state") == "awaiting_login_password":
+        payload = _load_state_payload(state)
+        phone = str(payload.get("phone") or "").strip()
+        username = str(payload.get("username") or "").strip()
+        password = normalized
+        if not phone or not username or not password:
+            telegram_api.send_message(chat_id, i18n.t(lang, "login_password_request"), reply_markup=keyboards.build_remove_keyboard(lang))
+            return
+        try:
+            result = site_api.bot_login(phone, username, password)
+        except Exception:
+            result = {"error": "request_failed"}
+        if not isinstance(result, dict) or result.get("error"):
+            _set_state_with_payload(chat_id, "awaiting_login_username", {"phone": phone})
+            telegram_api.send_message(chat_id, i18n.t(lang, "login_invalid"), reply_markup=keyboards.build_remove_keyboard(lang))
+            return
+        db.set_user_phone(chat_id, phone)
+        db.set_site_username(chat_id, str(result.get("username") or username))
+        db.set_site_role(chat_id, str(result.get("role") or ""))
+        site_full_name = str(result.get("full_name") or "").strip()
+        if site_full_name:
+            db.set_site_full_name(chat_id, site_full_name)
+        level = str(result.get("level") or "").strip()
+        if level:
+            db.set_user_level(chat_id, level)
+        try:
+            site_api.link_telegram_chat_id(phone, chat_id)
+        except Exception:
+            pass
         db.clear_state(chat_id)
-        telegram_api.send_message(chat_id, i18n.t(lang, "phone_saved"), reply_markup=keyboards.build_remove_keyboard(lang))
+        display_name = site_full_name or first_name or ""
+        telegram_api.send_message(
+            chat_id,
+            i18n.t(lang, "login_success", name=escape_html(display_name)),
+            reply_markup=keyboards.build_remove_keyboard(lang),
+        )
         render_start_message(chat_id, first_name, lang)
         return
     if state and state.get("state") == "awaiting_news_text":
@@ -1424,6 +1597,38 @@ def handle_text(chat_id: int, role: str, first_name: str, text: str, lang: str):
             telegram_api.send_message(chat_id, i18n.t(lang, "access_denied"), reply_markup=keyboards.build_remove_keyboard(lang))
             return
         save_news_from_message(chat_id, first_name or "", normalized, lang)
+        return
+
+    if state and state.get("state") == "awaiting_parent_phone":
+        phone = _normalize_phone_input(normalized)
+        digits = re.sub(r"\D", "", phone)
+        if len(digits) < 7:
+            telegram_api.send_message(chat_id, i18n.t(lang, "parent_phone_error"), reply_markup=keyboards.build_parents_cancel_keyboard(lang))
+            return
+        payload = _load_state_payload(state)
+        payload["phone"] = phone
+        _set_state_with_payload(chat_id, "awaiting_parent_first_name", payload)
+        telegram_api.send_message(chat_id, i18n.t(lang, "parent_add_first_name"), reply_markup=keyboards.build_parents_cancel_keyboard(lang))
+        return
+
+    if state and state.get("state") == "awaiting_parent_first_name":
+        if not normalized:
+            telegram_api.send_message(chat_id, i18n.t(lang, "parent_add_first_name"), reply_markup=keyboards.build_parents_cancel_keyboard(lang))
+            return
+        payload = _load_state_payload(state)
+        payload["first_name"] = normalized
+        _set_state_with_payload(chat_id, "awaiting_parent_last_name", payload)
+        telegram_api.send_message(chat_id, i18n.t(lang, "parent_add_last_name"), reply_markup=keyboards.build_parents_cancel_keyboard(lang))
+        return
+
+    if state and state.get("state") == "awaiting_parent_last_name":
+        if not normalized:
+            telegram_api.send_message(chat_id, i18n.t(lang, "parent_add_last_name"), reply_markup=keyboards.build_parents_cancel_keyboard(lang))
+            return
+        payload = _load_state_payload(state)
+        payload["last_name"] = normalized
+        _set_state_with_payload(chat_id, "awaiting_parent_relation", payload)
+        telegram_api.send_message(chat_id, i18n.t(lang, "parent_add_relation"), reply_markup=keyboards.build_parent_relation_keyboard(lang))
         return
 
     if state and state.get("state") == "awaiting_level":
@@ -1457,8 +1662,8 @@ def handle_text(chat_id: int, role: str, first_name: str, text: str, lang: str):
     if i18n.matches(normalized, "news"):
         handle_news(chat_id, lang)
         return
-    if i18n.matches(normalized, "daily"):
-        handle_daily_material(chat_id, lang)
+    if i18n.matches(normalized, "parents"):
+        render_parents(chat_id, lang)
         return
     if i18n.matches(normalized, "tip"):
         handle_tip(chat_id, lang)
@@ -1529,8 +1734,14 @@ def handle_command(chat_id: int, role: str, first_name: str, username: str, text
     if command == "/start":
         handle_start(chat_id, first_name, lang)
         return
+    if command == "/login":
+        handle_login(chat_id, lang, first_name)
+        return
     if command == "/help":
         handle_help(chat_id, lang)
+        return
+    if command == "/logout":
+        handle_logout(chat_id, lang)
         return
     if command == "/myid":
         telegram_api.send_message(chat_id, i18n.t(lang, "chat_id", chat_id=chat_id))
@@ -1549,6 +1760,9 @@ def handle_command(chat_id: int, role: str, first_name: str, username: str, text
         return
     if command == "/daily":
         handle_daily_material(chat_id, lang)
+        return
+    if command == "/parents":
+        render_parents(chat_id, lang)
         return
     if command == "/tip":
         handle_tip(chat_id, lang)
@@ -1673,6 +1887,9 @@ def handle_update(update: dict):
             render_profile(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
             return
         if data == "open_menu":
+            state = db.get_state(int(chat_id))
+            if state and state.get("state", "").startswith("awaiting_parent_"):
+                db.clear_state(int(chat_id))
             render_menu(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
             return
         if data == "menu_calendar":
@@ -1695,8 +1912,36 @@ def handle_update(update: dict):
         if data == "menu_news":
             handle_news(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
             return
-        if data == "menu_daily":
-            handle_daily_material(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
+        if data == "menu_parents":
+            render_parents(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
+            return
+        if data == "parents_add":
+            start_add_parent_flow(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
+            return
+        if data == "parents_cancel":
+            state = db.get_state(int(chat_id))
+            if state and state.get("state", "").startswith("awaiting_parent_"):
+                db.clear_state(int(chat_id))
+            render_parents(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
+            return
+        if data.startswith("parents_rel:"):
+            relation = (data.split(":", 1)[1] or "").strip().lower()
+            state = db.get_state(int(chat_id))
+            if not (state and state.get("state") == "awaiting_parent_relation"):
+                render_parents(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
+                return
+            payload = _load_state_payload(state)
+            phone = str(payload.get("phone") or "").strip()
+            first = str(payload.get("first_name") or "").strip()
+            last = str(payload.get("last_name") or "").strip()
+            if relation not in ("mother", "father") or not phone or not first or not last:
+                db.clear_state(int(chat_id))
+                render_parents(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
+                return
+            db.add_parent(int(chat_id), phone, first, last, relation)
+            db.clear_state(int(chat_id))
+            telegram_api.send_message(chat_id, i18n.t(lang, "parent_saved"), reply_markup=keyboards.build_remove_keyboard(lang))
+            render_parents(int(chat_id), lang, message_id=message_id, has_photo=has_photo)
             return
         if data == "menu_tip":
             handle_tip(int(chat_id), lang, message_id=message_id, has_photo=has_photo)

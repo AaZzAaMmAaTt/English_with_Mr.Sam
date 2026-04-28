@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "question": "Choose the correct word: There are ___ students in the class. (a lot of)",
+    "question": "Fill in the blank: There are ___ students in the class. (a lot of)",
     "options": {
       "A": "much",
       "B": "many",
@@ -9,14 +9,14 @@
       "D": "few"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"many\". The hint 'a lot of' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"many\". The hint 'a lot of' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a lot of”. Choose the word used with countable plural nouns or the word used with uncountable nouns.",
+    "explanation_simple": "Countable plural → “many”; uncountable → “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (students? time? coffee?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If you can count them (1, 2, 3…), it is countable → use the word for countable plural.\nStep 4: If you cannot count it as 1/2/3 (like time, water, money), it is uncountable → use the word for uncountable.\nStep 5: The hint in brackets (like “a lot of”) tells you the meaning: big quantity.",
     "explanation_translations": {}
   },
   {
     "id": 2,
-    "question": "Choose the correct sentence: I don't have ___ time today.",
+    "question": "Fill in the blank: I don't have ___ time today.",
     "options": {
       "A": "many",
       "B": "much",
@@ -24,14 +24,14 @@
       "D": "a few"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a lot of”. Choose the word used with countable plural nouns or the word used with uncountable nouns.",
+    "explanation_simple": "Countable plural → “many”; uncountable → “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (students? time? coffee?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If you can count them (1, 2, 3…), it is countable → use the word for countable plural.\nStep 4: If you cannot count it as 1/2/3 (like time, water, money), it is uncountable → use the word for uncountable.\nStep 5: Now choose the option that matches the noun type.",
     "explanation_translations": {}
   },
   {
     "id": 3,
-    "question": "Choose the correct word: She has ___ friends. She is very sociable.",
+    "question": "Fill in the blank: She has ___ friends. She is very sociable.",
     "options": {
       "A": "few",
       "B": "a few",
@@ -39,14 +39,14 @@
       "D": "little"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a few\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a few\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds positive/OK (for example: ‘I can buy it’), choose the form with “a”.\nStep 6: Now pick the option that matches both the noun type and the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 4,
-    "question": "Choose the correct sentence: He doesn't drink ___ coffee.",
+    "question": "Fill in the blank: He doesn't drink ___ coffee.",
     "options": {
       "A": "many",
       "B": "few",
@@ -54,14 +54,14 @@
       "D": "little"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a lot of”. Choose the word used with countable plural nouns or the word used with uncountable nouns.",
+    "explanation_simple": "Countable plural → “many”; uncountable → “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (students? time? coffee?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If you can count them (1, 2, 3…), it is countable → use the word for countable plural.\nStep 4: If you cannot count it as 1/2/3 (like time, water, money), it is uncountable → use the word for uncountable.\nStep 5: Now choose the option that matches the noun type.",
     "explanation_translations": {}
   },
   {
     "id": 5,
-    "question": "Choose the correct sentence: There are ___ apples on the table. (some)",
+    "question": "Fill in the blank: There are ___ apples on the table. (some)",
     "options": {
       "A": "a few",
       "B": "few",
@@ -69,14 +69,14 @@
       "D": "much"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a few\". The hint 'some' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a few\". The hint 'some' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds positive/OK (for example: ‘I can buy it’), choose the form with “a”.\nStep 6: The hint in brackets helps you choose the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 6,
-    "question": "Choose the correct word: There is ___ water in the bottle. (50–100 ml)",
+    "question": "Fill in the blank: There is ___ water in the bottle. (50–100 ml)",
     "options": {
       "A": "much",
       "B": "little",
@@ -84,14 +84,14 @@
       "D": "few"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint '50–100 ml' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint '50–100 ml' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds positive/OK (for example: ‘I can buy it’), choose the form with “a”.\nStep 6: The hint in brackets helps you choose the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 7,
-    "question": "Choose the correct word: I have ___ money. I can buy the book. (enough)",
+    "question": "Fill in the blank: I have ___ money. I can buy the book. (enough)",
     "options": {
       "A": "few",
       "B": "little",
@@ -99,14 +99,14 @@
       "D": "many"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint 'enough' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint 'enough' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds positive/OK (for example: ‘I can buy it’), choose the form with “a”.\nStep 6: The hint in brackets helps you choose the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 8,
-    "question": "Choose the correct word: There are ___ cars on the road today. It's very quiet.",
+    "question": "Fill in the blank: There are ___ cars on the road today. It's very quiet.",
     "options": {
       "A": "few",
       "B": "a few",
@@ -114,14 +114,14 @@
       "D": "little"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"few\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"few\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds negative/not enough (for example: ‘almost none’ or ‘very quiet’), choose the form without “a”.\nStep 6: Now pick the option that matches both the noun type and the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 9,
-    "question": "Choose the correct sentence: We don't have ___ homework today.",
+    "question": "Fill in the blank: We don't have ___ homework today.",
     "options": {
       "A": "many",
       "B": "much",
@@ -129,14 +129,14 @@
       "D": "little"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a lot of”. Choose the word used with countable plural nouns or the word used with uncountable nouns.",
+    "explanation_simple": "Countable plural → “many”; uncountable → “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (students? time? coffee?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If you can count them (1, 2, 3…), it is countable → use the word for countable plural.\nStep 4: If you cannot count it as 1/2/3 (like time, water, money), it is uncountable → use the word for uncountable.\nStep 5: Now choose the option that matches the noun type.",
     "explanation_translations": {}
   },
   {
     "id": 10,
-    "question": "Choose the correct question: ___ milk do you drink every morning",
+    "question": "Fill in the blank: ___ milk do you drink every morning",
     "options": {
       "A": "How many",
       "B": "How much",
@@ -144,14 +144,14 @@
       "D": "How little"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How much\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a question phrase about quantity. First decide if the noun is countable (friends/people) or uncountable (milk/money).",
+    "explanation_simple": "Countable plural → question with “many”; uncountable → question with “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (friends? milk? people?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose the question phrase used for counting.\nStep 4: If it is uncountable, choose the question phrase used for amount.\nStep 5: Choose the phrase that matches the noun type.",
     "explanation_translations": {}
   },
   {
     "id": 11,
-    "question": "Choose the correct question: ___ friends do you have",
+    "question": "Fill in the blank: ___ friends do you have",
     "options": {
       "A": "How many",
       "B": "How much",
@@ -159,14 +159,14 @@
       "D": "How few"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How many\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How many\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a question phrase about quantity. First decide if the noun is countable (friends/people) or uncountable (milk/money).",
+    "explanation_simple": "Countable plural → question with “many”; uncountable → question with “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (friends? milk? people?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose the question phrase used for counting.\nStep 4: If it is uncountable, choose the question phrase used for amount.\nStep 5: Choose the phrase that matches the noun type.",
     "explanation_translations": {}
   },
   {
     "id": 12,
-    "question": "Choose the correct question: ___ is this T-shirt' (price)",
+    "question": "Fill in the blank: ___ is this T-shirt' (price)",
     "options": {
       "A": "How many",
       "B": "How much",
@@ -174,14 +174,14 @@
       "D": "What many"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How much\". The hint 'price' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How much\". The hint 'price' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a question phrase about quantity. First decide if the noun is countable (friends/people) or uncountable (milk/money).",
+    "explanation_simple": "Countable plural → question with “many”; uncountable → question with “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (friends? milk? people?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose the question phrase used for counting.\nStep 4: If it is uncountable, choose the question phrase used for amount.\nStep 5: The hint in brackets helps (for example: price → an amount, not a number of items).",
     "explanation_translations": {}
   },
   {
     "id": 13,
-    "question": "Choose the correct sentence: He has ___ problems at school. (almost none)",
+    "question": "Fill in the blank: He has ___ problems at school. (almost none)",
     "options": {
       "A": "a few",
       "B": "few",
@@ -189,14 +189,14 @@
       "D": "much"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"few\". The hint 'almost none' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"few\". The hint 'almost none' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds negative/not enough (for example: ‘almost none’ or ‘very quiet’), choose the form without “a”.\nStep 6: The hint in brackets helps you choose the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 14,
-    "question": "Choose the correct sentence: She added ___ sugar to her tea. (a small amount)",
+    "question": "Fill in the blank: She added ___ sugar to her tea. (a small amount)",
     "options": {
       "A": "few",
       "B": "a few",
@@ -204,14 +204,14 @@
       "D": "much"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint 'a small amount' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"a little\". The hint 'a small amount' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a word meaning “a small number/amount”. First decide: countable (friends/apples) or uncountable (water/money). Then decide if the meaning is “some (ok)” or “almost none (not enough)”.",
+    "explanation_simple": "Countable: few/a few. Uncountable: little/a little. “a” = some (positive). No “a” = almost none (negative).",
+    "explanation_detailed": "Step 1: Find the noun after the blank.\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose a word for a small number.\nStep 4: If it is uncountable, choose a word for a small amount.\nStep 5: If the sentence sounds positive/OK (for example: ‘I can buy it’), choose the form with “a”.\nStep 6: The hint in brackets helps you choose the meaning.",
     "explanation_translations": {}
   },
   {
     "id": 15,
-    "question": "Choose the correct question: ___ people are there in your family",
+    "question": "Fill in the blank: ___ people are there in your family",
     "options": {
       "A": "How much",
       "B": "How many",
@@ -219,9 +219,9 @@
       "D": "How few"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How many\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"How many\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "This blank needs a question phrase about quantity. First decide if the noun is countable (friends/people) or uncountable (milk/money).",
+    "explanation_simple": "Countable plural → question with “many”; uncountable → question with “much”.",
+    "explanation_detailed": "Step 1: Find the noun after the blank (friends? milk? people?).\nStep 2: Countable nouns can be counted (one, two, three). Uncountable nouns are like a “mass” (water, milk, time) and we do not count them as 1/2/3 in basic English.\nStep 3: If it is countable and plural, choose the question phrase used for counting.\nStep 4: If it is uncountable, choose the question phrase used for amount.\nStep 5: Choose the phrase that matches the noun type.",
     "explanation_translations": {}
   }
 ]

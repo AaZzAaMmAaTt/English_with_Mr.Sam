@@ -1,11 +1,19 @@
 import subprocess
 import sys
+import os
+from pathlib import Path
 
 
 def main():
     python = sys.executable
-    server = subprocess.Popen([python, "backend\\server.py"])
-    bot = subprocess.Popen([python, "ielts_bot\\main.py"])
+    repo_root = Path(__file__).resolve().parent
+
+    # Run the HTTP server on a stable port for phone testing.
+    env = dict(os.environ)
+    env["EWMS_PORT"] = "8020"
+
+    server = subprocess.Popen([python, "backend\\server.py"], cwd=str(repo_root), env=env)
+    bot = subprocess.Popen([python, "ielts_bot\\main.py"], cwd=str(repo_root))
     try:
         server.wait()
         bot.wait()
@@ -16,3 +24,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+ 

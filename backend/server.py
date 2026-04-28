@@ -10,10 +10,11 @@ import shutil
 import sqlite3
 import urllib.error
 import urllib.request
+import zipfile
 from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse, urlencode, unquote
+from urllib.parse import parse_qs, quote, urlparse, urlencode, unquote
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -55,10 +56,16 @@ if LEGACY_DB_PATH.exists() and not DB_PATH.exists():
         shutil.copy2(LEGACY_DB_PATH, DB_PATH)
     except OSError:
         pass
-HOST = "0.0.0.0"
-PORT = 8000
+HOST = os.environ.get("EWMS_HOST", "0.0.0.0")
+try:
+    PORT = int(os.environ.get("EWMS_PORT") or os.environ.get("PORT") or "8000")
+except (TypeError, ValueError):
+    PORT = 8000
 SESSION_TTL_DAYS = 7
 LESSON_UNLOCK_INTERVAL_DAYS = 2
+ADMIN_EDIT_PIN_TTL_MINUTES = 10
+ADMIN_EDIT_PIN_MAX_ATTEMPTS = 5
+ADMIN_EDIT_BAN_MINUTES = 30
 LOCAL_TZ_OFFSET_HOURS = int(os.environ.get("EWMS_TZ_OFFSET_HOURS", "5"))
 LOCAL_TZ = timezone(timedelta(hours=LOCAL_TZ_OFFSET_HOURS))
 HOMEWORK_MAX_BYTES = 10 * 1024 * 1024
@@ -91,6 +98,86 @@ COURSE_LESSON_COUNTS = {
     "b2": 8,
 }
 EXPRESS_LEVEL_SUFFIXES = ("-express", " express", "_express")
+TRANSLATE_URL = os.environ.get("EWMS_TRANSLATE_URL", "").strip()
+TRANSLATE_API_KEY = os.environ.get("EWMS_TRANSLATE_API_KEY", "").strip()
+
+
+def _normalize_translate_endpoint(url: str) -> str:
+    cleaned = str(url or "").strip()
+    if not cleaned:
+        return ""
+    if cleaned.endswith("/translate"):
+        return cleaned
+    if cleaned.endswith("/"):
+        return f"{cleaned}translate"
+    return f"{cleaned}/translate"
+
+
+def translate_text(text: str, target_lang: str, source_lang: str = "en") -> str | None:
+    endpoint = _normalize_translate_endpoint(TRANSLATE_URL)
+    payload_text = str(text or "").strip()
+    if not endpoint or not payload_text:
+        return None
+    payload = {
+        "q": payload_text,
+        "source": str(source_lang or "en").strip() or "en",
+        "target": str(target_lang or "").strip().lower(),
+        "format": "text",
+    }
+    if TRANSLATE_API_KEY:
+        payload["api_key"] = TRANSLATE_API_KEY
+    data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    request = urllib.request.Request(
+        endpoint,
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "EWMS/1.0",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            raw = response.read().decode("utf-8", errors="replace")
+            decoded = json.loads(raw) if raw else {}
+    except (OSError, urllib.error.URLError, json.JSONDecodeError):
+        return None
+    translated = str((decoded or {}).get("translatedText", "") or "").strip()
+    return translated or None
+
+
+def _first_sentence(text: str) -> str:
+    cleaned = str(text or "").strip()
+    if not cleaned:
+        return ""
+    match = re.match(r"^(.*?[.!?])\s", cleaned)
+    return match.group(1).strip() if match else cleaned
+
+
+def _normalize_explanation_translation_map(raw) -> dict[str, dict[str, str]]:
+    normalized: dict[str, dict[str, str]] = {}
+    if not isinstance(raw, dict):
+        return normalized
+    for lang_key, value in raw.items():
+        lang = str(lang_key or "").strip().lower()
+        if not lang:
+            continue
+        if isinstance(value, str):
+            text = value.strip()
+            if text:
+                normalized[lang] = {"main": text}
+            continue
+        if isinstance(value, dict):
+            modes: dict[str, str] = {}
+            for mode_key, mode_value in value.items():
+                mode = str(mode_key or "").strip().lower()
+                text = str(mode_value or "").strip()
+                if mode and text:
+                    modes[mode] = text
+            if modes:
+                normalized[lang] = modes
+    return normalized
 
 
 def parse_chat_ids(raw_value: str):
@@ -199,9 +286,25 @@ def send_telegram_message(text: str) -> bool:
 
 ADMIN_USERNAME = "azamat_admin"
 ADMIN_PASSWORD = "AA20080608zz"
+ADMIN_EDIT_PERMANENT_CODE = (os.environ.get("EWMS_ADMIN_EDIT_CODE") or "").strip() or ADMIN_PASSWORD
 
 QUIZ_DIR = BASE_DIR / "quizzes"
+COVER_UPLOAD_DIR = BASE_DIR / "uploads" / "covers"
+CERTIFICATE_UPLOAD_DIR = BASE_DIR / "uploads" / "certificates"
 PRESENTATIONS_DIR = BASE_DIR.parent / "assets" / "presentations"
+LESSON_OVERRIDES_DIR = DEFAULT_DB_DIR / "lesson_overrides"
+CERTIFICATE_OVERRIDES_PATH = DEFAULT_DB_DIR / "certificates_overrides.json"
+SUBSCRIPTION_OVERRIDES_PATH = DEFAULT_DB_DIR / "subscriptions_overrides.json"
+TEAM_OVERRIDES_PATH = DEFAULT_DB_DIR / "team_overrides.json"
+TEAM_AVATAR_UPLOAD_DIR = DEFAULT_DB_DIR / "uploads" / "team"
+MAX_COVER_BYTES = 5 * 1024 * 1024
+MAX_PRESENTATION_BYTES = 25 * 1024 * 1024
+ALLOWED_COVER_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+
+COVER_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+CERTIFICATE_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+LESSON_OVERRIDES_DIR.mkdir(parents=True, exist_ok=True)
+TEAM_AVATAR_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 PRESENTATIONS_BY_COURSE = {
     "a1": {
         1: "abc_and_numbers.pdf",
@@ -230,6 +333,90 @@ PRESENTATIONS_BY_COURSE = {
     "b2": {},
 }
 
+DEFAULT_TEAM_MEMBERS: list[dict] = [
+    {
+        "id": "seed_mrsam",
+        "order": 0,
+        "header": "Mr.Sam - Founder & Lead Teacher",
+        "subheader": "IELTS instructor with practical exam strategy, CEFR-based planning, and clear step-by-step guidance from beginner to upper-intermediate levels.",
+        "achievements": [
+            "Practical exam strategies for IELTS and CEFR.",
+            "Clear step-by-step planning for beginners.",
+        ],
+        "telegram_username": "English_with_MrSam_bot",
+        "instagram_username": "english_with_mrsam",
+        "whatsapp_phone": "+998933503459",
+        # Served by the web root (frontend), not by the API.
+        "avatar_url": "/assets/images/Mr_Sam_ava.jpg",
+        "avatar_file": "",
+        "avatar_original_name": "",
+    },
+    {
+        "id": "seed_azamat",
+        "order": 1,
+        "header": "Azamat - Co-founder and Developer",
+        "subheader": "Leads development, ensures code quality, and turns ideas into working products. Creator of the platform English with Mr.Sam and other projects.",
+        "achievements": [
+            "Builds platform features end-to-end.",
+            "Maintains quality and stability.",
+        ],
+        "telegram_username": "",
+        "instagram_username": "",
+        "whatsapp_phone": "",
+        "avatar_url": "",
+        "avatar_file": "",
+        "avatar_original_name": "",
+    },
+    {
+        "id": "seed_shokhjakhon",
+        "order": 2,
+        "header": "Shokhjakhon - Head of Mentors",
+        "subheader": "Ensures every student develops fluency, confidence, and natural pronunciation across all mentors' work.",
+        "achievements": [
+            "Mentor quality control and training.",
+            "Focus on fluency and pronunciation.",
+        ],
+        "telegram_username": "",
+        "instagram_username": "",
+        "whatsapp_phone": "",
+        "avatar_url": "",
+        "avatar_file": "",
+        "avatar_original_name": "",
+    },
+    {
+        "id": "seed_javohir",
+        "order": 3,
+        "header": "Javohir - Head of Design",
+        "subheader": "Ensures every visual element is clear, functional, and aesthetically strong.",
+        "achievements": [
+            "Design system and UI consistency.",
+            "Improves usability across pages.",
+        ],
+        "telegram_username": "",
+        "instagram_username": "",
+        "whatsapp_phone": "",
+        "avatar_url": "",
+        "avatar_file": "",
+        "avatar_original_name": "",
+    },
+    {
+        "id": "seed_umarbek",
+        "order": 4,
+        "header": "Umarbek - Head of Student Support",
+        "subheader": "Ensures every student feels heard, helped, and supported throughout their journey.",
+        "achievements": [
+            "Fast student support and follow-up.",
+            "Improves student onboarding.",
+        ],
+        "telegram_username": "",
+        "instagram_username": "",
+        "whatsapp_phone": "",
+        "avatar_url": "",
+        "avatar_file": "",
+        "avatar_original_name": "",
+    },
+]
+
 
 def normalize_level(value: str):
     raw = str(value or "").strip().lower()
@@ -242,6 +429,153 @@ def normalize_level(value: str):
     return raw, is_express
 
 
+def resolve_mentor_profile_id(cur, mentor_user_row) -> int:
+    phone = str((mentor_user_row["phone"] if "phone" in mentor_user_row.keys() else "") or "").strip()
+    if phone:
+        cur.execute("SELECT id FROM mentors WHERE phone = ? ORDER BY id DESC LIMIT 1", (phone,))
+        row = cur.fetchone()
+        if row is not None:
+            return int(row["id"] or 0)
+    full_name = str((mentor_user_row["full_name"] if "full_name" in mentor_user_row.keys() else "") or "").strip()
+    if full_name:
+        cur.execute("SELECT id FROM mentors WHERE LOWER(name) = LOWER(?) ORDER BY id DESC LIMIT 1", (full_name,))
+        row = cur.fetchone()
+        if row is not None:
+            return int(row["id"] or 0)
+    return 0
+
+
+def atomic_write_text(path: Path, text: str) -> None:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    tmp.replace(path)
+
+
+def get_overrides_path(course: str) -> Path | None:
+    course_key, _ = normalize_level(course)
+    if course_key not in COURSE_LESSON_COUNTS:
+        return None
+    return LESSON_OVERRIDES_DIR / f"{course_key}.json"
+
+
+def load_lesson_overrides(course: str) -> list[dict]:
+    path = get_overrides_path(course)
+    if path is None or not path.exists():
+        return []
+    try:
+        raw_text = path.read_text(encoding="utf-8-sig")
+        payload = json.loads(raw_text)
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(payload, list):
+        return []
+    items: list[dict] = []
+    for item in payload:
+        if isinstance(item, dict):
+            items.append(item)
+    return items
+
+
+def save_lesson_overrides(course: str, items: list[dict]) -> bool:
+    path = get_overrides_path(course)
+    if path is None:
+        return False
+    try:
+        atomic_write_text(path, json.dumps(items, ensure_ascii=False, indent=2))
+        return True
+    except OSError:
+        return False
+
+
+def load_certificate_overrides() -> list[dict]:
+    path = CERTIFICATE_OVERRIDES_PATH
+    if not path.exists():
+        return []
+    try:
+        raw_text = path.read_text(encoding="utf-8-sig")
+        payload = json.loads(raw_text)
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(payload, list):
+        return []
+    items: list[dict] = []
+    for item in payload:
+        if isinstance(item, dict):
+            items.append(item)
+    return items
+
+
+def save_certificate_overrides(items: list[dict]) -> bool:
+    try:
+        atomic_write_text(CERTIFICATE_OVERRIDES_PATH, json.dumps(items, ensure_ascii=False, indent=2))
+        return True
+    except OSError:
+        return False
+
+
+def load_subscription_overrides() -> list[dict]:
+    path = SUBSCRIPTION_OVERRIDES_PATH
+    if not path.exists():
+        return []
+    try:
+        raw_text = path.read_text(encoding="utf-8-sig")
+        payload = json.loads(raw_text)
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(payload, list):
+        return []
+    items: list[dict] = []
+    for item in payload:
+        if isinstance(item, dict):
+            items.append(item)
+    return items
+
+
+def save_subscription_overrides(items: list[dict]) -> bool:
+    try:
+        atomic_write_text(SUBSCRIPTION_OVERRIDES_PATH, json.dumps(items, ensure_ascii=False, indent=2))
+        return True
+    except OSError:
+        return False
+
+
+def load_team_overrides() -> list[dict]:
+    path = TEAM_OVERRIDES_PATH
+    if not path.exists():
+        return list(DEFAULT_TEAM_MEMBERS)
+    try:
+        raw_text = path.read_text(encoding="utf-8-sig")
+        payload = json.loads(raw_text)
+    except (OSError, json.JSONDecodeError):
+        return list(DEFAULT_TEAM_MEMBERS)
+    if not isinstance(payload, list):
+        return list(DEFAULT_TEAM_MEMBERS)
+    items: list[dict] = []
+    for item in payload:
+        if isinstance(item, dict):
+            items.append(item)
+    return items
+
+
+def save_team_overrides(items: list[dict]) -> bool:
+    try:
+        atomic_write_text(TEAM_OVERRIDES_PATH, json.dumps(items, ensure_ascii=False, indent=2))
+        return True
+    except OSError:
+        return False
+
+def is_admin_user(conn: sqlite3.Connection, username: str) -> bool:
+    cleaned = str(username or "").strip()
+    if not cleaned:
+        return False
+    cur = conn.cursor()
+    cur.execute("SELECT role FROM users WHERE username = ?", (cleaned,))
+    row = cur.fetchone()
+    if row is None:
+        return False
+    return str(row["role"] or "").strip().lower() == "admin"
+
+
 def normalize_phone(value: str) -> str:
     raw = str(value or "").strip()
     if not raw:
@@ -250,6 +584,82 @@ def normalize_phone(value: str) -> str:
     if not digits:
         return ""
     return f"+{digits}"
+
+
+def sanitize_team_member(raw: dict, order: int) -> dict | None:
+    if not isinstance(raw, dict):
+        return None
+    member_id = str(raw.get("id", "") or "").strip()
+    if not member_id:
+        return None
+    header = str(raw.get("header", "") or "").strip()
+    subheader = str(raw.get("subheader", "") or "").strip()
+    if not header:
+        return None
+    if len(header) > 160:
+        header = header[:160].rstrip()
+    if len(subheader) > 700:
+        subheader = subheader[:700].rstrip()
+
+    achievements_raw = raw.get("achievements", [])
+    achievements: list[str] = []
+    if isinstance(achievements_raw, list):
+        for item in achievements_raw:
+            text = str(item or "").strip()
+            if not text:
+                continue
+            if len(text) > 160:
+                text = text[:160].rstrip()
+            achievements.append(text)
+            if len(achievements) >= 24:
+                break
+    elif isinstance(achievements_raw, str):
+        for line in achievements_raw.splitlines():
+            text = line.strip()
+            if not text:
+                continue
+            if len(text) > 160:
+                text = text[:160].rstrip()
+            achievements.append(text)
+            if len(achievements) >= 24:
+                break
+
+    telegram_username = str(raw.get("telegram_username", "") or raw.get("telegram", "") or "").strip().lstrip("@")
+    instagram_username = str(raw.get("instagram_username", "") or raw.get("instagram", "") or "").strip().lstrip("@")
+    whatsapp_phone_raw = str(raw.get("whatsapp_phone", "") or raw.get("whatsapp", "") or "").strip()
+
+    if telegram_username and re.fullmatch(r"[A-Za-z0-9_]{4,32}", telegram_username) is None:
+        telegram_username = ""
+    if instagram_username and re.fullmatch(r"[A-Za-z0-9_.]{1,32}", instagram_username) is None:
+        instagram_username = ""
+
+    whatsapp_phone = normalize_phone(whatsapp_phone_raw) if whatsapp_phone_raw else ""
+
+    avatar_url = str(raw.get("avatar_url", "") or "").strip()
+    if len(avatar_url) > 500:
+        avatar_url = avatar_url[:500].rstrip()
+    avatar_file = str(raw.get("avatar_file", "") or "").strip()
+    if avatar_file and ("/" in avatar_file or "\\" in avatar_file):
+        avatar_file = ""
+    if avatar_file and re.fullmatch(r"[A-Za-z0-9._-]{1,180}", avatar_file) is None:
+        avatar_file = ""
+    avatar_original_name = str(raw.get("avatar_original_name", "") or "").strip()
+    if len(avatar_original_name) > 180:
+        avatar_original_name = avatar_original_name[:180].rstrip()
+
+    return {
+        "id": member_id,
+        "order": int(order),
+        "header": header,
+        "subheader": subheader,
+        "achievements": achievements,
+        "telegram_username": telegram_username,
+        "instagram_username": instagram_username,
+        "whatsapp_phone": whatsapp_phone,
+        "avatar_url": avatar_url,
+        "avatar_file": avatar_file,
+        "avatar_original_name": avatar_original_name,
+    }
 
 
 def detect_device_type(user_agent: str) -> str:
@@ -550,12 +960,28 @@ def get_presentation_path(course: str, lesson_number: int):
         return None
     if lesson_num <= 0:
         return None
+
+    # Admin override upload: assets/presentations/<course>/lesson-<n>.pdf
+    override = PRESENTATIONS_DIR / course_key / f"lesson-{lesson_num}.pdf"
+    if override.exists():
+        return override
+
     course_map = PRESENTATIONS_BY_COURSE.get(course_key, {})
     filename = course_map.get(lesson_num)
-    if not filename:
-        return None
-    path = PRESENTATIONS_DIR / filename
-    return path if path.exists() else None
+    if filename:
+        path = PRESENTATIONS_DIR / filename
+        if path.exists():
+            return path
+        course_path = PRESENTATIONS_DIR / course_key / filename
+        if course_path.exists():
+            return course_path
+
+    # Fallback: allow the simple per-lesson naming convention:
+    # assets/presentations/<course>/lesson-<n>.pdf
+    fallback = PRESENTATIONS_DIR / course_key / f"lesson-{lesson_num}.pdf"
+    if fallback.exists():
+        return fallback
+    return None
 
 
 def load_quiz_questions(course: str, lesson_number: int):
@@ -597,13 +1023,30 @@ def load_quiz_questions(course: str, lesson_number: int):
         if isinstance(raw_translations, dict):
             for key, value in raw_translations.items():
                 lang_key = str(key or "").strip().lower()
-                lang_text = str(value or "").strip()
-                if lang_key and lang_text:
-                    translations[lang_key] = lang_text
+                if not lang_key:
+                    continue
+                if isinstance(value, str):
+                    lang_text = value.strip()
+                    if lang_text:
+                        translations[lang_key] = lang_text
+                    continue
+                if isinstance(value, dict):
+                    normalized: dict[str, str] = {}
+                    for mode_key, mode_value in value.items():
+                        mode = str(mode_key or "").strip().lower()
+                        text = str(mode_value or "").strip()
+                        if mode and text:
+                            normalized[mode] = text
+                    if normalized:
+                        translations[lang_key] = normalized
         for lang_key in ("ru", "uz", "en"):
             inline_text = str(item.get(f"explanation_{lang_key}", "")).strip()
             if inline_text:
-                translations.setdefault(lang_key, inline_text)
+                existing = translations.get(lang_key)
+                if existing is None:
+                    translations[lang_key] = inline_text
+                elif isinstance(existing, dict):
+                    existing.setdefault("main", inline_text)
         questions.append(
             {
                 "id": qid,
@@ -891,9 +1334,9 @@ def fetch_mentor_for_level(cur, level_label: str):
         return None
     cur.execute(
         """
-        SELECT id, name, level, phone, email, telegram_username, info, avatar_path, avatar_name
+        SELECT id, name, level, phone, email, telegram_username, instagram_username, info, avatar_path, avatar_name
         FROM mentors
-        WHERE level = ?
+        WHERE LOWER(level) = LOWER(?)
         ORDER BY id DESC
         LIMIT 1
         """,
@@ -912,6 +1355,39 @@ def fetch_mentor_for_level(cur, level_label: str):
         "phone": row["phone"] or "",
         "email": row["email"] or "",
         "telegram_username": row["telegram_username"] or "",
+        "instagram_username": row["instagram_username"] or "",
+        "info": row["info"] or "",
+        "avatar_url": avatar_url,
+    }
+
+
+def fetch_mentor_by_id(cur, mentor_id: int):
+    safe_id = int(mentor_id or 0)
+    if safe_id <= 0:
+        return None
+    cur.execute(
+        """
+        SELECT id, name, level, phone, email, telegram_username, instagram_username, info, avatar_path, avatar_name
+        FROM mentors
+        WHERE id = ?
+        LIMIT 1
+        """,
+        (safe_id,),
+    )
+    row = cur.fetchone()
+    if row is None:
+        return None
+    avatar_url = ""
+    if row["avatar_path"]:
+        avatar_url = f"/api/mentors/avatar?id={row['id']}"
+    return {
+        "id": row["id"],
+        "name": row["name"],
+        "level": row["level"],
+        "phone": row["phone"] or "",
+        "email": row["email"] or "",
+        "telegram_username": row["telegram_username"] or "",
+        "instagram_username": row["instagram_username"] or "",
         "info": row["info"] or "",
         "avatar_url": avatar_url,
     }
@@ -934,7 +1410,10 @@ def build_progress_summary(cur, user_row):
     if course not in COURSE_LESSON_COUNTS:
         achievements = build_achievements(level_label, 0, 0, 0, 0.0, earned_keys=earned_keys)
         sync_user_achievements(cur, user_row["id"], achievements, earned_keys=earned_keys)
-        mentor = fetch_mentor_for_level(cur, level_label)
+        mentor_id = int((user_row["mentor_id"] if "mentor_id" in user_row.keys() else 0) or 0)
+        mentor = fetch_mentor_by_id(cur, mentor_id) if mentor_id > 0 else None
+        if mentor is None:
+            mentor = fetch_mentor_for_level(cur, level_label)
         return {
             "level": level_label,
             "average_percent": 0.0,
@@ -981,6 +1460,16 @@ def build_progress_summary(cur, user_row):
         (user_row["id"], course),
     )
     completed_lessons = {int(row["lesson_number"]) for row in cur.fetchall()}
+
+    cur.execute(
+        """
+        SELECT DISTINCT lesson_number
+        FROM task_completions
+        WHERE user_id = ? AND course = ? AND task_key = 'lesson_completed'
+        """,
+        (user_row["id"], course),
+    )
+    strict_completed_lessons = {int(row["lesson_number"]) for row in cur.fetchall()}
     cur.execute(
         """
         SELECT DISTINCT lesson_number
@@ -1001,6 +1490,31 @@ def build_progress_summary(cur, user_row):
         now_local,
         total_lessons,
     )
+
+    next_required_lesson_number = total_lessons + 1
+    if total_lessons > 0:
+        for lesson_number in range(1, total_lessons + 1):
+            if lesson_number not in strict_completed_lessons:
+                next_required_lesson_number = lesson_number
+                break
+
+    next_lesson_available = bool(total_lessons > 0 and next_required_lesson_number <= available_lessons)
+    next_lesson_unlock_seconds = 0
+    next_lesson_unlock_at = ""
+    if (
+        total_lessons > 0
+        and 1 <= next_required_lesson_number <= total_lessons
+        and next_required_lesson_number > available_lessons
+    ):
+        next_required_unlock_dt = get_lesson_unlock_at(
+            access_started_local,
+            level_label,
+            schedule_raw,
+            next_required_lesson_number,
+        )
+        if next_required_unlock_dt is not None:
+            next_lesson_unlock_seconds = int(max(0.0, (next_required_unlock_dt - now_local).total_seconds()))
+            next_lesson_unlock_at = to_utc_iso(to_utc(next_required_unlock_dt))
     next_unlock_seconds = 0
     next_unlock_at = ""
     if total_lessons > 0 and available_lessons < total_lessons:
@@ -1023,7 +1537,10 @@ def build_progress_summary(cur, user_row):
         earned_keys=earned_keys,
     )
     sync_user_achievements(cur, user_row["id"], achievements, earned_keys=earned_keys)
-    mentor = fetch_mentor_for_level(cur, level_label)
+    mentor_id = int((user_row["mentor_id"] if "mentor_id" in user_row.keys() else 0) or 0)
+    mentor = fetch_mentor_by_id(cur, mentor_id) if mentor_id > 0 else None
+    if mentor is None:
+        mentor = fetch_mentor_for_level(cur, level_label)
 
     return {
         "level": level_label,
@@ -1035,8 +1552,13 @@ def build_progress_summary(cur, user_row):
         "total_lessons": total_lessons,
         "available_lessons": int(available_lessons or 0),
         "completed_lessons_list": sorted(completed_lessons),
+        "completed_lessons_strict_list": sorted(strict_completed_lessons),
         "next_unlock_seconds": next_unlock_seconds,
         "next_unlock_at": next_unlock_at,
+        "next_required_lesson_number": int(next_required_lesson_number or 0),
+        "next_lesson_available": bool(next_lesson_available),
+        "next_lesson_unlock_seconds": int(next_lesson_unlock_seconds or 0),
+        "next_lesson_unlock_at": next_lesson_unlock_at,
         "achievements": achievements,
         "mentor": mentor,
     }
@@ -1054,13 +1576,16 @@ def init_db():
             level TEXT NOT NULL DEFAULT '',
             lesson_schedule TEXT NOT NULL DEFAULT '',
             phone TEXT NOT NULL DEFAULT '',
+            mentor_id INTEGER NOT NULL DEFAULT 0,
             username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             password_hash TEXT NOT NULL,
             salt TEXT NOT NULL,
             role TEXT NOT NULL DEFAULT 'student',
             created_at TEXT NOT NULL,
-            access_started_at TEXT NOT NULL DEFAULT ''
+            access_started_at TEXT NOT NULL DEFAULT '',
+            avatar_path TEXT NOT NULL DEFAULT '',
+            avatar_name TEXT NOT NULL DEFAULT ''
         )
         """
     )
@@ -1075,6 +1600,8 @@ def init_db():
         cur.execute("ALTER TABLE users ADD COLUMN lesson_schedule TEXT NOT NULL DEFAULT ''")
     if "phone" not in existing_columns:
         cur.execute("ALTER TABLE users ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
+    if "mentor_id" not in existing_columns:
+        cur.execute("ALTER TABLE users ADD COLUMN mentor_id INTEGER NOT NULL DEFAULT 0")
     if "password" not in existing_columns:
         cur.execute("ALTER TABLE users ADD COLUMN password TEXT")
         cur.execute("UPDATE users SET password = '' WHERE password IS NULL")
@@ -1083,6 +1610,10 @@ def init_db():
         cur.execute(
             "UPDATE users SET access_started_at = created_at WHERE access_started_at IS NULL OR access_started_at = ''"
         )
+    if "avatar_path" not in existing_columns:
+        cur.execute("ALTER TABLE users ADD COLUMN avatar_path TEXT NOT NULL DEFAULT ''")
+    if "avatar_name" not in existing_columns:
+        cur.execute("ALTER TABLE users ADD COLUMN avatar_name TEXT NOT NULL DEFAULT ''")
     cur.execute(
         """
         UPDATE users
@@ -1105,17 +1636,18 @@ def init_db():
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS mentors (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            level TEXT NOT NULL,
-            phone TEXT NOT NULL DEFAULT '',
-            email TEXT NOT NULL DEFAULT '',
-            telegram_username TEXT NOT NULL DEFAULT '',
-            info TEXT NOT NULL DEFAULT '',
-            avatar_path TEXT NOT NULL DEFAULT '',
-            avatar_name TEXT NOT NULL DEFAULT '',
-            created_at TEXT NOT NULL
-        )
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    level TEXT NOT NULL,
+                    phone TEXT NOT NULL DEFAULT '',
+                    email TEXT NOT NULL DEFAULT '',
+                    telegram_username TEXT NOT NULL DEFAULT '',
+                    instagram_username TEXT NOT NULL DEFAULT '',
+                    info TEXT NOT NULL DEFAULT '',
+                    avatar_path TEXT NOT NULL DEFAULT '',
+                    avatar_name TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL
+                )
         """
     )
     cur.execute("PRAGMA table_info(mentors)")
@@ -1130,6 +1662,8 @@ def init_db():
         cur.execute("ALTER TABLE mentors ADD COLUMN email TEXT NOT NULL DEFAULT ''")
     if "telegram_username" not in mentor_columns:
         cur.execute("ALTER TABLE mentors ADD COLUMN telegram_username TEXT NOT NULL DEFAULT ''")
+    if "instagram_username" not in mentor_columns:
+        cur.execute("ALTER TABLE mentors ADD COLUMN instagram_username TEXT NOT NULL DEFAULT ''")
     if "info" not in mentor_columns:
         cur.execute("ALTER TABLE mentors ADD COLUMN info TEXT NOT NULL DEFAULT ''")
     if "avatar_path" not in mentor_columns:
@@ -1144,6 +1678,19 @@ def init_db():
         SET phone = '+' || phone
         WHERE phone != ''
           AND phone NOT LIKE '+%'
+        """
+    )
+
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS admin_edit_pins (
+            admin_username TEXT PRIMARY KEY,
+            pin_hash TEXT NOT NULL DEFAULT '',
+            salt TEXT NOT NULL DEFAULT '',
+            expires_at TEXT NOT NULL DEFAULT '',
+            attempts_left INTEGER NOT NULL DEFAULT 0,
+            banned_until TEXT NOT NULL DEFAULT ''
+        )
         """
     )
 
@@ -1233,6 +1780,9 @@ def init_db():
             file_path TEXT NOT NULL DEFAULT '',
             original_name TEXT NOT NULL DEFAULT '',
             mime_type TEXT NOT NULL DEFAULT '',
+            archive_path TEXT NOT NULL DEFAULT '',
+            archive_name TEXT NOT NULL DEFAULT '',
+            mentor_seen_at TEXT NOT NULL DEFAULT '',
             status TEXT NOT NULL DEFAULT 'new',
             feedback_text TEXT NOT NULL DEFAULT '',
             reviewer_username TEXT NOT NULL DEFAULT '',
@@ -1242,6 +1792,18 @@ def init_db():
         )
         """
     )
+    cur.execute("PRAGMA table_info(homework_submissions)")
+    homework_columns = {row["name"] for row in cur.fetchall()}
+    if "archive_path" not in homework_columns:
+        cur.execute("ALTER TABLE homework_submissions ADD COLUMN archive_path TEXT NOT NULL DEFAULT ''")
+    if "archive_name" not in homework_columns:
+        cur.execute("ALTER TABLE homework_submissions ADD COLUMN archive_name TEXT NOT NULL DEFAULT ''")
+    if "mentor_seen_at" not in homework_columns:
+        cur.execute("ALTER TABLE homework_submissions ADD COLUMN mentor_seen_at TEXT NOT NULL DEFAULT ''")
+    if "score" not in homework_columns:
+        cur.execute("ALTER TABLE homework_submissions ADD COLUMN score INTEGER NOT NULL DEFAULT 0")
+    if "student_seen_at" not in homework_columns:
+        cur.execute("ALTER TABLE homework_submissions ADD COLUMN student_seen_at TEXT NOT NULL DEFAULT ''")
 
     cur.execute(
         """
@@ -1452,18 +2014,111 @@ def init_db():
                 (to_utc_naive_iso(base_local), user_row["id"]),
             )
 
-    cur.execute("SELECT id FROM users WHERE username = ?", (ADMIN_USERNAME,))
-    admin = cur.fetchone()
-    if admin is None:
-        salt = secrets.token_hex(16)
-        password_hash = hash_password(ADMIN_PASSWORD, salt)
+        # Dev/testing helper: ensure at least 5 lessons are unlocked for Nemat_7 (without reducing access).
         cur.execute(
-            """
-            INSERT INTO users (username, password, password_hash, salt, role, created_at, access_started_at)
-            VALUES (?, ?, ?, ?, 'admin', ?, ?)
-            """,
-            (ADMIN_USERNAME, ADMIN_PASSWORD, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
+            "SELECT id, role, level, lesson_schedule, access_started_at FROM users WHERE username = ?",
+            ("Nemat_7",),
         )
+        nemat = cur.fetchone()
+        if nemat is not None and str(nemat["role"] or "").strip().lower() == "student":
+            now_local = local_now()
+            access_local = None
+            access_raw = str(nemat["access_started_at"] or "").strip()
+            if access_raw:
+                parsed = parse_iso_datetime(access_raw)
+                access_local = to_local(parsed) if parsed else None
+            course_key, _ = normalize_level(str(nemat["level"] or "").strip())
+            total_lessons = COURSE_LESSON_COUNTS.get(course_key)
+            available = get_available_lessons(
+                access_local,
+                str(nemat["level"] or "").strip(),
+                str(nemat["lesson_schedule"] or "").strip(),
+                now_local,
+                total_lessons=total_lessons,
+            )
+            if available < 5:
+                desired_dt = estimate_access_started_at(
+                    now_local,
+                    str(nemat["level"] or "").strip(),
+                    str(nemat["lesson_schedule"] or "").strip(),
+                    5,
+                )
+                cur.execute(
+                    "UPDATE users SET access_started_at = ? WHERE id = ?",
+                    (to_utc_naive_iso(desired_dt), nemat["id"]),
+                )
+
+        # Dev/testing helper: open first 5 A1 lessons for Bekzod (for testing sequential gating + unlock schedule).
+        cur.execute(
+            "SELECT id, role, level, lesson_schedule, access_started_at FROM users WHERE username = ?",
+            ("Bekzod",),
+        )
+        bekzod = cur.fetchone()
+        if bekzod is None:
+            cur.execute(
+                "SELECT id, role, level, lesson_schedule, access_started_at FROM users WHERE LOWER(username) = LOWER(?)",
+                ("Bekzod",),
+            )
+            bekzod = cur.fetchone()
+        if bekzod is not None and str(bekzod["role"] or "").strip().lower() == "student":
+            bekzod_level_raw = str(bekzod["level"] or "").strip()
+            bekzod_course, _ = normalize_level(bekzod_level_raw)
+            if bekzod_course == "a1":
+                now_local = local_now()
+                access_local = None
+                access_raw = str(bekzod["access_started_at"] or "").strip()
+                if access_raw:
+                    parsed = parse_iso_datetime(access_raw)
+                    access_local = to_local(parsed) if parsed else None
+                total_lessons = COURSE_LESSON_COUNTS.get(bekzod_course)
+                available = get_available_lessons(
+                    access_local,
+                    bekzod_level_raw,
+                    str(bekzod["lesson_schedule"] or "").strip(),
+                    now_local,
+                    total_lessons=total_lessons,
+                )
+                if available < 5:
+                    desired_dt = estimate_access_started_at(
+                        now_local,
+                        bekzod_level_raw,
+                        str(bekzod["lesson_schedule"] or "").strip(),
+                        5,
+                    )
+                    cur.execute(
+                        "UPDATE users SET access_started_at = ? WHERE id = ?",
+                        (to_utc_naive_iso(desired_dt), bekzod["id"]),
+                    )
+
+                # Keep only Lesson 1 marked as completed (so student must open other lessons in order).
+                cur.execute(
+                    """
+                    DELETE FROM task_completions
+                    WHERE user_id = ? AND course = ? AND task_key = 'lesson_completed' AND lesson_number > 1
+                    """,
+                    (bekzod["id"], bekzod_course),
+                )
+                completed_at = to_utc_naive_iso(utc_now())
+                cur.execute(
+                    """
+                    INSERT OR REPLACE INTO task_completions (user_id, course, lesson_number, task_key, completed_at)
+                    VALUES (?, ?, 1, 'lesson_completed', ?)
+                    """,
+                    (bekzod["id"], bekzod_course, completed_at),
+                )
+
+        cur.execute("SELECT id FROM users WHERE username = ?", (ADMIN_USERNAME,))
+        admin = cur.fetchone()
+        if admin is None:
+            salt = secrets.token_hex(16)
+            password_hash = hash_password(ADMIN_PASSWORD, salt)
+            cur.execute(
+                """
+                INSERT INTO users (username, password, password_hash, salt, role, created_at, access_started_at)
+                VALUES (?, ?, ?, ?, 'admin', ?, ?)
+                """,
+                (ADMIN_USERNAME, ADMIN_PASSWORD, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
+            )
 
     conn.commit()
     conn.close()
@@ -1473,6 +2128,9 @@ class Handler(BaseHTTPRequestHandler):
     def _set_headers(self, status=200, content_type="application/json"):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
+        # Avoid aggressive browser caching during development.
+        # Static HTML/CSS/JS are versioned client-side, but HTML itself can still be cached.
+        self.send_header("Cache-Control", "no-store")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Session-Token, Authorization")
@@ -1533,6 +2191,22 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
+
+        def _to_int_or(value, default):
+            if value is None:
+                return default
+            if isinstance(value, bool):
+                return default
+            if isinstance(value, int):
+                return value
+            try:
+                text = str(value).strip()
+                if not text:
+                    return default
+                return int(text)
+            except Exception:
+                return default
+
         if not parsed.path.startswith("/api/"):
             if self._serve_static(parsed.path):
                 return
@@ -1542,11 +2216,116 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
             return
 
+        if parsed.path == "/api/lessons/overrides":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            course_raw = params.get("course", "").strip()
+            course, _ = normalize_level(course_raw)
+            if not course:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "course is required"}).encode("utf-8"))
+                return
+            items = load_lesson_overrides(course)
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"items": items}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/certificates/overrides":
+            items = load_certificate_overrides()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"items": items}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/subscriptions/overrides":
+            items = load_subscription_overrides()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"items": items}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/team":
+            items = load_team_overrides()
+            safe_items = []
+            indexed_items = list(enumerate(items if isinstance(items, list) else []))
+            indexed_items.sort(
+                key=lambda pair: _to_int_or(pair[1].get("order") if isinstance(pair[1], dict) else None, pair[0])
+            )
+            for idx, (_orig_idx, raw) in enumerate(indexed_items):
+                if not isinstance(raw, dict):
+                    continue
+                member_id = str(raw.get("id", "") or "").strip()
+                if not member_id:
+                    continue
+                header = str(raw.get("header", "") or "").strip()
+                if not header:
+                    continue
+                avatar_url = str(raw.get("avatar_url", "") or "").strip()
+                avatar_file = str(raw.get("avatar_file", "") or "").strip()
+                if avatar_file:
+                    avatar_url = f"/api/team/avatar?id={quote(member_id)}"
+                order_value = _to_int_or(raw.get("order"), idx)
+                safe_items.append(
+                    {
+                        "id": member_id,
+                        "order": order_value,
+                        "header": header,
+                        "subheader": str(raw.get("subheader", "") or ""),
+                        "achievements": raw.get("achievements", []) if isinstance(raw.get("achievements", []), list) else [],
+                        "telegram_username": str(raw.get("telegram_username", "") or ""),
+                        "instagram_username": str(raw.get("instagram_username", "") or ""),
+                        "whatsapp_phone": str(raw.get("whatsapp_phone", "") or ""),
+                        "avatar_url": avatar_url,
+                    }
+                )
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"items": safe_items}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/team/avatar":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            member_id = str(params.get("id", "") or "").strip()
+            if not member_id:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "id is required"}).encode("utf-8"))
+                return
+            items = load_team_overrides()
+            match = None
+            for raw in items:
+                if isinstance(raw, dict) and str(raw.get("id", "") or "").strip() == member_id:
+                    match = raw
+                    break
+            if match is None:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "team member not found"}).encode("utf-8"))
+                return
+            avatar_file = str(match.get("avatar_file", "") or "").strip()
+            if not avatar_file:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "avatar not found"}).encode("utf-8"))
+                return
+            file_path = (TEAM_AVATAR_UPLOAD_DIR / avatar_file).resolve()
+            try:
+                file_path.relative_to(TEAM_AVATAR_UPLOAD_DIR.resolve())
+            except ValueError:
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "forbidden"}).encode("utf-8"))
+                return
+            if not file_path.exists():
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "avatar missing on disk"}).encode("utf-8"))
+                return
+            data = file_path.read_bytes()
+            content_type, _ = mimetypes.guess_type(file_path.name)
+            self.send_response(200)
+            self.send_header("Content-Type", content_type or "application/octet-stream")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(data)
+            return
+
         if self.path.startswith("/api/quiz/questions"):
             params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
             course = params.get("course", "").strip().lower()
             try:
-                lesson_number = int(params.get("lesson", 0))
+              lesson_number = int(params.get("lesson", 0))
             except (TypeError, ValueError):
                 lesson_number = 0
 
@@ -1741,6 +2520,44 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("X-Content-Type-Options", "nosniff")
             self.end_headers()
             self.wfile.write(content)
+            return
+
+        if parsed.path == "/api/presentation/info":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            course_raw = params.get("course", "").strip()
+            course, _ = normalize_level(course_raw)
+            try:
+                lesson_number = int(params.get("lesson", 0) or 0)
+            except (TypeError, ValueError):
+                lesson_number = 0
+            if not course or lesson_number <= 0:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "course and lesson are required"}).encode("utf-8"))
+                return
+
+            presentation_path = get_presentation_path(course, lesson_number)
+            if presentation_path is None:
+                self._set_headers(200)
+                self.wfile.write(json.dumps({"available": False}).encode("utf-8"))
+                return
+
+            url = ""
+            try:
+                rel = presentation_path.resolve().relative_to(WEB_ROOT.resolve())
+                url = f"/{rel.as_posix()}"
+            except (OSError, ValueError):
+                url = f"/assets/presentations/{presentation_path.name}"
+
+            self._set_headers(200)
+            self.wfile.write(
+                json.dumps(
+                    {
+                        "available": True,
+                        "file": presentation_path.name,
+                        "url": url,
+                    }
+                ).encode("utf-8")
+            )
             return
 
         if parsed.path == "/api/admin/overview":
@@ -1980,7 +2797,11 @@ class Handler(BaseHTTPRequestHandler):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute(
-                "SELECT id, level, lesson_schedule, created_at, access_started_at FROM users WHERE username = ?",
+                """
+                SELECT id, username, full_name, level, lesson_schedule, mentor_id, created_at, access_started_at, avatar_path, avatar_name
+                FROM users
+                WHERE username = ?
+                """,
                 (username,),
             )
             user = cur.fetchone()
@@ -1991,10 +2812,762 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             summary = build_progress_summary(cur, user)
+            summary["username"] = user["username"]
+            summary["full_name"] = user["full_name"] or ""
+            avatar_url = ""
+            if "avatar_path" in user.keys() and user["avatar_path"]:
+                avatar_url = f"/api/users/avatar?username={quote(user['username'])}"
+            summary["avatar_url"] = avatar_url
             conn.commit()
             conn.close()
             self._set_headers(200)
             self.wfile.write(json.dumps(summary).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/student/notifications/summary":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            if not username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
+            user = cur.fetchone()
+            if user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(user["role"] or "").strip().lower() != "student":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT COUNT(*) AS unread_count
+                FROM homework_submissions
+                WHERE user_id = ?
+                  AND status = 'checked'
+                  AND reviewed_at IS NOT NULL
+                  AND reviewed_at != ''
+                  AND (student_seen_at IS NULL OR student_seen_at = '')
+                """,
+                (user["id"],),
+            )
+            unread_row = cur.fetchone()
+            unread = int((unread_row["unread_count"] or 0) if unread_row is not None else 0)
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"unread_count": unread}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/student/notifications/homework-reviews":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            try:
+                limit = int(params.get("limit", 50))
+            except (TypeError, ValueError):
+                limit = 50
+            limit = max(1, min(250, limit))
+            if not username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
+            user = cur.fetchone()
+            if user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(user["role"] or "").strip().lower() != "student":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT COUNT(*) AS unread_count
+                FROM homework_submissions
+                WHERE user_id = ?
+                  AND status = 'checked'
+                  AND reviewed_at IS NOT NULL
+                  AND reviewed_at != ''
+                  AND (student_seen_at IS NULL OR student_seen_at = '')
+                """,
+                (user["id"],),
+            )
+            unread_row = cur.fetchone()
+            unread = int((unread_row["unread_count"] or 0) if unread_row is not None else 0)
+            cur.execute(
+                """
+                SELECT
+                    id AS submission_id,
+                    course,
+                    lesson_number,
+                    score,
+                    feedback_text,
+                    reviewer_username,
+                    reviewed_at,
+                    student_seen_at
+                FROM homework_submissions
+                WHERE user_id = ?
+                  AND status = 'checked'
+                  AND reviewed_at IS NOT NULL
+                  AND reviewed_at != ''
+                ORDER BY reviewed_at DESC, id DESC
+                LIMIT ?
+                """,
+                (user["id"], limit),
+            )
+            rows = [dict(row) for row in cur.fetchall()]
+            conn.close()
+            for row in rows:
+                row["is_unread"] = not bool(str(row.get("student_seen_at") or "").strip())
+                row["has_comment"] = bool(str(row.get("feedback_text") or "").strip())
+                row.pop("student_seen_at", None)
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"unread_count": unread, "items": rows}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/users/avatar":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            if not username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT avatar_path, avatar_name FROM users WHERE username = ?", (username,))
+            row = cur.fetchone()
+            conn.close()
+            if row is None:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            file_path_raw = str(row["avatar_path"] or "").strip()
+            if not file_path_raw:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "avatar not found"}).encode("utf-8"))
+                return
+            file_path = Path(file_path_raw)
+            if not file_path.exists():
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "avatar missing on disk"}).encode("utf-8"))
+                return
+
+            data = file_path.read_bytes()
+            content_type, _ = mimetypes.guess_type(str(row["avatar_name"] or ""))
+            if not content_type:
+                content_type = "application/octet-stream"
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.end_headers()
+            self.wfile.write(data)
+            return
+
+        if parsed.path == "/api/mentor/students":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            if not username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level, full_name, phone FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            course_level, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            if course_level not in COURSE_LESSON_COUNTS:
+                conn.close()
+                self._set_headers(200)
+                self.wfile.write(json.dumps({"items": []}).encode("utf-8"))
+                return
+
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            level_like = f"{course_level}%"
+            if mentor_profile_id > 0:
+                cur.execute(
+                    """
+                    WITH lesson_scores AS (
+                        SELECT
+                            user_id,
+                            lesson_number,
+                            (SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) * 100.0) / COUNT(*) AS percent
+                        FROM quiz_answer_events
+                        WHERE course = ? AND question_id IS NOT NULL
+                        GROUP BY user_id, lesson_number
+                    ),
+                    avg_scores AS (
+                        SELECT user_id, AVG(percent) AS average_percent
+                        FROM lesson_scores
+                        GROUP BY user_id
+                    )
+                    SELECT
+                        u.username,
+                        u.full_name,
+                        u.level,
+                        COALESCE(a.average_percent, 0.0) AS average_percent
+                    FROM users u
+                    LEFT JOIN avg_scores a ON a.user_id = u.id
+                    WHERE u.role = 'student'
+                      AND u.mentor_id = ?
+                      AND LOWER(u.level) LIKE LOWER(?)
+                    ORDER BY u.created_at DESC
+                    LIMIT 250
+                    """,
+                    (course_level, mentor_profile_id, level_like),
+                )
+            else:
+                cur.execute(
+                    """
+                    WITH lesson_scores AS (
+                        SELECT
+                            user_id,
+                            lesson_number,
+                            (SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) * 100.0) / COUNT(*) AS percent
+                        FROM quiz_answer_events
+                        WHERE course = ? AND question_id IS NOT NULL
+                        GROUP BY user_id, lesson_number
+                    ),
+                    avg_scores AS (
+                        SELECT user_id, AVG(percent) AS average_percent
+                        FROM lesson_scores
+                        GROUP BY user_id
+                    )
+                    SELECT
+                        u.username,
+                        u.full_name,
+                        u.level,
+                        COALESCE(a.average_percent, 0.0) AS average_percent
+                    FROM users u
+                    LEFT JOIN avg_scores a ON a.user_id = u.id
+                    WHERE u.role = 'student' AND LOWER(u.level) LIKE LOWER(?)
+                    ORDER BY u.created_at DESC
+                    LIMIT 250
+                    """,
+                    (course_level, level_like),
+                )
+            items = [dict(row) for row in cur.fetchall()]
+            conn.close()
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"items": items}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/mentor/student-details":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            student_username = params.get("student_username", "").strip()
+            if not username or not student_username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and student_username are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level, full_name, phone FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT id, username, full_name, level, lesson_schedule, mentor_id, phone, created_at, access_started_at
+                FROM users
+                WHERE username = ? AND role = 'student'
+                """,
+                (student_username,),
+            )
+            student = cur.fetchone()
+            if student is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "student user not found"}).encode("utf-8"))
+                return
+
+            mentor_course, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            student_course, _ = normalize_level(str(student["level"] or "").strip())
+            if mentor_course and student_course and mentor_course != student_course:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "level mismatch"}).encode("utf-8"))
+                return
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            student_mentor_id = int((student["mentor_id"] if "mentor_id" in student.keys() else 0) or 0)
+            if mentor_profile_id > 0 and student_mentor_id > 0 and student_mentor_id != mentor_profile_id:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student is not assigned to this mentor"}).encode("utf-8"))
+                return
+
+            summary = build_progress_summary(cur, student)
+            conn.commit()
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"student": dict(student), "summary": summary, "parents": []}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/mentor/homework/summary":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            if not username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            course_level, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            if course_level not in COURSE_LESSON_COUNTS:
+                conn.close()
+                self._set_headers(200)
+                self.wfile.write(json.dumps({"total_new": 0, "students": []}).encode("utf-8"))
+                return
+
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            level_like = f"{course_level}%"
+            if mentor_profile_id > 0:
+                cur.execute(
+                    """
+                    SELECT
+                        u.username,
+                        u.full_name,
+                        COUNT(DISTINCT (hs.course || ':' || hs.lesson_number)) AS new_count,
+                        MAX(hs.submitted_at) AS latest_submitted_at
+                    FROM homework_submissions hs
+                    JOIN users u ON u.id = hs.user_id
+                    WHERE u.role = 'student'
+                      AND u.mentor_id = ?
+                      AND LOWER(u.level) LIKE LOWER(?)
+                      AND hs.course = ?
+                      AND (hs.mentor_seen_at IS NULL OR hs.mentor_seen_at = '')
+                    GROUP BY u.id
+                    ORDER BY latest_submitted_at DESC
+                    LIMIT 250
+                    """,
+                    (mentor_profile_id, level_like, course_level),
+                )
+            else:
+                cur.execute(
+                    """
+                    SELECT
+                        u.username,
+                        u.full_name,
+                        COUNT(DISTINCT (hs.course || ':' || hs.lesson_number)) AS new_count,
+                        MAX(hs.submitted_at) AS latest_submitted_at
+                    FROM homework_submissions hs
+                    JOIN users u ON u.id = hs.user_id
+                    WHERE u.role = 'student'
+                      AND LOWER(u.level) LIKE LOWER(?)
+                      AND hs.course = ?
+                      AND (hs.mentor_seen_at IS NULL OR hs.mentor_seen_at = '')
+                    GROUP BY u.id
+                    ORDER BY latest_submitted_at DESC
+                    LIMIT 250
+                    """,
+                    (level_like, course_level),
+                )
+            students = [dict(row) for row in cur.fetchall()]
+            total_new = sum(int(item.get("new_count") or 0) for item in students)
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"total_new": total_new, "students": students}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/mentor/homework/lessons":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            student_username = params.get("student_username", "").strip()
+            if not username or not student_username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and student_username are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                "SELECT id, username, full_name, level, mentor_id FROM users WHERE username = ? AND role = 'student'",
+                (student_username,),
+            )
+            student = cur.fetchone()
+            if student is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "student user not found"}).encode("utf-8"))
+                return
+
+            mentor_course, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            student_course, _ = normalize_level(str(student["level"] or "").strip())
+            if mentor_course and student_course and mentor_course != student_course:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "level mismatch"}).encode("utf-8"))
+                return
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            student_mentor_id = int((student["mentor_id"] if "mentor_id" in student.keys() else 0) or 0)
+            if mentor_profile_id > 0 and student_mentor_id > 0 and student_mentor_id != mentor_profile_id:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student is not assigned to this mentor"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT
+                    hs.course,
+                    hs.lesson_number,
+                    MAX(hs.submitted_at) AS latest_submitted_at,
+                    SUM(CASE WHEN (hs.mentor_seen_at IS NULL OR hs.mentor_seen_at = '') THEN 1 ELSE 0 END) AS new_count,
+                    (
+                        SELECT id
+                        FROM homework_submissions hs2
+                        WHERE hs2.user_id = hs.user_id
+                          AND hs2.course = hs.course
+                          AND hs2.lesson_number = hs.lesson_number
+                        ORDER BY hs2.submitted_at DESC, hs2.id DESC
+                        LIMIT 1
+                    ) AS latest_submission_id
+                FROM homework_submissions hs
+                WHERE hs.user_id = ?
+                GROUP BY hs.course, hs.lesson_number
+                ORDER BY latest_submitted_at DESC
+                """,
+                (student["id"],),
+            )
+            items = [dict(row) for row in cur.fetchall()]
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"student": dict(student), "items": items}).encode("utf-8"))
+            return
+
+        if parsed.path == "/api/mentor/homework/download":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            try:
+                submission_id = int(params.get("submission_id", 0))
+            except (TypeError, ValueError):
+                submission_id = 0
+            if not username or submission_id <= 0:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and submission_id are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT
+                    hs.id,
+                    hs.user_id,
+                    hs.course,
+                    hs.lesson_number,
+                    hs.archive_path,
+                    hs.archive_name,
+                    hs.mentor_seen_at,
+                    u.username AS student_username,
+                    u.level AS student_level,
+                    u.mentor_id AS student_mentor_id
+                FROM homework_submissions hs
+                JOIN users u ON u.id = hs.user_id
+                WHERE hs.id = ?
+                """,
+                (submission_id,),
+            )
+            row = cur.fetchone()
+            if row is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "submission not found"}).encode("utf-8"))
+                return
+
+            mentor_course, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            student_course, _ = normalize_level(str(row["student_level"] or "").strip())
+            if mentor_course and student_course and mentor_course != student_course:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "level mismatch"}).encode("utf-8"))
+                return
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            student_mentor_id = int((row["student_mentor_id"] or 0) or 0)
+            if mentor_profile_id > 0 and student_mentor_id > 0 and student_mentor_id != mentor_profile_id:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student is not assigned to this mentor"}).encode("utf-8"))
+                return
+
+            archive_path_raw = str(row["archive_path"] or "").strip()
+            archive_name = str(row["archive_name"] or "").strip() or f"homework_{submission_id}.zip"
+            if not archive_path_raw:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "archive not available"}).encode("utf-8"))
+                return
+            archive_path = Path(archive_path_raw)
+            if not archive_path.exists():
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "archive missing on disk"}).encode("utf-8"))
+                return
+
+            if not str(row["mentor_seen_at"] or "").strip():
+                seen_at = datetime.utcnow().isoformat()
+                cur.execute(
+                    "UPDATE homework_submissions SET mentor_seen_at = ? WHERE id = ? AND (mentor_seen_at IS NULL OR mentor_seen_at = '')",
+                    (seen_at, submission_id),
+                )
+                conn.commit()
+            conn.close()
+
+            data = archive_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Disposition", f"attachment; filename=\"{quote(archive_name)}\"")
+            self.end_headers()
+            self.wfile.write(data)
+            return
+
+        if parsed.path == "/api/student/homework/download":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            try:
+                submission_id = int(params.get("submission_id", 0))
+            except (TypeError, ValueError):
+                submission_id = 0
+            if not username or submission_id <= 0:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and submission_id are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
+            user = cur.fetchone()
+            if user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(user["role"] or "").strip().lower() != "student":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT id, archive_path, archive_name
+                FROM homework_submissions
+                WHERE id = ? AND user_id = ?
+                """,
+                (submission_id, user["id"]),
+            )
+            row = cur.fetchone()
+            conn.close()
+            if row is None:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "submission not found"}).encode("utf-8"))
+                return
+            archive_path_raw = str(row["archive_path"] or "").strip()
+            archive_name = str(row["archive_name"] or "").strip() or f"homework_{submission_id}.zip"
+            if not archive_path_raw:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "archive not available"}).encode("utf-8"))
+                return
+            archive_path = Path(archive_path_raw)
+            if not archive_path.exists():
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "archive missing on disk"}).encode("utf-8"))
+                return
+
+            data = archive_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Disposition", f"attachment; filename=\"{quote(archive_name)}\"")
+            self.end_headers()
+            self.wfile.write(data)
+            return
+
+        if parsed.path == "/api/mentor/progress":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            student_username = params.get("student_username", "").strip()
+            if not username or not student_username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and student_username are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level, full_name, phone FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                "SELECT id, username, full_name, level, mentor_id FROM users WHERE username = ? AND role = 'student'",
+                (student_username,),
+            )
+            student = cur.fetchone()
+            if student is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "student user not found"}).encode("utf-8"))
+                return
+
+            mentor_course, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            student_course, _ = normalize_level(str(student["level"] or "").strip())
+            if mentor_course and student_course and mentor_course != student_course:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "level mismatch"}).encode("utf-8"))
+                return
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            student_mentor_id = int((student["mentor_id"] if "mentor_id" in student.keys() else 0) or 0)
+            if mentor_profile_id > 0 and student_mentor_id > 0 and student_mentor_id != mentor_profile_id:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student is not assigned to this mentor"}).encode("utf-8"))
+                return
+            course = student_course or mentor_course
+            if course not in COURSE_LESSON_COUNTS:
+                conn.close()
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid level"}).encode("utf-8"))
+                return
+
+            student_id = int(student["id"] or 0)
+            cur.execute(
+                """
+                SELECT
+                    lesson_number,
+                    SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) AS correct_count,
+                    SUM(CASE WHEN is_correct = 0 THEN 1 ELSE 0 END) AS wrong_count
+                FROM quiz_answer_events
+                WHERE user_id = ? AND course = ? AND question_id IS NOT NULL
+                GROUP BY lesson_number
+                """,
+                (student_id, course),
+            )
+            quiz_rows = {int(row["lesson_number"]): dict(row) for row in cur.fetchall()}
+            cur.execute(
+                """
+                SELECT lesson_number, watched_seconds, watched_minutes, duration_seconds, updated_at
+                FROM video_progress
+                WHERE user_id = ? AND course = ?
+                """,
+                (student_id, course),
+            )
+            video_rows = {int(row["lesson_number"]): dict(row) for row in cur.fetchall()}
+
+            lesson_numbers = sorted(set(quiz_rows.keys()) | set(video_rows.keys()))
+            lessons = []
+            for number in lesson_numbers:
+                quiz = quiz_rows.get(number) or {}
+                video = video_rows.get(number) or {}
+                lessons.append(
+                    {
+                        "lesson_number": number,
+                        "correct_count": int(quiz.get("correct_count") or 0),
+                        "wrong_count": int(quiz.get("wrong_count") or 0),
+                        "video_watched_seconds": float(video.get("watched_seconds") or 0),
+                        "video_watched_minutes": float(video.get("watched_minutes") or 0),
+                        "video_duration_seconds": float(video.get("duration_seconds") or 0),
+                        "video_updated_at": video.get("updated_at") or "",
+                    }
+                )
+
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"course": course, "student": dict(student), "lessons": lessons}).encode("utf-8"))
             return
 
         if parsed.path == "/api/leaderboard/achievements":
@@ -2004,26 +3577,46 @@ class Handler(BaseHTTPRequestHandler):
             except (TypeError, ValueError):
                 limit = 10
             limit = max(1, min(limit, 50))
+            level_filter = str(params.get("level", "") or "").strip()
 
             conn = get_connection()
             cur = conn.cursor()
-            cur.execute(
-                """
-                SELECT
-                    u.username,
-                    u.full_name,
-                    u.level,
-                    COALESCE(SUM(ua.points), 0) AS total_points,
-                    COUNT(ua.id) AS achievements_count
-                FROM users u
-                LEFT JOIN user_achievements ua ON ua.user_id = u.id
-                WHERE u.role = 'student'
-                GROUP BY u.id
-                ORDER BY total_points DESC, achievements_count DESC, u.created_at ASC
-                LIMIT ?
-                """,
-                (limit,),
-            )
+            if level_filter:
+                cur.execute(
+                    """
+                    SELECT
+                        u.username,
+                        u.full_name,
+                        u.level,
+                        COALESCE(SUM(ua.points), 0) AS total_points,
+                        COUNT(ua.id) AS achievements_count
+                    FROM users u
+                    LEFT JOIN user_achievements ua ON ua.user_id = u.id
+                    WHERE u.role = 'student' AND LOWER(u.level) = LOWER(?)
+                    GROUP BY u.id
+                    ORDER BY total_points DESC, achievements_count DESC, u.created_at ASC
+                    LIMIT ?
+                    """,
+                    (level_filter, limit),
+                )
+            else:
+                cur.execute(
+                    """
+                    SELECT
+                        u.username,
+                        u.full_name,
+                        u.level,
+                        COALESCE(SUM(ua.points), 0) AS total_points,
+                        COUNT(ua.id) AS achievements_count
+                    FROM users u
+                    LEFT JOIN user_achievements ua ON ua.user_id = u.id
+                    WHERE u.role = 'student'
+                    GROUP BY u.id
+                    ORDER BY total_points DESC, achievements_count DESC, u.created_at ASC
+                    LIMIT ?
+                    """,
+                    (limit,),
+                )
             rows = cur.fetchall()
             conn.close()
             items = []
@@ -2177,6 +3770,57 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
 
+        if parsed.path == "/api/admin/team":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            admin_username = str(params.get("username", "") or "").strip()
+            if not admin_username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+            conn = get_connection()
+            if not is_admin_user(conn, admin_username):
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                return
+            conn.close()
+            items = load_team_overrides()
+            payload_items = []
+            indexed_items = list(enumerate(items if isinstance(items, list) else []))
+            indexed_items.sort(
+                key=lambda pair: _to_int_or(pair[1].get("order") if isinstance(pair[1], dict) else None, pair[0])
+            )
+            for idx, (_orig_idx, raw) in enumerate(indexed_items):
+                if not isinstance(raw, dict):
+                    continue
+                member_id = str(raw.get("id", "") or "").strip()
+                header = str(raw.get("header", "") or "").strip()
+                if not member_id or not header:
+                    continue
+                avatar_url = str(raw.get("avatar_url", "") or "").strip()
+                avatar_file = str(raw.get("avatar_file", "") or "").strip()
+                if avatar_file:
+                    avatar_url = f"/api/team/avatar?id={quote(member_id)}"
+                order_value = _to_int_or(raw.get("order"), idx)
+                payload_items.append(
+                    {
+                        "id": member_id,
+                        "order": order_value,
+                        "header": header,
+                        "subheader": str(raw.get("subheader", "") or ""),
+                        "achievements": raw.get("achievements", []) if isinstance(raw.get("achievements", []), list) else [],
+                        "telegram_username": str(raw.get("telegram_username", "") or ""),
+                        "instagram_username": str(raw.get("instagram_username", "") or ""),
+                        "whatsapp_phone": str(raw.get("whatsapp_phone", "") or ""),
+                        "avatar_url": avatar_url,
+                        "avatar_file": avatar_file,
+                        "avatar_original_name": str(raw.get("avatar_original_name", "") or ""),
+                    }
+                )
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"items": payload_items}).encode("utf-8"))
+            return
+
         if parsed.path == "/api/admin/mentors":
             params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
             admin_username = params.get("username", "").strip()
@@ -2202,11 +3846,27 @@ class Handler(BaseHTTPRequestHandler):
 
             cur.execute(
                 """
-                SELECT id, name, level, phone, email, telegram_username, info, avatar_path, avatar_name, created_at
-                FROM mentors
-                ORDER BY id DESC
-                """
-            )
+                    SELECT
+                        m.id,
+                        m.name,
+                        m.level,
+                        m.phone,
+                        m.email,
+                        m.telegram_username,
+                        m.instagram_username,
+                        m.info,
+                        m.avatar_path,
+                        m.avatar_name,
+                        m.created_at,
+                        COUNT(u.id) AS student_count
+                    FROM mentors m
+                    LEFT JOIN users u
+                      ON u.role = 'student'
+                     AND u.mentor_id = m.id
+                    GROUP BY m.id
+                    ORDER BY m.id DESC
+                    """
+                )
             mentors = []
             for row in cur.fetchall():
                 avatar_url = f"/api/mentors/avatar?id={row['id']}" if row["avatar_path"] else ""
@@ -2218,9 +3878,11 @@ class Handler(BaseHTTPRequestHandler):
                         "phone": row["phone"] or "",
                         "email": row["email"] or "",
                         "telegram_username": row["telegram_username"] or "",
+                        "instagram_username": row["instagram_username"] or "",
                         "info": row["info"] or "",
                         "avatar_url": avatar_url,
                         "created_at": row["created_at"] or "",
+                        "student_count": int(row["student_count"] or 0),
                     }
                 )
             conn.close()
@@ -2466,6 +4128,67 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"items": rows, "pending_count": pending_count}).encode("utf-8"))
             return
 
+        if parsed.path == "/api/admin/user-details":
+            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
+            username = params.get("username", "").strip()
+            target_username = params.get("target_username", "").strip()
+            if not username or not target_username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and target_username are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
+            requester = cur.fetchone()
+            if requester is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if requester["role"] != "admin":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT full_name, username, phone, level, lesson_schedule, mentor_id, role, password, created_at, access_started_at
+                FROM users
+                WHERE username = ?
+                """,
+                (target_username,),
+            )
+            row = cur.fetchone()
+            if row is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+
+            details = dict(row)
+            mentor = None
+            if str(details.get("role") or "").strip().lower() == "student":
+                mentor_id = int(details.get("mentor_id") or 0)
+                mentor = fetch_mentor_by_id(cur, mentor_id) if mentor_id > 0 else None
+                if mentor is None:
+                    mentor = fetch_mentor_for_level(cur, str(details.get("level") or "").strip())
+            conn.close()
+
+            self._set_headers(200)
+            self.wfile.write(
+                json.dumps(
+                    {
+                        "user": details,
+                        "mentor": mentor,
+                        "parents": [],
+                        "bot_user": {"chat_id": ""},
+                    }
+                ).encode("utf-8")
+            )
+            return
+
         self._set_headers(404)
         self.wfile.write(json.dumps({"error": "not found"}).encode("utf-8"))
 
@@ -2526,6 +4249,989 @@ class Handler(BaseHTTPRequestHandler):
 
             self._set_headers(200)
             self.wfile.write(json.dumps({"status": "sent"}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/lessons/cover/upload":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            file_name = str(data.get("file_name", "")).strip()
+            file_data = str(data.get("file_data", "")).strip()
+            if not admin_username or not file_data:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and file_data are required"}).encode("utf-8"))
+                return
+            try:
+                blob = base64.b64decode(file_data, validate=False)
+            except (ValueError, TypeError):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid_file_data"}).encode("utf-8"))
+                return
+            if len(blob) <= 0 or len(blob) > MAX_COVER_BYTES:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "file_too_large"}).encode("utf-8"))
+                return
+            ext = Path(file_name).suffix.lower() if file_name else ""
+            if ext not in ALLOWED_COVER_EXTENSIONS:
+                ext = ".png"
+            safe_stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(file_name).stem)[:40] or "cover"
+            stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            token = secrets.token_hex(6)
+            out_name = f"{safe_stem}_{stamp}_{token}{ext}"
+            out_path = COVER_UPLOAD_DIR / out_name
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            try:
+                out_path.write_bytes(blob)
+            except OSError:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "upload_failed"}).encode("utf-8"))
+                return
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "url": f"/backend/uploads/covers/{out_name}"}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/certificates/image/upload":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            file_name = str(data.get("file_name", "")).strip()
+            file_data = str(data.get("file_data", "")).strip()
+            if not admin_username or not file_data:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and file_data are required"}).encode("utf-8"))
+                return
+            try:
+                blob = base64.b64decode(file_data, validate=False)
+            except (ValueError, TypeError):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid_file_data"}).encode("utf-8"))
+                return
+            if len(blob) <= 0 or len(blob) > MAX_COVER_BYTES:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "file_too_large"}).encode("utf-8"))
+                return
+            ext = Path(file_name).suffix.lower() if file_name else ""
+            if ext not in ALLOWED_COVER_EXTENSIONS:
+                ext = ".png"
+            safe_stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(file_name).stem)[:40] or "certificate"
+            stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            token = secrets.token_hex(6)
+            out_name = f"{safe_stem}_{stamp}_{token}{ext}"
+            out_path = CERTIFICATE_UPLOAD_DIR / out_name
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            try:
+                out_path.write_bytes(blob)
+            except OSError:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "upload_failed"}).encode("utf-8"))
+                return
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "url": f"/backend/uploads/certificates/{out_name}"}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/certificates/set-all":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            raw_items = data.get("items", None)
+            if not admin_username or not isinstance(raw_items, list):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and items are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            def normalize_section(value: str) -> str:
+                raw = str(value or "").strip().lower()
+                return raw if raw in {"ielts", "cefr"} else "cefr"
+
+            next_items: list[dict] = []
+            for item in raw_items[:500]:
+                if not isinstance(item, dict):
+                    continue
+                cid = str(item.get("id", "")).strip()
+                if not cid:
+                    cid = f"cert_{secrets.token_hex(10)}"
+                next_items.append(
+                    {
+                        "id": cid,
+                        "section": normalize_section(str(item.get("section", ""))),
+                        "name": str(item.get("name", "") or "").strip(),
+                        "motto": str(item.get("motto", "") or "").strip(),
+                        "image": str(item.get("image", "") or "").strip(),
+                    }
+                )
+
+            if not save_certificate_overrides(next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "count": len(next_items)}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/team/avatar/upload":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            file_name = str(data.get("file_name", "")).strip()
+            file_data = str(data.get("file_data", "")).strip()
+            if not admin_username or not file_data:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and file_data are required"}).encode("utf-8"))
+                return
+            try:
+                header, b64_data = file_data.split(",", 1)
+            except ValueError:
+                b64_data = file_data
+            try:
+                blob = base64.b64decode(b64_data, validate=False)
+            except (ValueError, TypeError):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid_file_data"}).encode("utf-8"))
+                return
+            if len(blob) <= 0 or len(blob) > MAX_COVER_BYTES:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "file_too_large"}).encode("utf-8"))
+                return
+            ext = Path(file_name).suffix.lower() if file_name else ""
+            if ext not in ALLOWED_COVER_EXTENSIONS:
+                ext = ".png"
+            safe_stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(file_name).stem)[:40] or "team"
+            stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            token = secrets.token_hex(6)
+            out_name = f"{safe_stem}_{stamp}_{token}{ext}"
+            out_path = TEAM_AVATAR_UPLOAD_DIR / out_name
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            try:
+                out_path.write_bytes(blob)
+            except OSError:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "upload_failed"}).encode("utf-8"))
+                return
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "file": out_name, "original_name": file_name}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/team/set-all":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            raw_items = data.get("items", None)
+            if not admin_username or not isinstance(raw_items, list):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and items are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            next_items: list[dict] = []
+            seen_ids: set[str] = set()
+            for idx, item in enumerate(raw_items[:200]):
+                safe = sanitize_team_member(item, idx)
+                if safe is None:
+                    continue
+                if safe["id"] in seen_ids:
+                    continue
+                seen_ids.add(safe["id"])
+                next_items.append(safe)
+
+            if not save_team_overrides(next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "count": len(next_items)}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/subscriptions/set-all":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            raw_items = data.get("items", None)
+            if not admin_username or not isinstance(raw_items, list):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and items are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            def parse_money(value) -> int:
+                if value is None:
+                    return 0
+                if isinstance(value, bool):
+                    return 0
+                if isinstance(value, (int, float)):
+                    return int(value)
+                digits = re.sub(r"[^\d]", "", str(value or ""))
+                if not digits:
+                    return 0
+                try:
+                    return int(digits)
+                except ValueError:
+                    return 0
+
+            def clamp_percent(value) -> int:
+                try:
+                    num = float(value)
+                except (TypeError, ValueError):
+                    return 0
+                if not num or num <= 0:
+                    return 0
+                if num >= 100:
+                    return 100
+                return int(round(num))
+
+            next_items: list[dict] = []
+            for item in raw_items[:200]:
+                if not isinstance(item, dict):
+                    continue
+                sid = str(item.get("id", "")).strip()
+                if not sid:
+                    sid = f"sub_{secrets.token_hex(10)}"
+                name = str(item.get("name", "") or "").strip()
+                badge = str(item.get("badge", "") or "").strip()
+                features_raw = item.get("features", [])
+                features: list[str] = []
+                if isinstance(features_raw, list):
+                    for feat in features_raw[:50]:
+                        text = str(feat or "").strip()
+                        if text:
+                            features.append(text)
+                price = parse_money(item.get("price", 0))
+                old_price = parse_money(item.get("old_price", 0))
+                discount_percent = clamp_percent(item.get("discount_percent", 0))
+                ends_at_raw = str(item.get("discount_ends_at", "") or "").strip()
+                ends_at = ""
+                if ends_at_raw:
+                    parsed_dt = parse_iso_datetime(ends_at_raw)
+                    ends_at = parsed_dt.isoformat() if parsed_dt else ""
+
+                next_items.append(
+                    {
+                        "id": sid,
+                        "name": name,
+                        "badge": badge,
+                        "features": features,
+                        "price": price,
+                        "old_price": old_price,
+                        "discount_percent": discount_percent,
+                        "discount_ends_at": ends_at,
+                    }
+                )
+
+            if not save_subscription_overrides(next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "count": len(next_items)}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/presentation/upload":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            try:
+                lesson_number = int(data.get("lesson_number", 0) or 0)
+            except (TypeError, ValueError):
+                lesson_number = 0
+            file_name = str(data.get("file_name", "")).strip()
+            file_data = str(data.get("file_data", "")).strip()
+            if not admin_username or not course or lesson_number <= 0 or not file_data:
+                self._set_headers(400)
+                self.wfile.write(
+                    json.dumps({"error": "admin_username, course, lesson_number, file_data are required"}).encode("utf-8")
+                )
+                return
+
+            try:
+                blob = base64.b64decode(file_data, validate=False)
+            except (ValueError, TypeError):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid_file_data"}).encode("utf-8"))
+                return
+            if len(blob) <= 0 or len(blob) > MAX_PRESENTATION_BYTES:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "file_too_large"}).encode("utf-8"))
+                return
+            if not blob.startswith(b"%PDF"):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "not_a_pdf"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            try:
+                dest_dir = PRESENTATIONS_DIR / course / ""
+                dest_dir.mkdir(parents=True, exist_ok=True)
+            except OSError:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "upload_failed"}).encode("utf-8"))
+                return
+
+            dest_path = (PRESENTATIONS_DIR / course / f"lesson-{lesson_number}.pdf").resolve()
+            try:
+                root = PRESENTATIONS_DIR.resolve()
+                dest_path.relative_to(root)
+            except ValueError:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid_path"}).encode("utf-8"))
+                return
+
+            try:
+                dest_path.write_bytes(blob)
+            except OSError:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "upload_failed"}).encode("utf-8"))
+                return
+
+            self._set_headers(200)
+            self.wfile.write(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "url": f"/assets/presentations/{course}/lesson-{lesson_number}.pdf",
+                        "file_name": file_name or dest_path.name,
+                    }
+                ).encode("utf-8")
+            )
+            return
+
+        if self.path == "/api/admin/lessons/save":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            try:
+                lesson_number = int(data.get("lesson_number", 0) or 0)
+            except (TypeError, ValueError):
+                lesson_number = 0
+            title = str(data.get("title", "")).strip()
+            cover = str(data.get("cover", "")).strip()
+            video = str(data.get("video", "")).strip()
+            if not admin_username or not course or lesson_number <= 0:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username, course, lesson_number are required"}).encode("utf-8"))
+                return
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            items = load_lesson_overrides(course)
+            by_num: dict[int, dict] = {}
+            for item in items:
+                try:
+                    num = int(item.get("lesson_number", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                if num > 0:
+                    by_num[num] = item
+            current = by_num.get(lesson_number, {"lesson_number": lesson_number})
+            current["lesson_number"] = lesson_number
+            if title:
+                current["title"] = title
+            if cover or "cover" in data:
+                current["cover"] = cover
+            if video or "video" in data:
+                current["video"] = video
+            by_num[lesson_number] = current
+            next_items = [by_num[n] for n in sorted(by_num.keys())]
+            if not save_lesson_overrides(course, next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/lessons/create":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            title = str(data.get("title", "")).strip()
+            cover = str(data.get("cover", "")).strip()
+            video = str(data.get("video", "")).strip()
+            if not admin_username or not course:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and course are required"}).encode("utf-8"))
+                return
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            items = load_lesson_overrides(course)
+            max_existing = 0
+            for item in items:
+                try:
+                    num = int(item.get("lesson_number", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                max_existing = max(max_existing, num)
+            max_baseline = int(COURSE_LESSON_COUNTS.get(course, 0) or 0)
+            next_lesson = max(max_existing, max_baseline) + 1
+            items.append(
+                {
+                    "lesson_number": next_lesson,
+                    "title": title or f"Theme: Lesson {next_lesson}",
+                    "cover": cover,
+                    "video": video,
+                }
+            )
+            if not save_lesson_overrides(course, items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True, "lesson_number": next_lesson}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/lessons/reorder":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            order = data.get("order")
+            if not admin_username or not course or not isinstance(order, list):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username, course, order are required"}).encode("utf-8"))
+                return
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            items = load_lesson_overrides(course)
+            by_num: dict[int, dict] = {}
+            for item in items:
+                try:
+                    num = int(item.get("lesson_number", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                if num > 0:
+                    by_num[num] = item
+            position = 1
+            for raw in order:
+                try:
+                    n = int(raw or 0)
+                except (TypeError, ValueError):
+                    continue
+                if n <= 0:
+                    continue
+                current = by_num.get(n, {"lesson_number": n})
+                current["lesson_number"] = n
+                current["position"] = position
+                by_num[n] = current
+                position += 1
+            next_items = [by_num[n] for n in sorted(by_num.keys())]
+            if not save_lesson_overrides(course, next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/lessons/hide":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            try:
+                lesson_number = int(data.get("lesson_number", 0) or 0)
+            except (TypeError, ValueError):
+                lesson_number = 0
+            try:
+                is_hidden = int(data.get("is_hidden", 0) or 0)
+            except (TypeError, ValueError):
+                is_hidden = 0
+            if not admin_username or not course or lesson_number <= 0:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username, course, lesson_number are required"}).encode("utf-8"))
+                return
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            items = load_lesson_overrides(course)
+            by_num: dict[int, dict] = {}
+            for item in items:
+                try:
+                    num = int(item.get("lesson_number", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                if num > 0:
+                    by_num[num] = item
+            current = by_num.get(lesson_number, {"lesson_number": lesson_number})
+            current["lesson_number"] = lesson_number
+            current["is_hidden"] = 1 if is_hidden else 0
+            by_num[lesson_number] = current
+            next_items = [by_num[n] for n in sorted(by_num.keys())]
+            if not save_lesson_overrides(course, next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/lessons/homework/save":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            try:
+                lesson_number = int(data.get("lesson_number", 0) or 0)
+            except (TypeError, ValueError):
+                lesson_number = 0
+            homework = data.get("homework")
+            if not admin_username or not course or lesson_number <= 0 or not isinstance(homework, list):
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username, course, lesson_number, homework are required"}).encode("utf-8"))
+                return
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            normalized = []
+            for item in homework:
+                if isinstance(item, str):
+                    normalized.append({"title": "", "detail": item})
+                elif isinstance(item, dict):
+                    normalized.append(
+                        {
+                            "title": str(item.get("title", "") or "").strip(),
+                            "detail": str(item.get("detail", "") or "").strip(),
+                        }
+                    )
+
+            items = load_lesson_overrides(course)
+            by_num: dict[int, dict] = {}
+            for item in items:
+                try:
+                    num = int(item.get("lesson_number", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                if num > 0:
+                    by_num[num] = item
+            current = by_num.get(lesson_number, {"lesson_number": lesson_number})
+            current["lesson_number"] = lesson_number
+            current["homework"] = normalized
+            by_num[lesson_number] = current
+            next_items = [by_num[n] for n in sorted(by_num.keys())]
+            if not save_lesson_overrides(course, next_items):
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/quiz/save":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            course_raw = str(data.get("course", "")).strip()
+            course, _ = normalize_level(course_raw)
+            try:
+                lesson_number = int(data.get("lesson_number", 0) or 0)
+            except (TypeError, ValueError):
+                lesson_number = 0
+            questions = data.get("questions")
+            if not admin_username or not course or lesson_number <= 0 or not isinstance(questions, list):
+                self._set_headers(400)
+                self.wfile.write(
+                    json.dumps({"error": "admin_username, course, lesson_number, questions are required"}).encode("utf-8")
+                )
+                return
+
+            conn = get_connection()
+            try:
+                if not is_admin_user(conn, admin_username):
+                    self._set_headers(403)
+                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                    return
+            finally:
+                conn.close()
+
+            safe_questions = []
+            used_ids: set[int] = set()
+            max_id = 0
+            for item in questions:
+                if not isinstance(item, dict):
+                    continue
+                try:
+                    qid = int(item.get("id", 0) or 0)
+                except (TypeError, ValueError):
+                    qid = 0
+                if qid <= 0 or qid in used_ids:
+                    qid = max_id + 1
+                used_ids.add(qid)
+                max_id = max(max_id, qid)
+                question = str(item.get("question", "") or "").strip()
+                options_raw = item.get("options") if isinstance(item.get("options"), dict) else {}
+                options = {
+                    "A": str((options_raw.get("A") or options_raw.get("a") or "")).strip(),
+                    "B": str((options_raw.get("B") or options_raw.get("b") or "")).strip(),
+                    "C": str((options_raw.get("C") or options_raw.get("c") or "")).strip(),
+                    "D": str((options_raw.get("D") or options_raw.get("d") or "")).strip(),
+                }
+                correct = str(item.get("correct", "") or "A").strip().upper()
+                if correct not in {"A", "B", "C", "D"}:
+                    correct = "A"
+                safe_questions.append(
+                    {
+                        "id": qid,
+                        "question": question,
+                        "options": options,
+                        "correct": correct,
+                        "explanation": str(item.get("explanation", "") or "").strip(),
+                        "explanation_simple": str(item.get("explanation_simple", "") or "").strip(),
+                        "explanation_detailed": str(item.get("explanation_detailed", "") or "").strip(),
+                    }
+                )
+            existing_questions = load_quiz_questions(course, lesson_number) or []
+            existing_by_id = {}
+            for existing in existing_questions:
+                try:
+                    existing_id = int(existing.get("id", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                if existing_id > 0:
+                    existing_by_id[existing_id] = existing
+
+            translate_cache: dict[tuple[str, str], str] = {}
+
+            def translate_cached(text_value: str, target_lang: str) -> str:
+                text_clean = str(text_value or "").strip()
+                key = (text_clean, target_lang)
+                if not text_clean:
+                    return ""
+                if key in translate_cache:
+                    return translate_cache[key]
+                translated = translate_text(text_clean, target_lang)
+                translate_cache[key] = str(translated or "").strip()
+                return translate_cache[key]
+
+            for q in safe_questions:
+                qid = int(q.get("id", 0) or 0)
+                prev = existing_by_id.get(qid)
+                prev_translations = _normalize_explanation_translation_map(prev.get("explanation_translations") if isinstance(prev, dict) else None)
+
+                main_en = str(q.get("explanation", "") or "").strip()
+                simple_en = str(q.get("explanation_simple", "") or "").strip() or _first_sentence(main_en) or main_en
+                detailed_en = str(q.get("explanation_detailed", "") or "").strip() or main_en
+
+                unchanged = False
+                if isinstance(prev, dict):
+                    prev_main = str(prev.get("explanation", "") or "").strip()
+                    prev_simple = str(prev.get("explanation_simple", "") or "").strip() or _first_sentence(prev_main) or prev_main
+                    prev_detailed = str(prev.get("explanation_detailed", "") or "").strip() or prev_main
+                    unchanged = main_en == prev_main and simple_en == prev_simple and detailed_en == prev_detailed
+
+                # Keep existing translations if the English source did not change and the admin did not provide overrides.
+                if unchanged and prev_translations:
+                    q["explanation_translations"] = prev_translations
+                    continue
+
+                if not TRANSLATE_URL:
+                    # No translation backend configured: avoid serving stale translations after edits.
+                    if unchanged and prev_translations:
+                        q["explanation_translations"] = prev_translations
+                    else:
+                        q.pop("explanation_translations", None)
+                    continue
+
+                merged = dict(prev_translations) if unchanged else {}
+
+                for lang_key in ("ru", "uz"):
+                    mode_map = merged.get(lang_key, {})
+                    if not isinstance(mode_map, dict):
+                        mode_map = {}
+                    translated_main = translate_cached(main_en, lang_key) if main_en else ""
+                    translated_simple = translate_cached(simple_en, lang_key) if simple_en else ""
+                    translated_detailed = translate_cached(detailed_en, lang_key) if detailed_en else ""
+                    if translated_main:
+                        mode_map["main"] = translated_main
+                    if translated_simple:
+                        mode_map["simple"] = translated_simple
+                    if translated_detailed:
+                        mode_map["detailed"] = translated_detailed
+                    if mode_map:
+                        merged[lang_key] = mode_map
+
+                q["explanation_translations"] = merged if merged else {}
+                if not q["explanation_translations"]:
+                    q.pop("explanation_translations", None)
+
+            quiz_path = get_quiz_path(course, lesson_number)
+            if quiz_path is None:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid course or lesson"}).encode("utf-8"))
+                return
+            try:
+                quiz_path.parent.mkdir(parents=True, exist_ok=True)
+            except OSError:
+                pass
+            try:
+                atomic_write_text(quiz_path, json.dumps(safe_questions, ensure_ascii=False, indent=2))
+            except OSError:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "save_failed"}).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/edit-access/request":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            if not admin_username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username is required"}).encode("utf-8"))
+                return
+            if not TG_BOT_TOKEN or not TG_ADMIN_IDS:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "telegram_bot_not_configured"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
+            admin = cur.fetchone()
+            if admin is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
+                return
+            if str(admin["role"] or "").strip().lower() != "admin":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                return
+
+            cur.execute("SELECT banned_until FROM admin_edit_pins WHERE admin_username = ?", (admin_username,))
+            gate = cur.fetchone()
+            banned_until_raw = str(gate["banned_until"] if gate is not None else "" or "").strip()
+            banned_until_dt = parse_iso_datetime(banned_until_raw) if banned_until_raw else None
+            if banned_until_dt is not None and utc_now() < banned_until_dt:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "banned"}).encode("utf-8"))
+                return
+
+            pin = f"{secrets.randbelow(1000000):06d}"
+            salt = secrets.token_hex(16)
+            pin_hash = hash_password(pin, salt)
+            expires_at = to_utc_naive_iso(utc_now() + timedelta(minutes=ADMIN_EDIT_PIN_TTL_MINUTES))
+            cur.execute(
+                """
+                INSERT INTO admin_edit_pins (admin_username, pin_hash, salt, expires_at, attempts_left, banned_until)
+                VALUES (?, ?, ?, ?, ?, '')
+                ON CONFLICT(admin_username) DO UPDATE SET
+                    pin_hash=excluded.pin_hash,
+                    salt=excluded.salt,
+                    expires_at=excluded.expires_at,
+                    attempts_left=excluded.attempts_left,
+                    banned_until=''
+                """,
+                (admin_username, pin_hash, salt, expires_at, ADMIN_EDIT_PIN_MAX_ATTEMPTS),
+            )
+            conn.commit()
+            conn.close()
+
+            sent = send_telegram_message(
+                f"Admin edit PIN for {admin_username}: {pin}\nValid for {ADMIN_EDIT_PIN_TTL_MINUTES} minutes."
+            )
+            if not sent:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "telegram_send_failed"}).encode("utf-8"))
+                return
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"ok": True}).encode("utf-8"))
+            return
+
+        if self.path == "/api/admin/edit-access/verify":
+            data = self._read_json()
+            admin_username = str(data.get("admin_username", "")).strip()
+            code = str(data.get("code", "")).strip()
+            if not admin_username or not code:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "admin_username and code are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
+            admin = cur.fetchone()
+            if admin is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
+                return
+            if str(admin["role"] or "").strip().lower() != "admin":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                "SELECT pin_hash, salt, expires_at, attempts_left, banned_until FROM admin_edit_pins WHERE admin_username = ?",
+                (admin_username,),
+            )
+            gate = cur.fetchone()
+            banned_until_raw = str(gate["banned_until"] if gate is not None else "" or "").strip()
+            banned_until_dt = parse_iso_datetime(banned_until_raw) if banned_until_raw else None
+            if banned_until_dt is not None and utc_now() < banned_until_dt:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"ok": False, "error": "banned"}).encode("utf-8"))
+                return
+
+            if ADMIN_EDIT_PERMANENT_CODE and code == ADMIN_EDIT_PERMANENT_CODE:
+                conn.close()
+                self._set_headers(200)
+                self.wfile.write(json.dumps({"ok": True, "method": "permanent"}).encode("utf-8"))
+                return
+
+            if gate is None:
+                conn.close()
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"ok": False, "error": "pin_not_requested"}).encode("utf-8"))
+                return
+
+            expires_raw = str(gate["expires_at"] or "").strip()
+            expires_dt = parse_iso_datetime(expires_raw) if expires_raw else None
+            if expires_dt is None or utc_now() > expires_dt:
+                conn.close()
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"ok": False, "error": "pin_expired"}).encode("utf-8"))
+                return
+
+            expected_hash = str(gate["pin_hash"] or "")
+            salt = str(gate["salt"] or "")
+            attempts_left = int(gate["attempts_left"] or 0)
+            if attempts_left <= 0:
+                banned_until = to_utc_naive_iso(utc_now() + timedelta(minutes=ADMIN_EDIT_BAN_MINUTES))
+                cur.execute(
+                    "UPDATE admin_edit_pins SET banned_until = ? WHERE admin_username = ?",
+                    (banned_until, admin_username),
+                )
+                conn.commit()
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"ok": False, "error": "banned"}).encode("utf-8"))
+                return
+
+            provided_hash = hash_password(code, salt)
+            if provided_hash == expected_hash:
+                cur.execute(
+                    "UPDATE admin_edit_pins SET pin_hash = '', salt = '', expires_at = '', attempts_left = 0 WHERE admin_username = ?",
+                    (admin_username,),
+                )
+                conn.commit()
+                conn.close()
+                self._set_headers(200)
+                self.wfile.write(json.dumps({"ok": True, "method": "pin"}).encode("utf-8"))
+                return
+
+            attempts_left = max(0, attempts_left - 1)
+            response_payload = {"ok": False, "error": "invalid_code", "attempts_left": attempts_left}
+            if attempts_left <= 0:
+                banned_until = to_utc_naive_iso(utc_now() + timedelta(minutes=ADMIN_EDIT_BAN_MINUTES))
+                cur.execute(
+                    "UPDATE admin_edit_pins SET attempts_left = ?, banned_until = ? WHERE admin_username = ?",
+                    (attempts_left, banned_until, admin_username),
+                )
+                response_payload = {"ok": False, "error": "banned"}
+            else:
+                cur.execute(
+                    "UPDATE admin_edit_pins SET attempts_left = ? WHERE admin_username = ?",
+                    (attempts_left, admin_username),
+                )
+            conn.commit()
+            conn.close()
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps(response_payload).encode("utf-8"))
             return
 
         if self.path == "/api/admin/contact-messages/mark-seen":
@@ -2944,7 +5650,9 @@ class Handler(BaseHTTPRequestHandler):
 
             if not username or not course or lesson_number <= 0:
                 self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username, course and lesson_number are required"}).encode("utf-8"))
+                self.wfile.write(
+                    json.dumps({"error": "username, course and lesson_number are required"}).encode("utf-8")
+                )
                 return
 
             if course not in COURSE_LESSON_COUNTS:
@@ -3028,6 +5736,99 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
             return
 
+        if self.path == "/api/mentor/self-update":
+            data = self._read_json()
+            username = str(data.get("username", "")).strip()
+            name = str(data.get("name", "")).strip()
+            phone_raw = str(data.get("phone", "")).strip()
+            telegram_username = str(data.get("telegram_username", "")).strip()
+            instagram_username = str(data.get("instagram_username", "")).strip()
+            info = str(data.get("info", "")).strip()
+
+            if not username or not name or not phone_raw:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username, name and phone are required"}).encode("utf-8"))
+                return
+
+            phone = normalize_phone(phone_raw)
+            if not phone:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid phone format"}).encode("utf-8"))
+                return
+
+            clean_telegram = telegram_username.lstrip("@")
+            if clean_telegram and re.fullmatch(r"[A-Za-z0-9_]{4,32}", clean_telegram) is None:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid telegram_username format"}).encode("utf-8"))
+                return
+
+            clean_instagram = instagram_username.lstrip("@")
+            if clean_instagram and re.fullmatch(r"[A-Za-z0-9_.]{1,32}", clean_instagram) is None:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid instagram_username format"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, full_name, phone FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            user_id = int(mentor_user["id"] or 0)
+            cur.execute("SELECT id FROM users WHERE phone = ? AND id != ?", (phone, user_id))
+            if cur.fetchone() is not None:
+                conn.close()
+                self._set_headers(409)
+                self.wfile.write(json.dumps({"error": "phone already exists"}).encode("utf-8"))
+                return
+
+            mentor_profile_id = 0
+            old_phone = str(mentor_user["phone"] or "").strip()
+            if old_phone:
+                cur.execute("SELECT id FROM mentors WHERE phone = ? ORDER BY id DESC LIMIT 1", (old_phone,))
+                row = cur.fetchone()
+                if row is not None:
+                    mentor_profile_id = int(row["id"] or 0)
+            if mentor_profile_id <= 0:
+                old_name = str(mentor_user["full_name"] or "").strip()
+                if old_name:
+                    cur.execute(
+                        "SELECT id FROM mentors WHERE LOWER(name) = LOWER(?) ORDER BY id DESC LIMIT 1", (old_name,)
+                    )
+                    row = cur.fetchone()
+                    if row is not None:
+                        mentor_profile_id = int(row["id"] or 0)
+
+            if mentor_profile_id <= 0:
+                conn.close()
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "mentor profile not found"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                UPDATE mentors
+                SET name = ?, phone = ?, telegram_username = ?, instagram_username = ?, info = ?
+                WHERE id = ?
+                """,
+                (name, phone, clean_telegram, clean_instagram, info, mentor_profile_id),
+            )
+            cur.execute("UPDATE users SET full_name = ?, phone = ? WHERE id = ?", (name, phone, user_id))
+            conn.commit()
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"status": "updated"}).encode("utf-8"))
+            return
+
         if self.path == "/api/admin/mentors/update":
             data = self._read_json()
             admin_username = str(data.get("admin_username", "")).strip()
@@ -3037,13 +5838,20 @@ class Handler(BaseHTTPRequestHandler):
             phone_raw = str(data.get("phone", "")).strip()
             email = str(data.get("email", "")).strip()
             telegram_username = str(data.get("telegram_username", "")).strip()
+            instagram_username = str(data.get("instagram_username", "")).strip()
             info = str(data.get("info", "")).strip()
             file_name = str(data.get("file_name", "")).strip()
             file_data = str(data.get("file_data", "")).strip()
 
             if telegram_username.startswith("@"):
                 telegram_username = telegram_username[1:]
+            if instagram_username.startswith("@"):
+                instagram_username = instagram_username[1:]
             phone = normalize_phone(phone_raw)
+            if instagram_username and re.fullmatch(r"[A-Za-z0-9_.]{1,32}", instagram_username) is None:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid instagram_username format"}).encode("utf-8"))
+                return
 
             if (
                 not admin_username
@@ -3128,10 +5936,21 @@ class Handler(BaseHTTPRequestHandler):
             cur.execute(
                 """
                 UPDATE mentors
-                SET name = ?, level = ?, phone = ?, email = ?, telegram_username = ?, info = ?, avatar_path = ?, avatar_name = ?
+                SET name = ?, level = ?, phone = ?, email = ?, telegram_username = ?, instagram_username = ?, info = ?, avatar_path = ?, avatar_name = ?
                 WHERE id = ?
                 """,
-                (name, course_level, phone, email, telegram_username, info, avatar_path, avatar_name, mentor_id),
+                (
+                    name,
+                    course_level,
+                    phone,
+                    email,
+                    telegram_username,
+                    instagram_username,
+                    info,
+                    avatar_path,
+                    avatar_name,
+                    mentor_id,
+                ),
             )
             conn.commit()
             conn.close()
@@ -3148,13 +5967,20 @@ class Handler(BaseHTTPRequestHandler):
             phone_raw = str(data.get("phone", "")).strip()
             email = str(data.get("email", "")).strip()
             telegram_username = str(data.get("telegram_username", "")).strip()
+            instagram_username = str(data.get("instagram_username", "")).strip()
             info = str(data.get("info", "")).strip()
             file_name = str(data.get("file_name", "")).strip()
             file_data = str(data.get("file_data", "")).strip()
 
             if telegram_username.startswith("@"):
                 telegram_username = telegram_username[1:]
+            if instagram_username.startswith("@"):
+                instagram_username = instagram_username[1:]
             phone = normalize_phone(phone_raw)
+            if instagram_username and re.fullmatch(r"[A-Za-z0-9_.]{1,32}", instagram_username) is None:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid instagram_username format"}).encode("utf-8"))
+                return
 
             if (
                 not admin_username
@@ -3227,10 +6053,21 @@ class Handler(BaseHTTPRequestHandler):
             created_at = datetime.utcnow().isoformat()
             cur.execute(
                 """
-                INSERT INTO mentors (name, level, phone, email, telegram_username, info, avatar_path, avatar_name, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO mentors (name, level, phone, email, telegram_username, instagram_username, info, avatar_path, avatar_name, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (name, course_level, phone, email, telegram_username, info, str(file_path), file_name, created_at),
+                (
+                    name,
+                    course_level,
+                    phone,
+                    email,
+                    telegram_username,
+                    instagram_username,
+                    info,
+                    str(file_path),
+                    file_name,
+                    created_at,
+                ),
             )
             mentor_id = cur.lastrowid
             conn.commit()
@@ -3245,13 +6082,21 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/api/admin/users/create":
             data = self._read_json()
             admin_username = data.get("admin_username", "").strip()
-            full_name = data.get("name", "").strip()
-            level = data.get("level", "").strip()
+            first_name = str(data.get("name", "")).strip()
+            second_name = str(data.get("second_name", "")).strip()
+            full_name = " ".join(part for part in [first_name, second_name] if part).strip()
+            level = str(data.get("level", "")).strip()
             lesson_schedule_raw = str(data.get("lesson_schedule", "") or data.get("schedule", "")).strip()
             username = data.get("username", "").strip()
             password = data.get("password", "")
             phone_raw = data.get("phone", "").strip()
             phone = normalize_phone(phone_raw)
+            role = str(data.get("role", "") or "student").strip().lower()
+            if role not in {"student", "mentor"}:
+                role = "student"
+            mentor_id = int(data.get("mentor_id", 0) or 0)
+            file_name = str(data.get("file_name", "")).strip()
+            file_data = str(data.get("file_data", "")).strip()
 
             if not admin_username or not full_name or not level or not username or not password or not phone:
                 self._set_headers(400)
@@ -3303,10 +6148,32 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "phone already exists"}).encode("utf-8"))
                 return
 
+            if role != "student":
+                mentor_id = 0
+            if mentor_id < 0:
+                mentor_id = 0
+            if role == "student" and mentor_id:
+                cur.execute("SELECT id, level FROM mentors WHERE id = ?", (mentor_id,))
+                mentor_row = cur.fetchone()
+                if mentor_row is None:
+                    conn.close()
+                    self._set_headers(400)
+                    self.wfile.write(json.dumps({"error": "mentor not found"}).encode("utf-8"))
+                    return
+                mentor_course, _ = normalize_level(str(mentor_row["level"] or "").strip())
+                if mentor_course and mentor_course != course_level:
+                    conn.close()
+                    self._set_headers(400)
+                    self.wfile.write(json.dumps({"error": "mentor level mismatch"}).encode("utf-8"))
+                    return
+
             salt = secrets.token_hex(16)
             password_hash = hash_password(password, salt)
             created_at = datetime.utcnow().isoformat()
-            lesson_schedule_key = get_user_schedule_key(level, lesson_schedule_raw)
+            level_label = level.lower()
+            if role == "mentor":
+                level_label = course_level
+            lesson_schedule_key = "" if role == "mentor" else get_user_schedule_key(level_label, lesson_schedule_raw)
             cur.execute(
                 """
                 INSERT INTO users (
@@ -3314,6 +6181,7 @@ class Handler(BaseHTTPRequestHandler):
                     level,
                     lesson_schedule,
                     phone,
+                    mentor_id,
                     username,
                     password,
                     password_hash,
@@ -3322,21 +6190,65 @@ class Handler(BaseHTTPRequestHandler):
                     created_at,
                     access_started_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'student', ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     full_name,
-                    level.lower(),
+                    level_label,
                     lesson_schedule_key,
                     phone,
+                    mentor_id,
                     username,
                     password,
                     password_hash,
                     salt,
+                    role,
                     created_at,
                     created_at,
                 ),
             )
+
+            if role == "mentor" and file_data:
+                try:
+                    header, b64_data = file_data.split(",", 1)
+                except ValueError:
+                    header = ""
+                    b64_data = file_data
+                try:
+                    file_bytes = base64.b64decode(b64_data)
+                except (ValueError, TypeError):
+                    conn.close()
+                    self._set_headers(400)
+                    self.wfile.write(json.dumps({"error": "invalid file_data"}).encode("utf-8"))
+                    return
+
+                uploads_dir = DEFAULT_DB_DIR / "uploads" / "mentors"
+                uploads_dir.mkdir(parents=True, exist_ok=True)
+                safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name or "mentor")[:120] or "mentor"
+                timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+                stored_name = f"{course_level}_{timestamp}_{safe_name}"
+                file_path = uploads_dir / stored_name
+                file_path.write_bytes(file_bytes)
+
+                cur.execute("SELECT id FROM mentors WHERE phone = ? ORDER BY id DESC LIMIT 1", (phone,))
+                existing = cur.fetchone()
+                if existing is not None:
+                    cur.execute(
+                        """
+                        UPDATE mentors
+                        SET name = ?, level = ?, avatar_path = ?, avatar_name = ?
+                        WHERE id = ?
+                        """,
+                        (full_name, course_level, str(file_path), file_name or safe_name, existing["id"]),
+                    )
+                else:
+                    cur.execute(
+                        """
+                        INSERT INTO mentors (name, level, phone, avatar_path, avatar_name, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (full_name, course_level, phone, str(file_path), file_name or safe_name, created_at),
+                    )
             conn.commit()
             conn.close()
 
@@ -3350,9 +6262,68 @@ class Handler(BaseHTTPRequestHandler):
                         "username": username,
                         "lesson_schedule": lesson_schedule_key,
                         "created_at": created_at,
+                        "role": role,
                     }
                 ).encode("utf-8")
             )
+            return
+
+        if self.path == "/api/user/avatar":
+            data = self._read_json()
+            username = str(data.get("username", "")).strip()
+            file_name = str(data.get("file_name", "")).strip()
+            file_data = str(data.get("file_data", "")).strip()
+
+            if not username or not file_data:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username and file_data are required"}).encode("utf-8"))
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id FROM users WHERE username = ?", (username,))
+            user = cur.fetchone()
+            if user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+
+            try:
+                header, b64_data = file_data.split(",", 1)
+            except ValueError:
+                header = ""
+                b64_data = file_data
+            try:
+                file_bytes = base64.b64decode(b64_data)
+            except (ValueError, TypeError):
+                conn.close()
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "invalid file_data"}).encode("utf-8"))
+                return
+
+            uploads_dir = DEFAULT_DB_DIR / "uploads" / "users"
+            uploads_dir.mkdir(parents=True, exist_ok=True)
+            safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name or "avatar")[:120] or "avatar"
+            timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            stored_name = f"{timestamp}_{safe_name}"
+            file_path = uploads_dir / stored_name
+            try:
+                file_path.write_bytes(file_bytes)
+            except OSError:
+                conn.close()
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": "failed to save file"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                "UPDATE users SET avatar_path = ?, avatar_name = ? WHERE username = ?",
+                (str(file_path), file_name or safe_name, username),
+            )
+            conn.commit()
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"status": "updated"}).encode("utf-8"))
             return
 
         if self.path == "/api/admin/users/update":
@@ -3818,9 +6789,51 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             if user_role != "admin" and is_same_level and lesson_number > 1:
+                cur = None
                 access_started_raw = session_user["access_started_at"] or session_user["created_at"]
                 created_dt = parse_iso_datetime(access_started_raw)
                 if created_dt is not None:
+                    # Enforce sequential progression: only already completed lessons and the next required lesson
+                    # can be opened (even if lessons are already unlocked by schedule).
+                    conn = get_connection()
+                    cur = conn.cursor()
+                    cur.execute(
+                        """
+                        SELECT DISTINCT lesson_number
+                        FROM task_completions
+                        WHERE user_id = ? AND course = ? AND task_key = 'lesson_completed'
+                        """,
+                        (session_user["id"], course),
+                    )
+                    strict_completed = {int(row["lesson_number"]) for row in cur.fetchall()}
+                    lesson_count = int(COURSE_LESSON_COUNTS.get(user_level, 0) or 0)
+                    next_required = lesson_count + 1
+                    if lesson_count > 0:
+                        for n in range(1, lesson_count + 1):
+                            if n not in strict_completed:
+                                next_required = n
+                                break
+                    if lesson_number > next_required:
+                        conn.close()
+                        self._set_headers(200)
+                        self.wfile.write(
+                            json.dumps(
+                                {
+                                    "allowed": False,
+                                    "guest_mode": False,
+                                    "reason": "prerequisite",
+                                    "username": session_user["username"],
+                                    "role": session_user["role"],
+                                    "level": user_level_raw,
+                                    "required_lesson_number": int(next_required or 0),
+                                    "subscription_expires_at": subscription_expires_at or "",
+                                }
+                            ).encode("utf-8")
+                        )
+                        return
+                    # If user is trying to open the next required lesson or any already completed lesson,
+                    # allow schedule check below to decide availability for the next required one.
+                    conn.close()
                     schedule_raw = session_user["lesson_schedule"] if "lesson_schedule" in session_user.keys() else ""
                     access_started_local = get_schedule_anchor_dt(created_dt, user_level_raw, schedule_raw)
                     now_local = local_now()
@@ -3999,6 +7012,40 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"status": "saved"}).encode("utf-8"))
             return
 
+        if self.path == "/api/task/uncomplete":
+            data = self._read_json()
+            username = data.get("username", "").strip()
+            course = data.get("course", "").strip()
+            lesson_number = int(data.get("lesson_number", 0))
+            task_key = data.get("task_key", "").strip()
+
+            if not username or not course or not lesson_number or not task_key:
+                self._set_headers(400)
+                self.wfile.write(
+                    json.dumps({"error": "username, course, lesson_number, task_key are required"}).encode("utf-8")
+                )
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id FROM users WHERE username = ?", (username,))
+            user = cur.fetchone()
+            if user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                "DELETE FROM task_completions WHERE user_id = ? AND course = ? AND lesson_number = ? AND task_key = ?",
+                (user["id"], course, lesson_number, task_key),
+            )
+            conn.commit()
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"status": "deleted"}).encode("utf-8"))
+            return
+
         if self.path == "/api/quiz/submit":
             data = self._read_json()
             username = data.get("username", "").strip()
@@ -4169,6 +7216,198 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
 
+        if self.path == "/api/mentor/homework/review":
+            data = self._read_json()
+            username = str(data.get("username", "")).strip()
+            try:
+                submission_id = int(data.get("submission_id", 0))
+            except (TypeError, ValueError):
+                submission_id = 0
+            try:
+                score = int(data.get("score", 0))
+            except (TypeError, ValueError):
+                score = 0
+            comment = str(data.get("comment", "")).strip()
+
+            if not username or submission_id <= 0 or score < 1 or score > 5:
+                self._set_headers(400)
+                self.wfile.write(
+                    json.dumps({"error": "username, submission_id and score (1-5) are required"}).encode("utf-8")
+                )
+                return
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role, level FROM users WHERE username = ?", (username,))
+            mentor_user = cur.fetchone()
+            if mentor_user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(mentor_user["role"] or "").strip().lower() != "mentor":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "mentor access required"}).encode("utf-8"))
+                return
+
+            cur.execute(
+                """
+                SELECT
+                    hs.id,
+                    hs.user_id,
+                    hs.course,
+                    hs.lesson_number,
+                    u.username AS student_username,
+                    u.level AS student_level,
+                    u.mentor_id AS student_mentor_id
+                FROM homework_submissions hs
+                JOIN users u ON u.id = hs.user_id
+                WHERE hs.id = ?
+                """,
+                (submission_id,),
+            )
+            row = cur.fetchone()
+            if row is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "submission not found"}).encode("utf-8"))
+                return
+
+            mentor_course, _ = normalize_level(str(mentor_user["level"] or "").strip())
+            student_course, _ = normalize_level(str(row["student_level"] or "").strip())
+            if mentor_course and student_course and mentor_course != student_course:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "level mismatch"}).encode("utf-8"))
+                return
+
+            mentor_profile_id = resolve_mentor_profile_id(cur, mentor_user)
+            student_mentor_id = int((row["student_mentor_id"] or 0) or 0)
+            if mentor_profile_id > 0 and student_mentor_id > 0 and student_mentor_id != mentor_profile_id:
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student is not assigned to this mentor"}).encode("utf-8"))
+                return
+
+            reviewed_at = datetime.utcnow().isoformat()
+            cur.execute(
+                """
+                UPDATE homework_submissions
+                SET status = ?,
+                    feedback_text = ?,
+                    reviewer_username = ?,
+                    reviewed_at = ?,
+                    score = ?,
+                    student_seen_at = '',
+                    mentor_seen_at = CASE
+                        WHEN mentor_seen_at IS NULL OR mentor_seen_at = '' THEN ?
+                        ELSE mentor_seen_at
+                    END
+                WHERE id = ?
+                """,
+                ("checked", comment, username, reviewed_at, score, reviewed_at, submission_id),
+            )
+            # Mark all submissions for this lesson as seen by the mentor, so badge counts represent
+            # lessons pending review (not older submissions that the mentor has already handled).
+            cur.execute(
+                """
+                UPDATE homework_submissions
+                SET mentor_seen_at = CASE
+                    WHEN mentor_seen_at IS NULL OR mentor_seen_at = '' THEN ?
+                    ELSE mentor_seen_at
+                END
+                WHERE user_id = ?
+                  AND course = ?
+                  AND lesson_number = ?
+                """,
+                (reviewed_at, row["user_id"], row["course"], row["lesson_number"]),
+            )
+            conn.commit()
+            conn.close()
+
+            self._set_headers(200)
+            self.wfile.write(
+                json.dumps({"status": "saved", "id": submission_id, "score": score, "reviewed_at": reviewed_at}).encode(
+                    "utf-8"
+                )
+            )
+            return
+
+        if self.path == "/api/student/notifications/mark-seen":
+            data = self._read_json()
+            username = str(data.get("username", "")).strip()
+            submission_ids_raw = data.get("submission_ids", None)
+            mark_all = bool(data.get("all", False))
+            if not username:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
+                return
+ 
+            submission_ids: list[int] = []
+            if isinstance(submission_ids_raw, list):
+                for value in submission_ids_raw:
+                    try:
+                        submission_ids.append(int(value))
+                    except (TypeError, ValueError):
+                        continue
+            submission_ids = [sid for sid in submission_ids if sid > 0]
+
+            conn = get_connection()
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
+            user = cur.fetchone()
+            if user is None:
+                conn.close()
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
+                return
+            if str(user["role"] or "").strip().lower() != "student":
+                conn.close()
+                self._set_headers(403)
+                self.wfile.write(json.dumps({"error": "student access required"}).encode("utf-8"))
+                return
+
+            seen_at = datetime.utcnow().isoformat()
+            updated = 0
+            if mark_all or not submission_ids:
+                cur.execute(
+                    """
+                    UPDATE homework_submissions
+                    SET student_seen_at = ?
+                    WHERE user_id = ?
+                      AND status = 'checked'
+                      AND reviewed_at IS NOT NULL
+                      AND reviewed_at != ''
+                      AND (student_seen_at IS NULL OR student_seen_at = '')
+                    """,
+                    (seen_at, user["id"]),
+                )
+                updated = int(cur.rowcount or 0)
+            else:
+                placeholders = ", ".join(["?"] * len(submission_ids))
+                params = [seen_at, user["id"], *submission_ids]
+                cur.execute(
+                    f"""
+                    UPDATE homework_submissions
+                    SET student_seen_at = ?
+                    WHERE user_id = ?
+                      AND id IN ({placeholders})
+                      AND status = 'checked'
+                      AND reviewed_at IS NOT NULL
+                      AND reviewed_at != ''
+                      AND (student_seen_at IS NULL OR student_seen_at = '')
+                    """,
+                    params,
+                )
+                updated = int(cur.rowcount or 0)
+
+            conn.commit()
+            conn.close()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"status": "ok", "updated": updated}).encode("utf-8"))
+            return
+
         if self.path == "/api/homework/submit":
             data = self._read_json()
             username = str(data.get("username", "")).strip()
@@ -4179,6 +7418,7 @@ class Handler(BaseHTTPRequestHandler):
             file_name = str(data.get("file_name", "")).strip()
             file_data = str(data.get("file_data", "")).strip()
             file_type = str(data.get("file_type", "")).strip()
+            files_raw = data.get("files", None)
 
             if not username or not course or lesson_number <= 0 or not submission_text:
                 self._set_headers(400)
@@ -4205,73 +7445,120 @@ class Handler(BaseHTTPRequestHandler):
             stored_path = ""
             original_name = ""
             mime_type = ""
+            stored_paths: list[str] = []
+            original_names: list[str] = []
+            mime_types: list[str] = []
 
-            if file_name or file_data:
+            submitted_at = datetime.utcnow().isoformat()
+
+            attachments: list[dict] = []
+            if isinstance(files_raw, list) and files_raw:
+                for entry in files_raw[:20]:
+                    if not isinstance(entry, dict):
+                        continue
+                    entry_name = str(entry.get("file_name", "")).strip()
+                    entry_data = str(entry.get("file_data", "")).strip()
+                    entry_type = str(entry.get("file_type", "")).strip()
+                    if not entry_name or not entry_data:
+                        conn.close()
+                        self._set_headers(400)
+                        self.wfile.write(json.dumps({"error": "file_name and file_data are required"}).encode("utf-8"))
+                        return
+                    attachments.append({"file_name": entry_name, "file_data": entry_data, "file_type": entry_type})
+            elif file_name or file_data:
                 if not file_name or not file_data:
                     conn.close()
                     self._set_headers(400)
                     self.wfile.write(json.dumps({"error": "file_name and file_data are required together"}).encode("utf-8"))
                     return
+                attachments.append({"file_name": file_name, "file_data": file_data, "file_type": file_type})
 
-                ext = Path(file_name).suffix.lower()
-                if ext and ext not in HOMEWORK_ALLOWED_EXTENSIONS:
-                    conn.close()
-                    self._set_headers(400)
-                    self.wfile.write(json.dumps({"error": "file type is not allowed"}).encode("utf-8"))
-                    return
-
-                try:
-                    header, b64_data = file_data.split(",", 1)
-                except ValueError:
-                    header = ""
-                    b64_data = file_data
-
-                try:
-                    file_bytes = base64.b64decode(b64_data)
-                except (ValueError, TypeError):
-                    conn.close()
-                    self._set_headers(400)
-                    self.wfile.write(json.dumps({"error": "invalid file_data"}).encode("utf-8"))
-                    return
-
-                if len(file_bytes) > HOMEWORK_MAX_BYTES:
-                    conn.close()
-                    self._set_headers(400)
-                    self.wfile.write(json.dumps({"error": "file is too large"}).encode("utf-8"))
-                    return
-
-                if header.startswith("data:") and ";" in header:
-                    mime_type = header[5:].split(";")[0].strip()
-                if not mime_type:
-                    guessed_type, _ = mimetypes.guess_type(file_name)
-                    mime_type = guessed_type or file_type or ""
-
+            if attachments:
                 uploads_dir = DEFAULT_DB_DIR / "uploads" / "homework"
                 uploads_dir.mkdir(parents=True, exist_ok=True)
-                safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name)[:120] or "homework"
+
                 timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-                stored_name = f"{username}_{course}_{lesson_number}_{timestamp}_{safe_name}"
-                file_path = uploads_dir / stored_name
-                try:
-                    file_path.write_bytes(file_bytes)
-                except OSError:
-                    conn.close()
-                    self._set_headers(500)
-                    self.wfile.write(json.dumps({"error": "failed to save file"}).encode("utf-8"))
-                    return
+                nonce = secrets.token_hex(4)
 
-                stored_path = str(file_path)
-                original_name = file_name
+                for index, attach in enumerate(attachments):
+                    entry_name = str(attach.get("file_name", "")).strip()
+                    entry_data = str(attach.get("file_data", "")).strip()
+                    entry_type = str(attach.get("file_type", "")).strip()
 
-            submitted_at = datetime.utcnow().isoformat()
+                    ext = Path(entry_name).suffix.lower()
+                    if ext and ext not in HOMEWORK_ALLOWED_EXTENSIONS:
+                        conn.close()
+                        self._set_headers(400)
+                        self.wfile.write(json.dumps({"error": "file type is not allowed"}).encode("utf-8"))
+                        return
+
+                    try:
+                        header, b64_data = entry_data.split(",", 1)
+                    except ValueError:
+                        header = ""
+                        b64_data = entry_data
+
+                    try:
+                        file_bytes = base64.b64decode(b64_data)
+                    except (ValueError, TypeError):
+                        conn.close()
+                        self._set_headers(400)
+                        self.wfile.write(json.dumps({"error": "invalid file_data"}).encode("utf-8"))
+                        return
+
+                    if len(file_bytes) > HOMEWORK_MAX_BYTES:
+                        conn.close()
+                        self._set_headers(400)
+                        self.wfile.write(json.dumps({"error": "file is too large"}).encode("utf-8"))
+                        return
+
+                    entry_mime = ""
+                    if header.startswith("data:") and ";" in header:
+                        entry_mime = header[5:].split(";")[0].strip()
+                    if not entry_mime:
+                        guessed_type, _ = mimetypes.guess_type(entry_name)
+                        entry_mime = guessed_type or entry_type or ""
+
+                    safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", entry_name)[:120] or "homework"
+                    stored_name = f"{username}_{course}_{lesson_number}_{timestamp}_{nonce}_{index + 1}_{safe_name}"
+                    file_path = uploads_dir / stored_name
+                    try:
+                        file_path.write_bytes(file_bytes)
+                    except OSError:
+                        conn.close()
+                        self._set_headers(500)
+                        self.wfile.write(json.dumps({"error": "failed to save file"}).encode("utf-8"))
+                        return
+
+                    stored_paths.append(str(file_path))
+                    original_names.append(entry_name)
+                    mime_types.append(entry_mime)
+
+                if stored_paths:
+                    stored_path = stored_paths[0]
+                    original_name = original_names[0] if original_names else ""
+                    mime_type = mime_types[0] if mime_types else ""
+
+            cur.execute(
+                "SELECT id FROM homework_submissions WHERE user_id = ? AND course = ? AND lesson_number = ? LIMIT 1",
+                (user["id"], course, lesson_number),
+            )
+            if cur.fetchone() is not None:
+                conn.close()
+                self._set_headers(409)
+                self.wfile.write(json.dumps({"error": "homework already submitted"}).encode("utf-8"))
+                return
+
             cur.execute(
                 """
                 INSERT INTO homework_submissions (
                     user_id, course, lesson_number, submission_text,
-                    file_path, original_name, mime_type, status,
+                    file_path, original_name, mime_type,
+                    archive_path, archive_name, mentor_seen_at,
+                    status,
                     feedback_text, reviewer_username, submitted_at, reviewed_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'new', '', '', ?, '')
+                VALUES (?, ?, ?, ?, ?, ?, ?, '', '', '', 'new', '', '', ?, '')
                 """,
                 (
                     user["id"],
@@ -4285,6 +7572,54 @@ class Handler(BaseHTTPRequestHandler):
                 ),
             )
             submission_id = cur.lastrowid
+
+            archive_path = ""
+            archive_name = ""
+            try:
+                archives_dir = (
+                    DEFAULT_DB_DIR
+                    / "uploads"
+                    / "homework_archives"
+                    / re.sub(r"[^A-Za-z0-9._-]", "_", username)[:80]
+                    / course
+                    / f"lesson_{lesson_number}"
+                )
+                archives_dir.mkdir(parents=True, exist_ok=True)
+                timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+                archive_name = f"homework_{course}_lesson{lesson_number}_{submission_id}_{timestamp}.zip"
+                archive_path_obj = archives_dir / archive_name
+
+                homework_txt = (
+                    f"Student: {username}\n"
+                    f"Course: {course}\n"
+                    f"Lesson: {lesson_number}\n"
+                    f"Submitted at (UTC): {submitted_at}\n"
+                    "\n"
+                    f"{submission_text}\n"
+                )
+                with zipfile.ZipFile(archive_path_obj, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+                    zf.writestr("homework.txt", homework_txt)
+                    if stored_paths:
+                        for idx, path_str in enumerate(stored_paths):
+                            try:
+                                attach_path = Path(path_str)
+                                attach_original = original_names[idx] if idx < len(original_names) else attach_path.name
+                                safe_attach_name = re.sub(r"[^A-Za-z0-9._-]", "_", attach_original)[:120] or "attachment"
+                                prefix = f"{idx + 1:02d}_" if len(stored_paths) > 1 else ""
+                                zf.write(attach_path, arcname=f"attachment/{prefix}{safe_attach_name}")
+                            except OSError:
+                                # If attachment is missing, keep the archive with text.
+                                pass
+                archive_path = str(archive_path_obj)
+            except Exception:
+                archive_path = ""
+                archive_name = ""
+
+            if archive_path:
+                cur.execute(
+                    "UPDATE homework_submissions SET archive_path = ?, archive_name = ? WHERE id = ?",
+                    (archive_path, archive_name, submission_id),
+                )
             conn.commit()
             conn.close()
 
@@ -4295,6 +7630,7 @@ class Handler(BaseHTTPRequestHandler):
                         "status": "submitted",
                         "id": submission_id,
                         "submitted_at": submitted_at,
+                        "archive_ready": bool(archive_path),
                     }
                 ).encode("utf-8")
             )
@@ -4384,9 +7720,16 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="EWMS API server")
+    parser.add_argument("--host", default=HOST)
+    parser.add_argument("--port", type=int, default=PORT)
+    args = parser.parse_args()
+
     init_db()
-    server = ThreadingHTTPServer((HOST, PORT), Handler)
-    print(f"API server running on http://{HOST}:{PORT}")
+    server = ThreadingHTTPServer((args.host, args.port), Handler)
+    print(f"API server running on http://{args.host}:{args.port}")
     print("Admin credentials:")
     print(f"  login: {ADMIN_USERNAME}")
     print(f"  password: {ADMIN_PASSWORD}")

@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "question": "I ___ play football every day when I was a child.",
+    "question": "Fill in the blank: I ___ play football every day when I was a child.",
     "options": {
       "A": "use to",
       "B": "used to",
@@ -9,14 +9,14 @@
       "D": "was use to"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 2,
-    "question": "She ___ like coffee, but now she drinks it every morning.",
+    "question": "Fill in the blank: She ___ like coffee, but now she drinks it every morning.",
     "options": {
       "A": "didn't use to",
       "B": "doesn't used to",
@@ -24,14 +24,14 @@
       "D": "don't use to"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"didn't use to\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"didn't use to\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 3,
-    "question": "There ___ be a cinema here, but it was closed.",
+    "question": "Fill in the blank: There ___ be a cinema here, but it was closed.",
     "options": {
       "A": "use",
       "B": "used",
@@ -39,14 +39,14 @@
       "D": "is used to"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 4,
-    "question": "My grandfather ___ work as a teacher.",
+    "question": "Fill in the blank: My grandfather ___ work as a teacher.",
     "options": {
       "A": "is used to",
       "B": "used to",
@@ -54,14 +54,14 @@
       "D": "was use to"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 5,
-    "question": "We ___ live in a small flat before we bought this house.",
+    "question": "Fill in the blank: We ___ live in a small flat before we bought this house.",
     "options": {
       "A": "used to",
       "B": "use to",
@@ -69,14 +69,14 @@
       "D": "were used to"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 6,
-    "question": "Did you ___ play video games when you were young",
+    "question": "Fill in the blank: Did you ___ play video games when you were young",
     "options": {
       "A": "use to",
       "B": "used to",
@@ -84,14 +84,14 @@
       "D": "use"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"use to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"use to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 7,
-    "question": "I'm not ___ waking up so early.",
+    "question": "Fill in the blank: I'm not ___ waking up so early.",
     "options": {
       "A": "used to",
       "B": "use to",
@@ -99,14 +99,14 @@
       "D": "using to"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 8,
-    "question": "There ___ many trees in this area, but now it's all buildings.",
+    "question": "Fill in the blank: There ___ many trees in this area, but now it's all buildings.",
     "options": {
       "A": "were used to",
       "B": "used to be",
@@ -114,14 +114,14 @@
       "D": "are used to"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to be\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to be\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 9,
-    "question": "He ___ drive to work, but now he takes the bus.",
+    "question": "Fill in the blank: He ___ drive to work, but now he takes the bus.",
     "options": {
       "A": "used to",
       "B": "use to",
@@ -129,14 +129,14 @@
       "D": "was used to"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 10,
-    "question": "My mom ___ cook every day when we were kids.",
+    "question": "Fill in the blank: My mom ___ cook every day when we were kids.",
     "options": {
       "A": "used to",
       "B": "use to",
@@ -144,14 +144,14 @@
       "D": "is used to"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 11,
-    "question": "They ___ live in London, didn't they",
+    "question": "Fill in the blank: They ___ live in London, didn't they",
     "options": {
       "A": "use to",
       "B": "used to",
@@ -159,14 +159,14 @@
       "D": "were use to"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 12,
-    "question": "We ___ eating spicy food when we moved to India.",
+    "question": "Fill in the blank: We ___ eating spicy food when we moved to India.",
     "options": {
       "A": "are used to",
       "B": "used to",
@@ -174,14 +174,14 @@
       "D": "were used to"
     },
     "correct": "D",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"were used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"were used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 13,
-    "question": "He didn't ___ wear glasses before.",
+    "question": "Fill in the blank: He didn't ___ wear glasses before.",
     "options": {
       "A": "use to",
       "B": "used to",
@@ -189,14 +189,14 @@
       "D": "uses to"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"use to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"use to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 14,
-    "question": "I ___ go swimming every weekend when I was a child.",
+    "question": "Fill in the blank: I ___ go swimming every weekend when I was a child.",
     "options": {
       "A": "use to",
       "B": "used to",
@@ -204,14 +204,14 @@
       "D": "was used to"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   },
   {
     "id": 15,
-    "question": "She's ___ living alone now, but at first it was hard.",
+    "question": "Fill in the blank: She's ___ living alone now, but at first it was hard.",
     "options": {
       "A": "used to",
       "B": "use to",
@@ -219,9 +219,9 @@
       "D": "used"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"used to\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Used to talks about past habits or past states that are not true now. Be used to talks about something that feels normal because you have experience with it.",
+    "explanation_simple": "used to + base verb = past habit/state (not now). be used to + noun/-ing = accustomed to.",
+    "explanation_detailed": "Step 1: If the meaning is ‘in the past, but not now’, use used to + base verb.\nStep 2: If the meaning is ‘it is normal for me now’, use be used to + noun or verb-ing.\nStep 3: For questions/negatives with used to, use did/didn’t + use to + base verb.\nStep 4: Check the sentence for clues: ‘when I was a child’, ‘but now…’, ‘at first it was hard’.\nStep 5: Choose the option that matches the meaning and the grammar form.",
     "explanation_translations": {}
   }
 ]

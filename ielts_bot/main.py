@@ -15,8 +15,10 @@ def main():
     notifications.start_lesson_notification_worker()
     commands = [
         {"command": "start", "description": "Запуск бота"},
+        {"command": "login", "description": "Войти в аккаунт"},
         {"command": "help", "description": "Подсказка"},
         {"command": "calendar", "description": "Календарь уроков"},
+        {"command": "logout", "description": "Выйти из аккаунта"},
     ]
     telegram_api.set_bot_commands(commands)
 

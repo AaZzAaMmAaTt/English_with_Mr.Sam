@@ -9,9 +9,9 @@
       "D": "I am go to school tomorrow."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I will go to school tomorrow.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"I will go to school tomorrow.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
@@ -24,14 +24,14 @@
       "D": "РћРЅР° РїСѓС‚РµС€РµСЃС‚РІСѓРµС‚ СЃРµР№С‡Р°СЃ."
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РћРЅР° Р±СѓРґРµС‚ РїСѓС‚РµС€РµСЃС‚РІРѕРІР°С‚СЊ РЅР° СЃР»РµРґСѓСЋС‰РµР№ РЅРµРґРµР»Рµ.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РћРЅР° Р±СѓРґРµС‚ РїСѓС‚РµС€РµСЃС‚РІРѕРІР°С‚СЊ РЅР° СЃР»РµРґСѓСЋС‰РµР№ РЅРµРґРµР»Рµ.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 3,
-    "question": "Choose the correct negative form: He ___ play football tomorrow.",
+    "question": "Fill in the blank: Choose the correct negative form: He ___ play football tomorrow.",
     "options": {
       "A": "won't",
       "B": "doesn't",
@@ -39,14 +39,14 @@
       "D": "isn't"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 4,
-    "question": "Choose the correct question: ___ you help me tomorrow' (Future Simple)",
+    "question": "Fill in the blank: ___ you help me tomorrow' (Future Simple)",
     "options": {
       "A": "Do",
       "B": "Are",
@@ -54,14 +54,14 @@
       "D": "Did"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 5,
-    "question": "Choose the correct sentence: They ___ meet us at 5 p.m. tomorrow. (Future Simple)",
+    "question": "Fill in the blank: They ___ meet us at 5 p.m. tomorrow. (Future Simple)",
     "options": {
       "A": "will",
       "B": "was",
@@ -69,14 +69,14 @@
       "D": "are"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 6,
-    "question": "Choose the correct answer: I think it ___ rain tomorrow.",
+    "question": "Fill in the blank: I think it ___ rain tomorrow.",
     "options": {
       "A": "will",
       "B": "is",
@@ -84,14 +84,14 @@
       "D": "do"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 7,
-    "question": "Choose the correct negative form: We ___ go to school next week.",
+    "question": "Fill in the blank: Choose the correct negative form: We ___ go to school next week.",
     "options": {
       "A": "not",
       "B": "don't",
@@ -99,14 +99,14 @@
       "D": "didn't"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 8,
-    "question": "Choose the correct sentence: He ___ be a doctor one day. (Future Simple)",
+    "question": "Fill in the blank: He ___ be a doctor one day. (Future Simple)",
     "options": {
       "A": "is",
       "B": "was",
@@ -114,14 +114,14 @@
       "D": "are"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 9,
-    "question": "Choose the correct question: ___ she come to the party tomorrow' (Future Simple)",
+    "question": "Fill in the blank: ___ she come to the party tomorrow' (Future Simple)",
     "options": {
       "A": "Do",
       "B": "Does",
@@ -129,14 +129,14 @@
       "D": "Did"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 10,
-    "question": "Choose the correct sentence: I will not = ___",
+    "question": "Fill in the blank: I will not = ___",
     "options": {
       "A": "willn't",
       "B": "won't",
@@ -144,9 +144,9 @@
       "D": "won't be"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"won't\". Possession uses 's for a single owner and s' for plural owners ending in s. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
@@ -159,14 +159,14 @@
       "D": "РЇ Р±С‹Р» Р±С‹ СѓС‡РёС‚РµР»РµРј."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РЇ Р±СѓРґСѓ СѓС‡РёС‚РµР»РµРј.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"РЇ Р±СѓРґСѓ СѓС‡РёС‚РµР»РµРј.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 12,
-    "question": "Choose the correct sentence: They think we ___ be late tomorrow. (Future Simple)",
+    "question": "Fill in the blank: They think we ___ be late tomorrow. (Future Simple)",
     "options": {
       "A": "are",
       "B": "will",
@@ -174,14 +174,14 @@
       "D": "were"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 13,
-    "question": "Choose the correct form: I ___ work with you next week. (Future Simple)",
+    "question": "Fill in the blank: I ___ work with you next week. (Future Simple)",
     "options": {
       "A": "am",
       "B": "will",
@@ -189,14 +189,14 @@
       "D": "do"
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 14,
-    "question": "Choose the correct question: ___ it be sunny tomorrow",
+    "question": "Fill in the blank: ___ it be sunny tomorrow",
     "options": {
       "A": "Will",
       "B": "Does",
@@ -204,14 +204,14 @@
       "D": "Was"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Will\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   },
   {
     "id": 15,
-    "question": "Choose the correct sentence: He believes he ___ win the competition next year. (Future Simple)",
+    "question": "Fill in the blank: He believes he ___ win the competition next year. (Future Simple)",
     "options": {
       "A": "will",
       "B": "is",
@@ -219,9 +219,9 @@
       "D": "do"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"will\". The hint 'Future Simple' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "Future Simple talks about the future (tomorrow, next week) and uses will + base verb. For negatives use will not / won’t, and for questions start with Will.",
+    "explanation_simple": "Future Simple: will + base verb. Negative: won’t. Question: Will + subject + base verb?",
+    "explanation_detailed": "Step 1: Look for future time words: tomorrow, next week, next year, one day.\nStep 2: Use will + base verb (go, help, be, win).\nStep 3: Negative: will + not (or the short form).\nStep 4: Question: Will + subject + base verb?\nStep 5: Do not add -s, -ed, or -ing after will.",
     "explanation_translations": {}
   }
 ]

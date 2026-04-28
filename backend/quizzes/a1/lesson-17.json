@@ -9,9 +9,9 @@
       "D": "Neither he or she is right."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Either he or she is right.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Either he or she is right.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -24,9 +24,9 @@
       "D": "Все учатся и работают."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Или учись, или работай.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Или учись, или работай.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Either…or… means: choose ONE of two things.\nStep 2: Neither…nor… means: NOT this one and NOT that one (zero of two).\nStep 3: Both…and… means: the two together.\nStep 4: All means: everyone/everything in a group.\nStep 5: Choose the option whose meaning matches the sentence.",
     "explanation_translations": {}
   },
   {
@@ -39,9 +39,9 @@
       "D": "Both he nor his brother is at home."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Neither he nor his brother are at home.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Neither he nor his brother are at home.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -54,14 +54,14 @@
       "D": "All my friend are kind."
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Both my friends are kind.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Both my friends are kind.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
     "id": 5,
-    "question": "Choose the correct option: ___ of you can come with me. (one of two)",
+    "question": "Fill in the blank: ___ of you can come with me. (one of two)",
     "options": {
       "A": "Either",
       "B": "Neither",
@@ -69,9 +69,9 @@
       "D": "All"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Either\". The hint 'one of two' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Either\". The hint 'one of two' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -84,9 +84,9 @@
       "D": "He both eats nor drinks."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"He neither eats nor drinks.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"He neither eats nor drinks.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -99,9 +99,9 @@
       "D": "Она работает, но не учится."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Она не учится и не работает.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Она не учится и не работает.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Either…or… means: choose ONE of two things.\nStep 2: Neither…nor… means: NOT this one and NOT that one (zero of two).\nStep 3: Both…and… means: the two together.\nStep 4: All means: everyone/everything in a group.\nStep 5: Choose the option whose meaning matches the sentence.",
     "explanation_translations": {}
   },
   {
@@ -114,14 +114,14 @@
       "D": "Both you or I am going to the meeting."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Either you or I am going to the meeting.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Either you or I am going to the meeting.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
     "id": 9,
-    "question": "Choose the correct option: ___ of my parents can drive a car. (both of them)",
+    "question": "Fill in the blank: ___ of my parents can drive a car. (both of them)",
     "options": {
       "A": "Either",
       "B": "Neither",
@@ -129,9 +129,9 @@
       "D": "All"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Both\". The hint 'both of them' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Both\". The hint 'both of them' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide how many choices there are: two choices or more.\nStep 2: If it is about two choices: use either (one) or neither (zero).\nStep 3: If it is about two together: use both.\nStep 4: If it is about everyone in a group: use all.\nStep 5: In sentences with either…or… / neither…nor…, the verb often matches the closest subject (the one right before the verb).",
     "explanation_translations": {}
   },
   {
@@ -144,9 +144,9 @@
       "D": "Either students are ready."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"All the students are ready.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"All the students are ready.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -159,9 +159,9 @@
       "D": "all / and"
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"both / and\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"both / and\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -174,14 +174,14 @@
       "D": "Только один студент устал."
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Все студенты устали.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Все студенты устали.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Either…or… means: choose ONE of two things.\nStep 2: Neither…nor… means: NOT this one and NOT that one (zero of two).\nStep 3: Both…and… means: the two together.\nStep 4: All means: everyone/everything in a group.\nStep 5: Choose the option whose meaning matches the sentence.",
     "explanation_translations": {}
   },
   {
     "id": 13,
-    "question": "Choose the correct option: ___ of them knows the answer. (ни один)",
+    "question": "Fill in the blank: ___ of them knows the answer. (ни один)",
     "options": {
       "A": "Either",
       "B": "Both",
@@ -189,9 +189,9 @@
       "D": "All"
     },
     "correct": "C",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Neither\". The hint 'ни один' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Neither\". The hint 'ни один' tells you the meaning or ownership, so choose the form that expresses it clearly. This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -204,9 +204,9 @@
       "D": "All my brother plays football."
     },
     "correct": "B",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Both my brothers play football.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Both my brothers play football.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   },
   {
@@ -219,9 +219,9 @@
       "D": "Both doctors nor nurses are at the hospital."
     },
     "correct": "A",
-    "explanation": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Neither doctors nor nurses are at the hospital.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
-    "explanation_simple": "Choose the option that makes the sentence correct in grammar and meaning.",
-    "explanation_detailed": "Choose the option that makes the sentence correct in grammar and meaning. The correct choice is \"Neither doctors nor nurses are at the hospital.\". This option fits the rule being tested in the lesson, while the other forms change the meaning or are incorrect.",
+    "explanation": "These words talk about choices and groups: either/neither/both/all. First decide the meaning (one of two, none of two, both of two, or everyone).",
+    "explanation_simple": "Either = one of two. Neither = none of two. Both = two together. All = everyone.",
+    "explanation_detailed": "Step 1: Decide the meaning: one of two / none of two / both / all.\nStep 2: Choose the sentence that matches the meaning and grammar.",
     "explanation_translations": {}
   }
 ]
