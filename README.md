@@ -82,8 +82,24 @@ cd english-with-mr-sam
 Step 2: Run the Project
 Option A — Using start_all.py (Easiest)
 
-Run the startup script:
+Run the startup script in terminal of the project:
 python start_all.py
 
 Then click **"Go Live"** in VS Code, or open your browser and go to:
 
+
+
+Option B — Manual Start via PowerShell / Terminal
+
+Open PowerShell (or terminal) and navigate to the project folder:
+
+bash
+cd path\to\english-with-mr-sam
+Start the backend server:
+
+bash
+python backend\server.py --host 0.0.0.0 --port 8020
+Open your browser and go to:
+
+text
+http://127.0.0.1:8020/
