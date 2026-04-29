@@ -92,14 +92,12 @@ Then click **"Go Live"** in VS Code, or open your browser and go to:
 Option B — Manual Start via PowerShell / Terminal
 
 Open PowerShell (or terminal) and navigate to the project folder:
-
 bash
 cd path\to\english-with-mr-sam
-Start the backend server:
 
+Start the backend server:
 bash
 python backend\server.py --host 0.0.0.0 --port 8020
-Open your browser and go to:
 
-text
+Open your browser and go to:
 http://127.0.0.1:8020/
