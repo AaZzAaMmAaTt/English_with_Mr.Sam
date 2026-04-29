@@ -76,8 +76,8 @@ If the live site is not yet available, you can run the project on your own compu
 
 #### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/your-username/english-with-mr-sam.git
-cd english-with-mr-sam
+git clone https://github.com/AaZzAaMmAaTt/English_with_Mr.Sam.git
+cd English_with_Mr.Sam
 
 Step 2: Run the Project
 Option A — Using start_all.py (Easiest)
@@ -93,7 +93,7 @@ Option B — Manual Start via PowerShell / Terminal
 
 Open PowerShell (or terminal) and navigate to the project folder:
 bash
-cd path\to\english-with-mr-sam
+cd English_with_Mr.Sam
 
 Start the backend server:
 bash
