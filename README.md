@@ -84,3 +84,6 @@ Option A — Using start_all.py (Easiest)
 
 Run the startup script:
 python start_all.py
+
+Then click **"Go Live"** in VS Code, or open your browser and go to:
+
