@@ -5240,10 +5240,15 @@ const closeAdminModal = (id) => {
 
 const adminPostJson = async (path, payload, timeoutMs = 8000) => {
   await ensureApiBaseUrl();
+  const authState = getAuthState();
+  const sessionToken = (authState && authState.sessionToken) || "";
   try {
     const response = await fetchWithTimeout(`${API_BASE_URL}${path}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Session-Token": sessionToken,
+      },
       body: JSON.stringify(payload || {}),
     }, timeoutMs);
     const data = await response.json().catch(() => ({}));
@@ -5251,6 +5256,32 @@ const adminPostJson = async (path, payload, timeoutMs = 8000) => {
   } catch (error) {
     return { ok: false, status: 0, data: { error: "network_error" } };
   }
+};
+
+const adminGetJson = async (path, timeoutMs = 8000) => {
+  await ensureApiBaseUrl();
+  const authState = getAuthState();
+  const sessionToken = (authState && authState.sessionToken) || "";
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}${path}`, {
+      method: "GET",
+      headers: {
+        "X-Session-Token": sessionToken,
+      },
+    }, timeoutMs);
+    const data = await response.json().catch(() => ({}));
+    return { ok: response.ok, status: response.status, data };
+  } catch (error) {
+    return { ok: false, status: 0, data: { error: "network_error" } };
+  }
+};
+
+const adminFetchRaw = async (url, options = {}, timeoutMs = 8000) => {
+  await ensureApiBaseUrl();
+  const authState = getAuthState();
+  const sessionToken = (authState && authState.sessionToken) || "";
+  const headers = Object.assign({}, options.headers || {}, { "X-Session-Token": sessionToken });
+  return fetchWithTimeout(url, Object.assign({}, options, { headers }), timeoutMs);
 };
 
 const initAdminLessonsEditing = () => {
@@ -10203,7 +10234,7 @@ const refreshAdminPanelBadge = async () => {
     return;
   }
   try {
-    const response = await fetch(`${API_BASE_URL}/api/admin/overview?username=${encodeURIComponent(authState.username)}`);
+    const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/overview`);
     if (!response.ok) {
       return;
     }
@@ -12396,7 +12427,7 @@ const initTeamModal = () => {
     }
     await ensureApiBaseUrl();
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/team?username=${encodeURIComponent(authState.username)}`);
+      const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/team`);
       const payload = await response.json().catch(() => ({}));
       if (response.ok && Array.isArray(payload.items)) {
         return payload.items.slice();
@@ -13801,8 +13832,8 @@ const adminPage = document.querySelector("[data-admin-page]");
               if (!item || !item.id) {
                 return "";
               }
-              const paymentLink = `${API_BASE_URL}/api/admin/payment-checks/file?username=${encodeURIComponent(
-                authState.username
+              const paymentLink = `${API_BASE_URL}/api/admin/payment-checks/file?session_token=${encodeURIComponent(
+                authState.sessionToken || ""
               )}&id=${encodeURIComponent(item.id)}`;
               return `<a href="${paymentLink}" target="_blank" rel="noopener">Open #${index + 1}</a>`;
             })
@@ -13818,7 +13849,6 @@ const adminPage = document.querySelector("[data-admin-page]");
           <td>${escapeHtml(usernameValue || "-")}</td>
           <td>${escapeHtml(scheduleLabel)}</td>
           <td>${escapeHtml(user.phone || "-")}</td>
-          <td>${escapeHtml(user.password || "-")}</td>
           <td>${escapeHtml(user.role || "-")}</td>
           <td>${escapeHtml(user.created_at || "-")}</td>
           <td>${paymentCell}</td>
@@ -13915,7 +13945,6 @@ const adminPage = document.querySelector("[data-admin-page]");
           let rowHtml = `
             <td>${escapeHtml(user.name || "-")}</td>
             <td>${escapeHtml(user.user || "-")}</td>
-            <td>${escapeHtml(user.password || "-")}</td>
             <td>${escapeHtml(user.created_at || "-")}</td>
           `;
           for (let i = 1; i <= lessonCount; i += 1) {
@@ -14206,7 +14235,7 @@ const adminPage = document.querySelector("[data-admin-page]");
         const row = document.createElement("tr");
         row.dataset.username = String(item.username || "").trim().toLowerCase();
         const fileLink = item.id && authState && authState.username
-          ? `${API_BASE_URL}/api/admin/payment-checks/file?username=${encodeURIComponent(authState.username)}&id=${encodeURIComponent(item.id)}`
+          ? `${API_BASE_URL}/api/admin/payment-checks/file?session_token=${encodeURIComponent(authState.sessionToken || "")}&id=${encodeURIComponent(item.id)}`
           : "";
         const fileCell = fileLink
           ? `<a href="${fileLink}" target="_blank" rel="noopener">Open</a>`
@@ -14227,8 +14256,8 @@ const adminPage = document.querySelector("[data-admin-page]");
       }
       devicesNote.textContent = "Loading devices...";
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/admin/device-log?username=${encodeURIComponent(authState.username)}`
+        const response = await adminFetchRaw(
+          `${API_BASE_URL}/api/admin/device-log`
         );
         if (!response.ok) {
           devicesNote.textContent = "Failed to load device log.";
@@ -14284,7 +14313,7 @@ const adminPage = document.querySelector("[data-admin-page]");
 
     const markEnrollmentRequestsSeen = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/enrollment-requests/mark-seen`, {
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/enrollment-requests/mark-seen`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -14309,7 +14338,7 @@ const adminPage = document.querySelector("[data-admin-page]");
         return { ok: false };
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/enrollment-requests/mark-one`, {
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/enrollment-requests/mark-one`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -14337,7 +14366,7 @@ const adminPage = document.querySelector("[data-admin-page]");
         return { ok: false };
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/enrollment-requests/delete`, {
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/enrollment-requests/delete`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -14530,7 +14559,7 @@ const adminPage = document.querySelector("[data-admin-page]");
         return;
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/payment-checks?username=${encodeURIComponent(authState.username)}`);
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/payment-checks`);
         if (!response.ok) {
           return;
         }
@@ -14661,8 +14690,8 @@ const adminPage = document.querySelector("[data-admin-page]");
         progressLessons.innerHTML = "";
       }
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/admin/progress?username=${encodeURIComponent(authState.username)}&student_username=${encodeURIComponent(studentUsername)}`
+        const response = await adminFetchRaw(
+          `${API_BASE_URL}/api/admin/progress?student_username=${encodeURIComponent(studentUsername)}`
         );
         if (!response.ok) {
           let serverError = "";
@@ -15047,10 +15076,8 @@ const adminPage = document.querySelector("[data-admin-page]");
       syncModalBodyScroll();
 
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/admin/user-details?username=${encodeURIComponent(
-            authState.username
-          )}&target_username=${encodeURIComponent(userInfoTargetUsername)}`
+        const response = await adminFetchRaw(
+          `${API_BASE_URL}/api/admin/user-details?target_username=${encodeURIComponent(userInfoTargetUsername)}`
         );
         let payload = null;
         try {
@@ -15359,7 +15386,7 @@ const adminPage = document.querySelector("[data-admin-page]");
       const silent = !!(options && options.silent);
       try {
         await ensureApiBaseUrl();
-        const response = await fetch(`${API_BASE_URL}/api/admin/mentors?username=${encodeURIComponent(authState.username)}`);
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/mentors`);
         if (!response.ok) {
           if (!silent && mentorsNote) {
             mentorsNote.textContent = "Failed to load mentors.";
@@ -15401,7 +15428,7 @@ const adminPage = document.querySelector("[data-admin-page]");
         return;
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/mentors/update`, {
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/mentors/update`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -15445,7 +15472,7 @@ const adminPage = document.querySelector("[data-admin-page]");
     const loadAdminOverview = async () => {
       try {
         await ensureApiBaseUrl();
-        const response = await fetch(`${API_BASE_URL}/api/admin/overview?username=${encodeURIComponent(authState.username)}`);
+        const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/overview`);
         if (!response.ok) {
           if (adminGuard) {
             adminGuard.hidden = false;
@@ -16038,7 +16065,7 @@ const adminPage = document.querySelector("[data-admin-page]");
           return;
         }
         try {
-          const response = await fetch(`${API_BASE_URL}/api/admin/users/delete`, {
+          const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/users/delete`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -16084,7 +16111,7 @@ const adminPage = document.querySelector("[data-admin-page]");
             return;
           }
           try {
-            const response = await fetch(`${API_BASE_URL}/api/admin/users/extend-subscription`, {
+            const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/users/extend-subscription`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -16142,7 +16169,7 @@ const adminPage = document.querySelector("[data-admin-page]");
       const reader = new FileReader();
       reader.onload = async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/api/admin/payment-checks/upload`, {
+          const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/payment-checks/upload`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -16313,7 +16340,7 @@ const adminPage = document.querySelector("[data-admin-page]");
 	              file_data: fileData,
 	            };
 	          }
-	          const response = await fetch(`${API_BASE_URL}/api/admin/users/create`, {
+	          const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/users/create`, {
 	            method: "POST",
 	            headers: {
 	              "Content-Type": "application/json",
@@ -16392,7 +16419,7 @@ const adminPage = document.querySelector("[data-admin-page]");
           return;
         }
         try {
-          const response = await fetch(`${API_BASE_URL}/api/admin/users/update`, {
+          const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/users/update`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -16458,7 +16485,7 @@ const adminPage = document.querySelector("[data-admin-page]");
         const reader = new FileReader();
         reader.onload = async () => {
           try {
-            const response = await fetch(`${API_BASE_URL}/api/admin/mentors/create`, {
+            const response = await adminFetchRaw(`${API_BASE_URL}/api/admin/mentors/create`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

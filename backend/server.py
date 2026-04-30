@@ -284,14 +284,18 @@ def send_telegram_message(text: str) -> bool:
             sent += 1
     return sent > 0
 
-ADMIN_USERNAME = "azamat_admin"
-ADMIN_PASSWORD = "AA20080608zz"
+ADMIN_USERNAME = os.environ.get("EWMS_ADMIN_USERNAME", "azamat_admin").strip()
+ADMIN_PASSWORD = os.environ.get("EWMS_ADMIN_PASSWORD", "").strip()
+if not ADMIN_PASSWORD:
+    ADMIN_PASSWORD = secrets.token_urlsafe(24)
+    print(f"WARNING: EWMS_ADMIN_PASSWORD not set. Generated temporary password: {ADMIN_PASSWORD}")
+    print("Set EWMS_ADMIN_PASSWORD in your .env file for a persistent password.")
 ADMIN_EDIT_PERMANENT_CODE = (os.environ.get("EWMS_ADMIN_EDIT_CODE") or "").strip() or ADMIN_PASSWORD
 
 QUIZ_DIR = BASE_DIR / "quizzes"
-COVER_UPLOAD_DIR = BASE_DIR / "uploads" / "covers"
-CERTIFICATE_UPLOAD_DIR = BASE_DIR / "uploads" / "certificates"
-PRESENTATIONS_DIR = BASE_DIR.parent / "assets" / "presentations"
+COVER_UPLOAD_DIR = DEFAULT_DB_DIR / "uploads" / "covers"
+CERTIFICATE_UPLOAD_DIR = DEFAULT_DB_DIR / "uploads" / "certificates"
+PRESENTATIONS_DIR = DEFAULT_DB_DIR / "uploads" / "presentations"
 LESSON_OVERRIDES_DIR = DEFAULT_DB_DIR / "lesson_overrides"
 CERTIFICATE_OVERRIDES_PATH = DEFAULT_DB_DIR / "certificates_overrides.json"
 SUBSCRIPTION_OVERRIDES_PATH = DEFAULT_DB_DIR / "subscriptions_overrides.json"
@@ -1633,6 +1637,26 @@ def init_db():
         """
     )
 
+    # Security migration: clear plain-text passwords, rehash if needed
+    cur.execute("SELECT id, password, password_hash, salt FROM users WHERE password IS NOT NULL AND password != ''")
+    rows_to_migrate = cur.fetchall()
+    for row in rows_to_migrate:
+        user_id = row["id"]
+        plain_pw = str(row["password"] or "").strip()
+        existing_hash = str(row["password_hash"] or "").strip()
+        existing_salt = str(row["salt"] or "").strip()
+        if plain_pw and (not existing_hash or not existing_salt):
+            # User has plain-text password but no hash — rehash it
+            new_salt = secrets.token_hex(16)
+            new_hash = hash_password(plain_pw, new_salt)
+            cur.execute(
+                "UPDATE users SET password = '', password_hash = ?, salt = ? WHERE id = ?",
+                (new_hash, new_salt, user_id),
+            )
+        else:
+            # Already has hash — just clear the plain-text password
+            cur.execute("UPDATE users SET password = '' WHERE id = ?", (user_id,))
+
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS mentors (
@@ -2115,9 +2139,9 @@ def init_db():
             cur.execute(
                 """
                 INSERT INTO users (username, password, password_hash, salt, role, created_at, access_started_at)
-                VALUES (?, ?, ?, ?, 'admin', ?, ?)
+                VALUES (?, '', ?, ?, 'admin', ?, ?)
                 """,
-                (ADMIN_USERNAME, ADMIN_PASSWORD, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
+                (ADMIN_USERNAME, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
             )
 
     conn.commit()
@@ -2135,6 +2159,38 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Session-Token, Authorization")
         self.end_headers()
+
+    def _get_session_token(self) -> str:
+        token = self.headers.get("X-Session-Token", "").strip()
+        if not token:
+            auth_header = self.headers.get("Authorization", "")
+            if auth_header.lower().startswith("bearer "):
+                token = auth_header[7:].strip()
+        if not token:
+            parsed = urlparse(self.path)
+            params = {k: v[0] for k, v in parse_qs(parsed.query).items()}
+            token = params.get("session_token", "").strip() or params.get("token", "").strip()
+        return token
+
+    def _get_authenticated_user(self, conn: sqlite3.Connection):
+        token = self._get_session_token()
+        if not token:
+            return None
+        cur = conn.cursor()
+        user = get_session_user(cur, token)
+        return user
+
+    def _require_admin(self, conn: sqlite3.Connection):
+        user = self._get_authenticated_user(conn)
+        if user is None:
+            self._set_headers(401)
+            self.wfile.write(json.dumps({"error": "unauthorized"}).encode("utf-8"))
+            return None
+        if user["role"] != "admin":
+            self._set_headers(403)
+            self.wfile.write(json.dumps({"error": "forbidden"}).encode("utf-8"))
+            return None
+        return user
 
     def _serve_static(self, path: str) -> bool:
         raw_path = unquote(path or "")
@@ -2561,28 +2617,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/overview":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            username = params.get("username", "").strip()
-            if not username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT COUNT(*) AS total_users FROM users")
             total_users = cur.fetchone()["total_users"]
@@ -2600,7 +2639,7 @@ class Handler(BaseHTTPRequestHandler):
 
             cur.execute(
                 """
-                SELECT full_name, level, username, phone, password, role, lesson_schedule, created_at
+                SELECT full_name, level, username, phone, role, lesson_schedule, created_at
                 FROM users
                 ORDER BY created_at DESC
                 LIMIT 30
@@ -2659,7 +2698,7 @@ class Handler(BaseHTTPRequestHandler):
             }
             cur.execute(
                 """
-                SELECT id, full_name, username, password, created_at, level
+                SELECT id, full_name, username, created_at, level
                 FROM users
                 WHERE role = 'student'
                 ORDER BY created_at DESC
@@ -2689,7 +2728,6 @@ class Handler(BaseHTTPRequestHandler):
                     {
                         "name": raw_user["full_name"] or "",
                         "user": raw_user["username"] or "",
-                        "password": raw_user["password"] or "",
                         "created_at": raw_user["created_at"] or "",
                         "lessons": lessons,
                     }
@@ -2718,27 +2756,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/device-log":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            username = params.get("username", "").strip()
-            if not username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
@@ -3668,29 +3690,18 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/admin/progress":
             params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            admin_username = params.get("username", "").strip()
             student_username = params.get("student_username", "").strip()
-            if not admin_username or not student_username:
+            if not student_username:
                 self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username and student_username are required"}).encode("utf-8"))
+                self.wfile.write(json.dumps({"error": "student_username is required"}).encode("utf-8"))
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
+
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin_user = cur.fetchone()
-            if admin_user is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-
-            if admin_user["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
-
             cur.execute(
                 "SELECT id, full_name, username, level FROM users WHERE username = ? AND role = 'student'",
                 (student_username,),
@@ -3771,17 +3782,9 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/team":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            admin_username = str(params.get("username", "") or "").strip()
-            if not admin_username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
             conn = get_connection()
-            if not is_admin_user(conn, admin_username):
+            if not self._require_admin(conn):
                 conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
                 return
             conn.close()
             items = load_team_overrides()
@@ -3822,27 +3825,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/mentors":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            admin_username = params.get("username", "").strip()
-            if not admin_username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
@@ -3925,27 +3912,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/payment-checks":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            admin_username = params.get("username", "").strip()
-            if not admin_username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
@@ -3964,27 +3935,17 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/admin/payment-checks/file":
             params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            admin_username = params.get("username", "").strip()
             check_id = params.get("id", "").strip()
-            if not admin_username or not check_id:
+            if not check_id:
                 self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username and id are required"}).encode("utf-8"))
+                self.wfile.write(json.dumps({"error": "id is required"}).encode("utf-8"))
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 "SELECT file_path, original_name FROM payment_checks WHERE id = ?",
@@ -4013,27 +3974,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/enrollment-requests":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            username = params.get("username", "").strip()
-            if not username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
@@ -4052,27 +3997,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/renewal-requests":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            username = params.get("username", "").strip()
-            if not username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
@@ -4090,27 +4019,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/admin/contact-messages":
-            params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            username = params.get("username", "").strip()
-            if not username:
-                self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username is required"}).encode("utf-8"))
-                return
-
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
@@ -4130,31 +4043,21 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/admin/user-details":
             params = {key: values[0] for key, values in parse_qs(parsed.query).items()}
-            username = params.get("username", "").strip()
             target_username = params.get("target_username", "").strip()
-            if not username or not target_username:
+            if not target_username:
                 self._set_headers(400)
-                self.wfile.write(json.dumps({"error": "username and target_username are required"}).encode("utf-8"))
+                self.wfile.write(json.dumps({"error": "target_username is required"}).encode("utf-8"))
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 """
-                SELECT full_name, username, phone, level, lesson_schedule, mentor_id, role, password, created_at, access_started_at
+                SELECT full_name, username, phone, level, lesson_schedule, mentor_id, role, created_at, access_started_at
                 FROM users
                 WHERE username = ?
                 """,
@@ -4280,13 +4183,10 @@ class Handler(BaseHTTPRequestHandler):
             out_path = COVER_UPLOAD_DIR / out_name
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             try:
                 out_path.write_bytes(blob)
@@ -4328,13 +4228,10 @@ class Handler(BaseHTTPRequestHandler):
             out_path = CERTIFICATE_UPLOAD_DIR / out_name
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             try:
                 out_path.write_bytes(blob)
@@ -4357,13 +4254,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             def normalize_section(value: str) -> str:
                 raw = str(value or "").strip().lower()
@@ -4427,13 +4321,10 @@ class Handler(BaseHTTPRequestHandler):
             out_path = TEAM_AVATAR_UPLOAD_DIR / out_name
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             try:
                 out_path.write_bytes(blob)
@@ -4456,13 +4347,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             next_items: list[dict] = []
             seen_ids: set[str] = set()
@@ -4493,13 +4381,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             def parse_money(value) -> int:
                 if value is None:
@@ -4607,13 +4492,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             try:
                 dest_dir = PRESENTATIONS_DIR / course / ""
@@ -4668,13 +4550,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "admin_username, course, lesson_number are required"}).encode("utf-8"))
                 return
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             items = load_lesson_overrides(course)
             by_num: dict[int, dict] = {}
@@ -4716,13 +4595,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "admin_username and course are required"}).encode("utf-8"))
                 return
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             items = load_lesson_overrides(course)
             max_existing = 0
@@ -4761,13 +4637,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "admin_username, course, order are required"}).encode("utf-8"))
                 return
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             items = load_lesson_overrides(course)
             by_num: dict[int, dict] = {}
@@ -4818,13 +4691,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "admin_username, course, lesson_number are required"}).encode("utf-8"))
                 return
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             items = load_lesson_overrides(course)
             by_num: dict[int, dict] = {}
@@ -4863,13 +4733,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "admin_username, course, lesson_number, homework are required"}).encode("utf-8"))
                 return
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             normalized = []
             for item in homework:
@@ -4923,13 +4790,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
-            try:
-                if not is_admin_user(conn, admin_username):
-                    self._set_headers(403)
-                    self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                    return
-            finally:
+            if not self._require_admin(conn):
                 conn.close()
+                return
+            conn.close()
 
             safe_questions = []
             used_ids: set[int] = set()
@@ -5073,19 +4937,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if str(admin["role"] or "").strip().lower() != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT banned_until FROM admin_edit_pins WHERE admin_username = ?", (admin_username,))
             gate = cur.fetchone()
@@ -5139,19 +4994,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if str(admin["role"] or "").strip().lower() != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 "SELECT pin_hash, salt, expires_at, attempts_left, banned_until FROM admin_edit_pins WHERE admin_username = ?",
@@ -5243,19 +5089,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (username,))
-            requester = cur.fetchone()
-            if requester is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
-                return
-            if requester["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("UPDATE contact_messages SET seen_by_admin = 1 WHERE seen_by_admin = 0")
             conn.commit()
@@ -5293,9 +5130,9 @@ class Handler(BaseHTTPRequestHandler):
             cur.execute(
                 """
                 INSERT INTO users (full_name, level, username, password, password_hash, salt, role, created_at, access_started_at)
-                VALUES (?, ?, ?, ?, ?, ?, 'student', ?, ?)
+                VALUES (?, ?, ?, '', ?, ?, 'student', ?, ?)
                 """,
-                ("", "", username, password, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
+                ("", "", username, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
             )
             conn.commit()
             conn.close()
@@ -5312,10 +5149,15 @@ class Handler(BaseHTTPRequestHandler):
             conn = get_connection()
             cur = conn.cursor()
             cur.execute(
-                "SELECT id, username, full_name, role, level FROM users WHERE username = ? AND password = ?",
-                (username, password),
+                "SELECT id, username, full_name, role, level, password_hash, salt FROM users WHERE username = ?",
+                (username,),
             )
             user = cur.fetchone()
+            if user is not None:
+                stored_hash = str(user["password_hash"] or "").strip()
+                stored_salt = str(user["salt"] or "").strip()
+                if not stored_hash or not stored_salt or hash_password(password, stored_salt) != stored_hash:
+                    user = None
 
             if user is None:
                 conn.close()
@@ -5517,19 +5359,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("UPDATE enrollment_requests SET seen_by_admin = 1 WHERE seen_by_admin = 0")
             updated_rows = int(cur.rowcount or 0)
@@ -5556,19 +5389,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute(
                 "UPDATE enrollment_requests SET seen_by_admin = 1 WHERE id = ? AND seen_by_admin = 0",
@@ -5605,19 +5429,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("DELETE FROM enrollment_requests WHERE id = ?", (request_id,))
             deleted_rows = int(cur.rowcount or 0)
@@ -5884,19 +5699,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT id, avatar_path, avatar_name FROM mentors WHERE id = ?", (mentor_id,))
             current = cur.fetchone()
@@ -6014,19 +5820,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             try:
                 header, b64_data = file_data.split(",", 1)
@@ -6119,20 +5916,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT id FROM users WHERE username = ?", (username,))
             if cur.fetchone() is not None:
@@ -6190,7 +5977,7 @@ class Handler(BaseHTTPRequestHandler):
                     created_at,
                     access_started_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, ?, ?, ?)
                 """,
                 (
                     full_name,
@@ -6199,7 +5986,6 @@ class Handler(BaseHTTPRequestHandler):
                     phone,
                     mentor_id,
                     username,
-                    password,
                     password_hash,
                     salt,
                     role,
@@ -6358,20 +6144,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT id, role, phone, lesson_schedule FROM users WHERE username = ?", (target_username,))
             target = cur.fetchone()
@@ -6410,8 +6186,8 @@ class Handler(BaseHTTPRequestHandler):
             if password:
                 salt = secrets.token_hex(16)
                 password_hash = hash_password(password, salt)
-                update_fields.extend(["password = ?", "password_hash = ?", "salt = ?"])
-                update_values.extend([password, password_hash, salt])
+                update_fields.extend(["password = ''", "password_hash = ?", "salt = ?"])
+                update_values.extend([password_hash, salt])
 
             update_values.append(target_username)
             cur.execute(
@@ -6446,19 +6222,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT id, created_at, access_started_at FROM users WHERE username = ?", (target_username,))
             user = cur.fetchone()
@@ -6505,19 +6272,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             cur.execute("SELECT id, role FROM users WHERE username = ?", (target_username,))
             user = cur.fetchone()
@@ -6568,19 +6326,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             conn = get_connection()
+            if not self._require_admin(conn):
+                conn.close()
+                return
             cur = conn.cursor()
-            cur.execute("SELECT id, role FROM users WHERE username = ?", (admin_username,))
-            admin = cur.fetchone()
-            if admin is None:
-                conn.close()
-                self._set_headers(404)
-                self.wfile.write(json.dumps({"error": "admin user not found"}).encode("utf-8"))
-                return
-            if admin["role"] != "admin":
-                conn.close()
-                self._set_headers(403)
-                self.wfile.write(json.dumps({"error": "admin access required"}).encode("utf-8"))
-                return
 
             try:
                 header, b64_data = file_data.split(",", 1)
@@ -7730,9 +7479,7 @@ def main():
     init_db()
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"API server running on http://{args.host}:{args.port}")
-    print("Admin credentials:")
-    print(f"  login: {ADMIN_USERNAME}")
-    print(f"  password: {ADMIN_PASSWORD}")
+    print(f"Admin login: {ADMIN_USERNAME}")
     server.serve_forever()
 
 
