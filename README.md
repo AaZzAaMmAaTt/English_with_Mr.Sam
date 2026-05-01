@@ -61,5 +61,41 @@ All video lessons, materials, and course structures are created by **Mr. Sam** a
 ## 🚀 Getting Started
 
 ### 🌐 Live Website
-> The live website link https://english-with-mr-sam.vercel.app/
+> The live website link https://english-with-mr-sam.vercel.app/ 
+
+
+### !!! However we faced some trubles while hosting the website, and we are working on them now. So, if you want to see the working version, we ask you to run the website locally on your computer/laptop. Here is how you can do that: 
+
+#### Prerequisites
+- Python 3.8 or higher
+- VS Code (recommended) or any code editor
+- Git
+
+#### Step 1: Clone the Repository
+```bash
+git clone https://github.com/AaZzAaMmAaTt/English_with_Mr.Sam.git
+cd English_with_Mr.Sam
+
+
+Step 2: Run the Project
+Option A — Using start_all.py (Easiest)
+
+Run the startup script:
+python start_all.py
+
+
+Then click "Go Live" in VS Code, or open your browser and go to:
+http://127.0.0.1:8020/
+
+
+Option B — Manual Start via PowerShell / Terminal
+1.Open PowerShell (or terminal) and navigate to the project folder:
+cd English_with_Mr.Sam
+
+2.Start the backend server:
+python backend\server.py --host 0.0.0.0 --port 8020
+
+3.Open your browser and go to:
+http://127.0.0.1:8020/
+
 
