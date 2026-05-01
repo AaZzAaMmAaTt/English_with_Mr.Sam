@@ -296,6 +296,7 @@ QUIZ_DIR = BASE_DIR / "quizzes"
 COVER_UPLOAD_DIR = DEFAULT_DB_DIR / "uploads" / "covers"
 CERTIFICATE_UPLOAD_DIR = DEFAULT_DB_DIR / "uploads" / "certificates"
 PRESENTATIONS_DIR = DEFAULT_DB_DIR / "uploads" / "presentations"
+STATIC_PRESENTATIONS_DIR = WEB_ROOT / "assets" / "presentations"
 LESSON_OVERRIDES_DIR = DEFAULT_DB_DIR / "lesson_overrides"
 CERTIFICATE_OVERRIDES_PATH = DEFAULT_DB_DIR / "certificates_overrides.json"
 SUBSCRIPTION_OVERRIDES_PATH = DEFAULT_DB_DIR / "subscriptions_overrides.json"
@@ -965,7 +966,7 @@ def get_presentation_path(course: str, lesson_number: int):
     if lesson_num <= 0:
         return None
 
-    # Admin override upload: assets/presentations/<course>/lesson-<n>.pdf
+    # Admin override upload: uploads/presentations/<course>/lesson-<n>.pdf
     override = PRESENTATIONS_DIR / course_key / f"lesson-{lesson_num}.pdf"
     if override.exists():
         return override
@@ -979,12 +980,24 @@ def get_presentation_path(course: str, lesson_number: int):
         course_path = PRESENTATIONS_DIR / course_key / filename
         if course_path.exists():
             return course_path
+            
+        # Check static dir
+        static_path = STATIC_PRESENTATIONS_DIR / filename
+        if static_path.exists():
+            return static_path
+        static_course_path = STATIC_PRESENTATIONS_DIR / course_key / filename
+        if static_course_path.exists():
+            return static_course_path
 
     # Fallback: allow the simple per-lesson naming convention:
-    # assets/presentations/<course>/lesson-<n>.pdf
     fallback = PRESENTATIONS_DIR / course_key / f"lesson-{lesson_num}.pdf"
     if fallback.exists():
         return fallback
+        
+    static_fallback = STATIC_PRESENTATIONS_DIR / course_key / f"lesson-{lesson_num}.pdf"
+    if static_fallback.exists():
+        return static_fallback
+        
     return None
 
 
@@ -2200,14 +2213,26 @@ class Handler(BaseHTTPRequestHandler):
             raw_path = raw_path[1:]
         if not raw_path:
             raw_path = "index.html"
-        root = WEB_ROOT.resolve()
-        target = (root / raw_path).resolve()
-        try:
-            target.relative_to(root)
-        except ValueError:
-            self._set_headers(403, "text/plain; charset=utf-8")
-            self.wfile.write(b"Forbidden")
-            return True
+            
+        if raw_path.startswith("backend/uploads/"):
+            rel_path = raw_path[len("backend/uploads/"):]
+            target = (DEFAULT_DB_DIR / "uploads" / rel_path).resolve()
+            try:
+                target.relative_to((DEFAULT_DB_DIR / "uploads").resolve())
+            except ValueError:
+                self._set_headers(403, "text/plain; charset=utf-8")
+                self.wfile.write(b"Forbidden")
+                return True
+        else:
+            root = WEB_ROOT.resolve()
+            target = (root / raw_path).resolve()
+            try:
+                target.relative_to(root)
+            except ValueError:
+                self._set_headers(403, "text/plain; charset=utf-8")
+                self.wfile.write(b"Forbidden")
+                return True
+
         if target.is_dir():
             target = target / "index.html"
         if not target.exists():
@@ -2602,7 +2627,7 @@ class Handler(BaseHTTPRequestHandler):
                 rel = presentation_path.resolve().relative_to(WEB_ROOT.resolve())
                 url = f"/{rel.as_posix()}"
             except (OSError, ValueError):
-                url = f"/assets/presentations/{presentation_path.name}"
+                url = f"/backend/uploads/presentations/{presentation_path.name}"
 
             self._set_headers(200)
             self.wfile.write(
