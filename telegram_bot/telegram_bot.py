@@ -6,7 +6,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -80,7 +80,7 @@ API_ROOT = f"https://api.telegram.org/bot{TG_BOT_TOKEN}/"
 
 
 def utc_now():
-    return datetime.utcnow().isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def escape_html(value: str) -> str:
@@ -271,8 +271,8 @@ def check_site_api():
     try:
         with urllib.request.urlopen(url, timeout=3) as response:
             payload = response.read().decode("utf-8", errors="ignore")
-    except urllib.error.URLError:
-        print("Site API is not reachable:", url)
+    except Exception as e:
+        print("Site API is not reachable:", url, e)
         return False
     try:
         data = json.loads(payload)
@@ -472,12 +472,12 @@ def build_level_keyboard():
 
 
 def pick_daily_material():
-    index = datetime.utcnow().date().toordinal() % len(DAILY_MATERIALS)
+    index = datetime.now(timezone.utc).date().toordinal() % len(DAILY_MATERIALS)
     return DAILY_MATERIALS[index]
 
 
 def pick_tip():
-    index = datetime.utcnow().date().toordinal() % len(IELTS_TIPS)
+    index = datetime.now(timezone.utc).date().toordinal() % len(IELTS_TIPS)
     return IELTS_TIPS[index]
 
 def add_news(title: str, body: str, created_by_chat_id: int, created_by_name: str):

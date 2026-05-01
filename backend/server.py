@@ -718,7 +718,7 @@ def record_user_device(cur, user_id: int, username: str, user_agent: str, client
     ua = str(user_agent or "").strip()
     device_type = detect_device_type(ua)
     device_hash = hashlib.sha256(ua.lower().encode("utf-8")).hexdigest()
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     cur.execute(
         """
         SELECT id, last_ip, city, region, country, timezone, org
@@ -1078,14 +1078,14 @@ def hash_password(password: str, salt: str) -> str:
 
 def create_session(cur, user_id: int) -> tuple[str, str]:
     token = secrets.token_urlsafe(32)
-    expires_at = (datetime.utcnow() + timedelta(days=SESSION_TTL_DAYS)).isoformat()
+    expires_at = (datetime.now(timezone.utc) + timedelta(days=SESSION_TTL_DAYS)).isoformat()
     cur.execute("DELETE FROM user_sessions WHERE user_id = ?", (user_id,))
     cur.execute(
         """
         INSERT INTO user_sessions (token, user_id, created_at, expires_at)
         VALUES (?, ?, ?, ?)
         """,
-        (token, user_id, datetime.utcnow().isoformat(), expires_at),
+        (token, user_id, datetime.now(timezone.utc).isoformat(), expires_at),
     )
     return token, expires_at
 
@@ -1105,7 +1105,7 @@ def get_session_user(cur, token: str):
     session_row = cur.fetchone()
     if session_row is None:
         return None
-    if session_row["expires_at"] <= datetime.utcnow().isoformat():
+    if session_row["expires_at"] <= datetime.now(timezone.utc).isoformat():
         cur.execute("DELETE FROM user_sessions WHERE token = ?", (token,))
         return None
     return session_row
@@ -1122,7 +1122,7 @@ def parse_iso_datetime(value: str):
 
 
 def utc_now():
-    return datetime.utcnow().replace(tzinfo=timezone.utc)
+    return datetime.now(timezone.utc).replace(tzinfo=timezone.utc)
 
 
 def local_now():
@@ -2141,7 +2141,7 @@ def init_db():
                 INSERT INTO users (username, password, password_hash, salt, role, created_at, access_started_at)
                 VALUES (?, '', ?, ?, 'admin', ?, ?)
                 """,
-                (ADMIN_USERNAME, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
+                (ADMIN_USERNAME, password_hash, salt, datetime.now(timezone.utc).isoformat(), datetime.now(timezone.utc).isoformat()),
             )
 
     conn.commit()
@@ -3407,7 +3407,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             if not str(row["mentor_seen_at"] or "").strip():
-                seen_at = datetime.utcnow().isoformat()
+                seen_at = datetime.now(timezone.utc).isoformat()
                 cur.execute(
                     "UPDATE homework_submissions SET mentor_seen_at = ? WHERE id = ? AND (mentor_seen_at IS NULL OR mentor_seen_at = '')",
                     (seen_at, submission_id),
@@ -4144,7 +4144,7 @@ class Handler(BaseHTTPRequestHandler):
                     message,
                     client_ip,
                     user_agent,
-                    datetime.utcnow().isoformat(),
+                    datetime.now(timezone.utc).isoformat(),
                 ),
             )
             conn.commit()
@@ -4177,7 +4177,7 @@ class Handler(BaseHTTPRequestHandler):
             if ext not in ALLOWED_COVER_EXTENSIONS:
                 ext = ".png"
             safe_stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(file_name).stem)[:40] or "cover"
-            stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             token = secrets.token_hex(6)
             out_name = f"{safe_stem}_{stamp}_{token}{ext}"
             out_path = COVER_UPLOAD_DIR / out_name
@@ -4222,7 +4222,7 @@ class Handler(BaseHTTPRequestHandler):
             if ext not in ALLOWED_COVER_EXTENSIONS:
                 ext = ".png"
             safe_stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(file_name).stem)[:40] or "certificate"
-            stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             token = secrets.token_hex(6)
             out_name = f"{safe_stem}_{stamp}_{token}{ext}"
             out_path = CERTIFICATE_UPLOAD_DIR / out_name
@@ -4315,7 +4315,7 @@ class Handler(BaseHTTPRequestHandler):
             if ext not in ALLOWED_COVER_EXTENSIONS:
                 ext = ".png"
             safe_stem = re.sub(r"[^A-Za-z0-9_-]", "_", Path(file_name).stem)[:40] or "team"
-            stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             token = secrets.token_hex(6)
             out_name = f"{safe_stem}_{stamp}_{token}{ext}"
             out_path = TEAM_AVATAR_UPLOAD_DIR / out_name
@@ -5132,7 +5132,7 @@ class Handler(BaseHTTPRequestHandler):
                 INSERT INTO users (full_name, level, username, password, password_hash, salt, role, created_at, access_started_at)
                 VALUES (?, ?, ?, '', ?, ?, 'student', ?, ?)
                 """,
-                ("", "", username, password_hash, salt, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()),
+                ("", "", username, password_hash, salt, datetime.now(timezone.utc).isoformat(), datetime.now(timezone.utc).isoformat()),
             )
             conn.commit()
             conn.close()
@@ -5239,7 +5239,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps({"error": "invalid lesson_schedule"}).encode("utf-8"))
                     return
 
-            created_at = datetime.utcnow().isoformat()
+            created_at = datetime.now(timezone.utc).isoformat()
             conn = get_connection()
             cur = conn.cursor()
             cur.execute(
@@ -5499,7 +5499,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
                 return
 
-            now = datetime.utcnow().isoformat()
+            now = datetime.now(timezone.utc).isoformat()
             cur.execute(
                 """
                 SELECT id, watched_seconds, duration_seconds
@@ -5732,7 +5732,7 @@ class Handler(BaseHTTPRequestHandler):
                 uploads_dir = DEFAULT_DB_DIR / "uploads" / "mentors"
                 uploads_dir.mkdir(parents=True, exist_ok=True)
                 safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name or "mentor")[:120] or "mentor"
-                timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
                 stored_name = f"{course_level}_{timestamp}_{safe_name}"
                 file_path = uploads_dir / stored_name
                 file_path.write_bytes(file_bytes)
@@ -5842,12 +5842,12 @@ class Handler(BaseHTTPRequestHandler):
             uploads_dir = DEFAULT_DB_DIR / "uploads" / "mentors"
             uploads_dir.mkdir(parents=True, exist_ok=True)
             safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name)[:120] or "mentor"
-            timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             stored_name = f"{course_level}_{timestamp}_{safe_name}"
             file_path = uploads_dir / stored_name
             file_path.write_bytes(file_bytes)
 
-            created_at = datetime.utcnow().isoformat()
+            created_at = datetime.now(timezone.utc).isoformat()
             cur.execute(
                 """
                 INSERT INTO mentors (name, level, phone, email, telegram_username, instagram_username, info, avatar_path, avatar_name, created_at)
@@ -5956,7 +5956,7 @@ class Handler(BaseHTTPRequestHandler):
 
             salt = secrets.token_hex(16)
             password_hash = hash_password(password, salt)
-            created_at = datetime.utcnow().isoformat()
+            created_at = datetime.now(timezone.utc).isoformat()
             level_label = level.lower()
             if role == "mentor":
                 level_label = course_level
@@ -6011,7 +6011,7 @@ class Handler(BaseHTTPRequestHandler):
                 uploads_dir = DEFAULT_DB_DIR / "uploads" / "mentors"
                 uploads_dir.mkdir(parents=True, exist_ok=True)
                 safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name or "mentor")[:120] or "mentor"
-                timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
                 stored_name = f"{course_level}_{timestamp}_{safe_name}"
                 file_path = uploads_dir / stored_name
                 file_path.write_bytes(file_bytes)
@@ -6091,7 +6091,7 @@ class Handler(BaseHTTPRequestHandler):
             uploads_dir = DEFAULT_DB_DIR / "uploads" / "users"
             uploads_dir.mkdir(parents=True, exist_ok=True)
             safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name or "avatar")[:120] or "avatar"
-            timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             stored_name = f"{timestamp}_{safe_name}"
             file_path = uploads_dir / stored_name
             try:
@@ -6235,7 +6235,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
                 return
 
-            new_created_at = datetime.utcnow().isoformat()
+            new_created_at = datetime.now(timezone.utc).isoformat()
             access_started_at = user["access_started_at"] or user["created_at"]
             cur.execute(
                 "UPDATE users SET created_at = ?, access_started_at = ? WHERE id = ?",
@@ -6348,12 +6348,12 @@ class Handler(BaseHTTPRequestHandler):
             uploads_dir = DEFAULT_DB_DIR / "uploads" / "payments"
             uploads_dir.mkdir(parents=True, exist_ok=True)
             safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", file_name)[:120] or "payment"
-            timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             stored_name = f"{username}_{timestamp}_{safe_name}"
             file_path = uploads_dir / stored_name
             file_path.write_bytes(file_bytes)
 
-            uploaded_at = datetime.utcnow().isoformat()
+            uploaded_at = datetime.now(timezone.utc).isoformat()
             cur.execute(
                 """
                 INSERT INTO payment_checks (username, payment_date, file_path, original_name, uploaded_at)
@@ -6672,7 +6672,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
                 return
 
-            submitted_at = datetime.utcnow().isoformat()
+            submitted_at = datetime.now(timezone.utc).isoformat()
             cur.execute(
                 """
                 INSERT INTO knowledge_test_attempts (
@@ -6744,7 +6744,7 @@ class Handler(BaseHTTPRequestHandler):
                     course,
                     lesson_number,
                     task_key,
-                    datetime.utcnow().isoformat(),
+                    datetime.now(timezone.utc).isoformat(),
                 ),
             )
             cur.execute(
@@ -6881,7 +6881,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "user not found"}).encode("utf-8"))
                 return
 
-            submitted_at = datetime.utcnow().isoformat()
+            submitted_at = datetime.now(timezone.utc).isoformat()
             cur.execute(
                 """
                 INSERT INTO quiz_attempts (user_id, course, lesson_number, total_questions, correct_answers, submitted_at)
@@ -7039,7 +7039,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "student is not assigned to this mentor"}).encode("utf-8"))
                 return
 
-            reviewed_at = datetime.utcnow().isoformat()
+            reviewed_at = datetime.now(timezone.utc).isoformat()
             cur.execute(
                 """
                 UPDATE homework_submissions
@@ -7117,7 +7117,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "student access required"}).encode("utf-8"))
                 return
 
-            seen_at = datetime.utcnow().isoformat()
+            seen_at = datetime.now(timezone.utc).isoformat()
             updated = 0
             if mark_all or not submission_ids:
                 cur.execute(
@@ -7198,7 +7198,7 @@ class Handler(BaseHTTPRequestHandler):
             original_names: list[str] = []
             mime_types: list[str] = []
 
-            submitted_at = datetime.utcnow().isoformat()
+            submitted_at = datetime.now(timezone.utc).isoformat()
 
             attachments: list[dict] = []
             if isinstance(files_raw, list) and files_raw:
@@ -7226,7 +7226,7 @@ class Handler(BaseHTTPRequestHandler):
                 uploads_dir = DEFAULT_DB_DIR / "uploads" / "homework"
                 uploads_dir.mkdir(parents=True, exist_ok=True)
 
-                timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
                 nonce = secrets.token_hex(4)
 
                 for index, attach in enumerate(attachments):
@@ -7334,7 +7334,7 @@ class Handler(BaseHTTPRequestHandler):
                     / f"lesson_{lesson_number}"
                 )
                 archives_dir.mkdir(parents=True, exist_ok=True)
-                timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
                 archive_name = f"homework_{course}_lesson{lesson_number}_{submission_id}_{timestamp}.zip"
                 archive_path_obj = archives_dir / archive_name
 
@@ -7446,7 +7446,7 @@ class Handler(BaseHTTPRequestHandler):
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (user["id"], course, lesson_number, question_id, selected_option, is_correct, datetime.utcnow().isoformat()),
+                (user["id"], course, lesson_number, question_id, selected_option, is_correct, datetime.now(timezone.utc).isoformat()),
             )
             inserted = cur.rowcount == 1
             conn.commit()
