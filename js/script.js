@@ -8066,6 +8066,11 @@ const applyLessonAccessLocks = async () => {
     button.onclick = null;
     delete button.dataset.requiredLessonNumber;
     delete button.dataset.prerequisiteLocked;
+    
+    const lessonCard = button.closest(".lesson-card");
+    if (lessonCard) {
+      lessonCard.classList.remove("is-locked-lesson-card");
+    }
   };
 
   const lockLessonButton = (button, label = "Locked") => {
@@ -8191,6 +8196,8 @@ const applyLessonAccessLocks = async () => {
       }
     });
   } else {
+    // Pre-lock all visually so there is no blue flash
+    const lessonConfigs = [];
     for (const button of lessonButtons) {
       resetLessonButton(button);
       const href = button.getAttribute("href") || "";
@@ -8201,16 +8208,42 @@ const applyLessonAccessLocks = async () => {
       } catch (error) {
         lessonNumber = 1;
       }
+      
+      lessonConfigs.push({ button, lessonNumber });
+      
+      if (lessonNumber > 1) {
+         lockLessonButton(button, "Loading...");
+      }
+    }
+
+    // Fetch all lessons concurrently to prevent waterfall
+    const checkPromises = lessonConfigs.map(async (config) => {
+      const { button, lessonNumber } = config;
+      if (lessonNumber <= 1) return { ...config, payload: { allowed: true } };
+      
+      if (isBekzodA1Preview && lessonNumber <= 4) {
+        return { ...config, isBekzod: true };
+      }
+      
+      const payload = await fetchLessonAccess(currentCourse, lessonNumber);
+      return { ...config, payload };
+    });
+
+    const results = await Promise.all(checkPromises);
+
+    for (const result of results) {
+      const { button, lessonNumber, payload, isBekzod } = result;
       if (lessonNumber <= 1) {
-        continue;
+         resetLessonButton(button);
+         continue;
       }
 
-      // Bekzod preview mode: show first 4 lessons as "Go to the lesson", but only allow opening the next required one.
-      if (isBekzodA1Preview && lessonNumber <= 4) {
+      if (isBekzod) {
         if (lessonNumber === 2) {
-          // Next required lesson is Lesson 2 (because only Lesson 1 is marked completed).
+          resetLessonButton(button);
           continue;
         }
+        lockLessonButton(button, "Locked");
         button.onclick = async (event) => {
           event.preventDefault();
           const merged = await mergeCourseLessons(currentCourse);
@@ -8222,10 +8255,11 @@ const applyLessonAccessLocks = async () => {
         continue;
       }
 
-      const payload = await fetchLessonAccess(currentCourse, lessonNumber);
       if (payload && payload.allowed) {
+        resetLessonButton(button);
         continue;
       }
+
       const reason = payload && payload.reason ? String(payload.reason) : "";
       if (reason === "prerequisite") {
         const requiredLessonNumber = Number(payload.required_lesson_number) || 0;
