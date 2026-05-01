@@ -1178,7 +1178,7 @@ if (lessonPage) {
     }
 
     if (tasksBtn) {
-      tasksBtn.href = `tasks.html?course=${course}&lesson=${lessonNumber}`;
+      tasksBtn.href = `tasks.html?course=${course}&lesson=${lessonNumber}&open=quiz`;
     }
 
     const tasksUrl = `tasks.html?course=${course}&lesson=${lessonNumber}`;
@@ -1305,7 +1305,7 @@ if (lessonPage) {
 
     if (homeworkGateTasksBtn) {
       homeworkGateTasksBtn.addEventListener("click", () => {
-        window.location.href = tasksUrl;
+        window.location.href = `${tasksUrl}&open=quiz`;
       });
     }
 
@@ -2699,8 +2699,12 @@ if (tasksPage) {
 
   // No "Tasks" button inside the quiz topbar (exit is "Back to lesson").
 
-  // Default: tasks page shows tests. ("Open tests" button is still available.)
-  showQuizCard();
+  // Default: tasks page shows tests only if requested via ?open=quiz.
+  if (openQuizOnly) {
+    showQuizCard();
+  } else {
+    showTasksCard();
+  }
 
   // Always allow taking the quiz when opening tasks.
 
