@@ -8066,11 +8066,6 @@ const applyLessonAccessLocks = async () => {
     button.onclick = null;
     delete button.dataset.requiredLessonNumber;
     delete button.dataset.prerequisiteLocked;
-    
-    const lessonCard = button.closest(".lesson-card");
-    if (lessonCard) {
-      lessonCard.classList.remove("is-locked-lesson-card");
-    }
   };
 
   const lockLessonButton = (button, label = "Locked") => {
