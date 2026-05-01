@@ -8081,6 +8081,10 @@ const applyLessonAccessLocks = async () => {
     button.onclick = (event) => {
       event.preventDefault();
     };
+    const lessonCard = button.closest(".lesson-card");
+    if (lessonCard) {
+      lessonCard.classList.add("is-locked-lesson-card");
+    }
   };
 
   const ensureLessonPrereqModal = () => {
@@ -8178,8 +8182,6 @@ const applyLessonAccessLocks = async () => {
 
       const lessonCard = button.closest(".lesson-card");
       if (lessonCard) {
-        lessonCard.classList.add("is-locked-lesson-card");
-
         if (!lessonCard.querySelector(".lesson-lock-note")) {
           const lockNote = document.createElement("p");
           lockNote.className = "lesson-lock-note";
@@ -8229,7 +8231,9 @@ const applyLessonAccessLocks = async () => {
         const requiredLessonNumber = Number(payload.required_lesson_number) || 0;
         button.dataset.prerequisiteLocked = "1";
         button.dataset.requiredLessonNumber = String(requiredLessonNumber || "");
-        button.classList.add("is-locked-lesson-btn");
+        
+        lockLessonButton(button, "Locked");
+        
         button.onclick = async (event) => {
           event.preventDefault();
           const merged = await mergeCourseLessons(currentCourse);
@@ -8936,6 +8940,11 @@ const handleSubscriptionGate = async () => {
 
 const applyCourseLevelLocks = () => {
   const courseButtons = document.querySelectorAll("#levels .card .btn");
+  const authState = getAuthState();
+  const isLoggedIn = !!(authState && authState.sessionToken);
+  const userLevel = authState ? normalizeCourseLevel(authState.level) : "";
+  const isAdmin = authState && authState.role === "admin";
+
   courseButtons.forEach((button) => {
     if (!button.dataset.originalText) {
       button.dataset.originalText = button.textContent;
@@ -8949,6 +8958,25 @@ const applyCourseLevelLocks = () => {
     button.classList.remove("is-locked-course-btn");
     button.removeAttribute("aria-disabled");
     button.removeAttribute("tabindex");
+    button.onclick = null;
+
+    if (isLoggedIn && userLevel && !isAdmin) {
+      const btnHref = button.dataset.originalHref;
+      let courseMatch = "";
+      if (btnHref.includes("a1.html")) courseMatch = "a1";
+      else if (btnHref.includes("a2.html")) courseMatch = "a2";
+      else if (btnHref.includes("b1.html")) courseMatch = "b1";
+      else if (btnHref.includes("b2.html")) courseMatch = "b2";
+
+      if (courseMatch && courseMatch !== userLevel) {
+        button.href = "#";
+        button.textContent = "Locked";
+        button.classList.add("is-locked-course-btn");
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("tabindex", "-1");
+        button.onclick = (e) => e.preventDefault();
+      }
+    }
   });
 };
 
