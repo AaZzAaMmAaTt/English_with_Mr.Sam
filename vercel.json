@@ -9,6 +9,17 @@
       "destination": "https://web-production-e2bfcb.up.railway.app/backend/uploads/$1"
     }
   ],
+  "headers": [
+    {
+      "source": "/(.*\\.(js|css))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
   "cleanUrls": true,
   "trailingSlash": false
 }
