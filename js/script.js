@@ -871,7 +871,7 @@ const getSessionTokenFromStorage = () => {
 
 const getCourseFromPathname = () => {
   const path = (window.location.pathname || "").toLowerCase();
-  const match = path.match(/\/(a1|a2|b1|b2)\.html$/);
+  const match = path.match(/\/(a1|a2|b1|b2)(\.html)?\/?$/);
   return match ? match[1] : "";
 };
 
