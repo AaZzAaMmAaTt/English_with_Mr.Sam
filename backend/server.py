@@ -1095,7 +1095,7 @@ def get_session_user(cur, token: str):
         return None
     cur.execute(
         """
-        SELECT s.user_id, s.expires_at, u.username, u.role, u.level, u.lesson_schedule, u.created_at, u.access_started_at
+        SELECT u.id, s.user_id, s.expires_at, u.username, u.role, u.level, u.lesson_schedule, u.created_at, u.access_started_at
         FROM user_sessions s
         JOIN users u ON u.id = s.user_id
         WHERE s.token = ?
