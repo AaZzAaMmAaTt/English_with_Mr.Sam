@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://YOUR_RAILWAY_APP_URL/api/$1"
+      "destination": "https://web-production-e2bfcb.up.railway.app/api/$1"
     },
     {
       "source": "/backend/uploads/(.*)",
-      "destination": "https://YOUR_RAILWAY_APP_URL/backend/uploads/$1"
+      "destination": "https://web-production-e2bfcb.up.railway.app/backend/uploads/$1"
     }
   ],
   "cleanUrls": true,
